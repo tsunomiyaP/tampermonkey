@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube ProgressBar
 // @namespace    http://tampermonkey.net/
-// @version      3.0
+// @version      4.0
 // @description  try to take over the world!
 // @author       You
 // @match        https://www.youtube.com/*
@@ -22,8 +22,11 @@
   // 変数宣言
   const waitTime = 500;
   const alsoInFullscreen = true;
+  const isDebugMode = true;
+  const player = 'div#movie_player.html5-video-player';
   const regWatch = '/watch|/live';
   // 可変数
+  let moYt;
   // ==========================================================
   // 静的style適用エリア
   const elemStyle = document.createElement('style');
@@ -37,6 +40,11 @@
   // 常時表示
   elemStyle.textContent += '#player-container-inner, #full-bleed-container { padding-bottom: 55px !important; } #full-bleed-container div#container { height: calc(100% + 55px) !important; } #full-bleed-container div#container video { top: 0 !important; } div#movie_player.ended-mode:has(video) video { display: none !important; } ';
   elemStyle.textContent += 'div.ytp-chrome-bottom { z-index: 999; bottom: auto; top: calc(100% - 55px); opacity: 1 !important; background: #000; } ';
+  // 動画要素非表示
+  if (!isDebugMode) {
+    // pc
+    elemStyle.textContent += 'div#secondary { visibility: hidden !important; } div#related.ytd-watch-flexy { display: none !important; } ';
+  }
 
   // .ytp-scrubber-container
   elemStyle.textContent += 'div.ytp-chrome-bottom .ytp-progress-bar[role="slider"] > * { display: none !important; } ';
@@ -183,6 +191,37 @@
     const isWatch = watch.test(location.pathname);
 
     isProgressBar(isWatch);
+
+    if (!isDebugMode) {
+      if (!isNuN(moYt)) { moYt.disconnect(); }
+
+      const columns = await waitQuerySelector('div#columns.ytd-watch-flexy');
+      // console.log('> chat columns', columns);
+      const primary = await waitQuerySelector('div#primary.ytd-watch-flexy');
+      // console.log('> chat primary', primary);
+      const ytVid = await waitQuerySelector(player + ' video');
+      // console.log('> chat video', ytVid);
+      primary.style.width = '';
+      columns.style.display = 'grid';
+      // 動画要素位置設定
+      const num = parseInt(ytVid.style.width) + parseInt(ytVid.style.left) * 2;
+      primary.style.width = num + 'px';
+
+      if (num + 'px' !== primary.style.width) { console.log('> yt retry...'); return reWatch(); }
+
+      const config = { 'attributes': true, 'childList': false, 'subtree': false };
+      moYt = new MutationObserver(async () => {
+        const columns = await waitQuerySelector('div#columns.ytd-watch-flexy');
+        const primary = await waitQuerySelector('div#primary.ytd-watch-flexy');
+        const ytVid = await waitQuerySelector(player + ' video');
+        columns.style.display = 'grid';
+        // 動画要素位置設定
+        const num = parseInt(ytVid.style.width) + parseInt(ytVid.style.left) * 2;
+        primary.style.width = num + 'px';
+        // console.log('> yt reload... resize... moYt');
+      });
+      moYt.observe(document.querySelector(player), config);
+    }
   };
   const changeUrl = async () => {
     let href;
@@ -193,6 +232,7 @@
         // console.log('Before:', href);
         // console.log('After:', location.href);
         href = location.pathname + location.search;
+        if (!isNuN(moYt)) { moYt.disconnect(); }
 
         await new Promise(resolve => setTimeout(resolve, waitTime * 10));
         reWatch();
