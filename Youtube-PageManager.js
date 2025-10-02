@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube PageManager
 // @namespace    http://tampermonkey.net/
-// @version      3.2
+// @version      4.0
 // @description  try to take over the world!
 // @author       You
 // @match        https://*.youtube.com/*
@@ -18,11 +18,9 @@
 
   // ==========================================================
   // 変数宣言
-  const isDebugMode = false;
   const isChatMode = false;
   const scale = 'scale(0.8)';
   const waitTime = 500;
-  const player = 'div#movie_player.html5-video-player';
   const manager = 'ytd-app, ytm-app[id="app"]';
   const itemsArray = [
     { device: 'www.youtube.com', path: '^/$', area: '[page-subtype="home"] div#primary > ytd-rich-grid-renderer > div#contents' },
@@ -42,7 +40,7 @@
   const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
   // 可変数
   let userName = window.sessionStorage.getItem('channel') || '';
-  let moScal, moYt;
+  let moScal;
   // ==========================================================
   // 静的style適用エリア
   const elemStyle = document.createElement('style');
@@ -93,13 +91,6 @@
   elemStyle.textContent += 'div[tab-title="ホーム"] ytm-rich-grid-renderer > div > ytm-rich-item-renderer.is-in-first-col:has(ad-slot-renderer) { display: none; } ';
 
   if (!isChatMode) { elemStyle.textContent += 'div#chat-container { display: none !important; } '; }
-  // 動画要素非表示
-  if (!isDebugMode) {
-    // pc
-    elemStyle.textContent += 'div#secondary { visibility: hidden !important; } div#related.ytd-watch-flexy { display: none !important; } ';
-    // mobile
-    //elemStyle.textContent += 'ytm-watch div.related-items-container { display: none; } ';
-  }
 
   // [ショート]動画 削除
   elemStyle.textContent += '.target:has(a[href*="/shorts"]) { display: none; } ';
@@ -107,7 +98,7 @@
   elemStyle.textContent += '.target:has(a[href*="&list="], #rich-shelf-header-container, .rich-shelf-header, chips-shelf-with-video-shelf-renderer, ytd-brand-video-singleton-renderer) { display: none; } ';
   // 初期表示
   elemStyle.textContent += '.target:not(.show) { display: none !important; visibility: hidden !important; } ';
-  elemStyle.textContent += '.target.minScale:not(:has(div[class*="subheader"])) > * { display: block; transform: ' + scale + ' !important; pointer-events: none !important; } ';
+  elemStyle.textContent += '.target.minScale:not(:has(div[class*="subheader"])) > * { transform: ' + scale + ' !important; pointer-events: none !important; } ';
 
   // Modal画面
   const modal = document.createElement('div');
@@ -216,79 +207,50 @@
     if (!watcher.test(location.pathname)) { return false; }
     console.log('> chat area create...');
     const chat = await waitQuerySelectorCount(5, 'div#chat-container');
-
-    if (!isDebugMode) {
-      if (!isNuN(moYt)) { moYt.disconnect(); }
-
-      const columns = await waitQuerySelector('div#columns.ytd-watch-flexy');
-      // console.log('> chat columns', columns);
-      const primary = await waitQuerySelector('div#primary.ytd-watch-flexy');
-      // console.log('> chat primary', primary);
-      const ytVid = await waitQuerySelector(player + ' video');
-      // console.log('> chat video', ytVid);
-      primary.style.width = '';
-      columns.style.display = 'grid';
-      // 動画要素位置設定
-      const num = parseInt(ytVid.style.width) + parseInt(ytVid.style.left) * 2;
-      primary.style.width = num + 'px';
-
-      if (num + 'px' !== primary.style.width) { console.log('> chat size get retry...'); return ytChatArea(); }
-
-      const config = { 'attributes': true, 'childList': false, 'subtree': false };
-      moYt = new MutationObserver(async () => {
-        const columns = await waitQuerySelector('div#columns.ytd-watch-flexy');
-        const primary = await waitQuerySelector('div#primary.ytd-watch-flexy');
-        const ytVid = await waitQuerySelector(player + ' video');
-        columns.style.display = 'grid';
-        // 動画要素位置設定
-        const num = parseInt(ytVid.style.width) + parseInt(ytVid.style.left) * 2;
-        primary.style.width = num + 'px';
-        // console.log('> chat reload... resize... moYt');
-      });
-      moYt.observe(document.querySelector(player), config);
-    }
     if (!isNuN(chat)) { chat.remove(); }
   };
   const removeMovieInformation = async (item) => {
     const mode = {'pc': {}, 'mobile': {}};
-    // pc
-    mode.pc.ytTitle = isNuN(item.querySelector('div#meta a #video-title, yt-lockup-view-model a span[role="text"]')) ? '' : item.querySelector('div#meta a #video-title, yt-lockup-view-model a span[role="text"]').textContent;
-    mode.pc.userNam = isNuN(item.querySelector('div#meta #channel-name a, yt-lockup-view-model span > a')) ? '' : item.querySelector('div#meta #channel-name a, yt-lockup-view-model span > a').textContent;
-    mode.pc.channel = isNuN(item.querySelector('div#meta #channel-name a[href], yt-lockup-view-model span > a[href]')) ? '' : item.querySelector('div#meta #channel-name a[href], yt-lockup-view-model span > a[href]').href;
+
+    const watcher = new RegExp(regWatch, 'gis');
+    const device = 'www.youtube.com' !== location.hostname ? mode.mobile : mode.pc;
+    const youtubeItem = {};
+
+    // pc 動画
+    mode.pc.ytTitle = isNuN(item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container span')) ? '' : item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container span').textContent;
+    mode.pc.userNam = isNuN(item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span')) ? '' : item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span').textContent;
     // mobile
     mode.mobile.ytTitle = isNuN(item.querySelector('ytm-media-item div.media-item-info .media-item-headline > span[role="text"]')) ? '' : item.querySelector('ytm-media-item div.media-item-info .media-item-headline > span[role="text"]').textContent;
     mode.mobile.userNam = isNuN(item.querySelector('ytm-media-item div.media-item-info ytm-badge-and-byline-renderer > span > span')) ? '' : item.querySelector('ytm-media-item div.media-item-info ytm-badge-and-byline-renderer > span > span').textContent;
-    mode.mobile.channel = isNuN(item.querySelector('ytm-media-item div.media-channel a[href]')) ? '' : item.querySelector('ytm-media-item div.media-channel a[href]').href;
 
-    const watcher = new RegExp(regWatch, 'gis');
-    const isMobile = 'm.youtube.com' === location.hostname ? true : false;
-
-    const device = 'www.youtube.com' !== location.hostname ? mode.mobile : mode.pc;
     const strData = device;
-
-    const youtubeItem = {};
     youtubeItem.ytTitle = strData.ytTitle;
     youtubeItem.userNam = strData.userNam;
-    youtubeItem.channel = strData.channel.split('/@')[1];
 
-    if (isMobile) {
-      if (watcher.test(location.pathname)) {
-        const user = await waitQuerySelector('ytm-slim-owner-renderer a[href]');
-        const userCh = user.href.split('/@')[1];
-        console.log(userCh, youtubeItem.channel);
-        if (userCh !== youtubeItem.channel) { item.classList.add('remove_item'); }
+    if (watcher.test(location.pathname)) {
+      let user = '';
+      if ('www.youtube.com' === location.hostname) {
+        const channel = await waitQuerySelector('ytd-channel-name#channel-name #text-container > yt-formatted-string#text[title]');
+        user = channel.title;
       }
+      if ('m.youtube.com' === location.hostname) {
+        const channel = await waitQuerySelector('ytm-slim-owner-renderer h3.slim-owner-channel-name span');
+        user = channel.textContent;
+      }
+
+      console.log(user, youtubeItem.userNam);
+      if (user !== youtubeItem.userNam) { item.classList.add('remove_item'); }
     }
 
     if (isNuN(youtubeItem.ytTitle)) { return false; }
     if (isNuN(youtubeItem.userNam)) { return false; }
-    if (isNuN(youtubeItem.channel)) { return false; }
+
     const words = isNuN(abc) ? [] : abc.hideword;
     const excludes = isNuN(abc) ? [] : abc.execludeWords;
 
     for (const word of words) {
       const regw = new RegExp(word, 'gis');
-      if (regw.test(youtubeItem.ytTitle) || regw.test(youtubeItem.userNam) || regw.test(youtubeItem.channel)) {
+      if (regw.test(youtubeItem.ytTitle) || regw.test(youtubeItem.userNam)) {
         item.classList.add('remove_item');
         youtubeItem.word = word;
         console.log('> hide all words : ', youtubeItem);
@@ -297,7 +259,7 @@
     }
     for (const word of excludes) {
       const regw = new RegExp(word, 'gis');
-      if (regw.test(youtubeItem.ytTitle) || regw.test(youtubeItem.userNam) || regw.test(youtubeItem.channel)) {
+      if (regw.test(youtubeItem.ytTitle) || regw.test(youtubeItem.userNam)) {
         item.classList.remove('remove_item');
         // console.log('> un hide words : ', youtubeItem);
         break;
@@ -423,7 +385,6 @@
         // youtube Area Manager
         await waitQuerySelector(manager);
         if (!isNuN(moScal)) { moScal.disconnect(); }
-        if (!isNuN(moYt)) { moYt.disconnect(); }
 
         // channel replace
         const channel = new RegExp(regChannel, 'gis');
