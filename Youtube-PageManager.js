@@ -216,30 +216,42 @@
     const device = 'www.youtube.com' !== location.hostname ? mode.mobile : mode.pc;
     const youtubeItem = {};
 
-    // pc 動画
-    mode.pc.ytTitle = isNuN(item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container span')) ? '' : item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container span').textContent;
-    mode.pc.userNam = isNuN(item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span')) ? '' : item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span').textContent;
-    // mobile
-    mode.mobile.ytTitle = isNuN(item.querySelector('ytm-media-item div.media-item-info .media-item-headline > span[role="text"]')) ? '' : item.querySelector('ytm-media-item div.media-item-info .media-item-headline > span[role="text"]').textContent;
-    mode.mobile.userNam = isNuN(item.querySelector('ytm-media-item div.media-item-info ytm-badge-and-byline-renderer > span > span')) ? '' : item.querySelector('ytm-media-item div.media-item-info ytm-badge-and-byline-renderer > span > span').textContent;
-
-    const strData = device;
-    youtubeItem.ytTitle = strData.ytTitle;
-    youtubeItem.userNam = strData.userNam;
-
     if (watcher.test(location.pathname)) {
+      await waitQuerySelector('div#owner ytd-video-owner-renderer ytd-channel-name#channel-name #text-container > yt-formatted-string#text[title], ytm-slim-owner-renderer h3.slim-owner-channel-name span');
+      // pc 動画
+      mode.pc.ytTitle = isNuN(item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container span')) ? '' : item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container span').textContent;
+      mode.pc.userNam = isNuN(item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span')) ? '' : item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span').textContent;
+      // mobile
+      mode.mobile.ytTitle = isNuN(item.querySelector('ytm-media-item div.media-item-info .media-item-headline > span[role="text"]')) ? '' : item.querySelector('ytm-media-item div.media-item-info .media-item-headline > span[role="text"]').textContent;
+      mode.mobile.userNam = isNuN(item.querySelector('ytm-media-item div.media-item-info ytm-badge-and-byline-renderer > span > span')) ? '' : item.querySelector('ytm-media-item div.media-item-info ytm-badge-and-byline-renderer > span > span').textContent;
+
+      const strData = device;
+      youtubeItem.ytTitle = strData.ytTitle;
+      youtubeItem.userNam = strData.userNam;
+
       let user = '';
       if ('www.youtube.com' === location.hostname) {
-        const channel = await waitQuerySelector('ytd-channel-name#channel-name #text-container > yt-formatted-string#text[title]');
+        const channel = document.querySelector('div#owner ytd-video-owner-renderer ytd-channel-name#channel-name #text-container > yt-formatted-string#text[title]');
         user = channel.title;
       }
       if ('m.youtube.com' === location.hostname) {
-        const channel = await waitQuerySelector('ytm-slim-owner-renderer h3.slim-owner-channel-name span');
+        const channel = document.querySelector('ytm-slim-owner-renderer h3.slim-owner-channel-name span');
         user = channel.textContent;
       }
 
       console.log(user, youtubeItem.userNam);
       if (user !== youtubeItem.userNam) { item.classList.add('remove_item'); }
+    } else {
+      // pc 動画
+      mode.pc.ytTitle = isNuN(item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container span')) ? '' : item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container span').textContent;
+      mode.pc.userNam = isNuN(item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span')) ? '' : item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span').textContent;
+      // mobile
+      mode.mobile.ytTitle = isNuN(item.querySelector('ytm-media-item div.media-item-info .media-item-headline > span[role="text"]')) ? '' : item.querySelector('ytm-media-item div.media-item-info .media-item-headline > span[role="text"]').textContent;
+      mode.mobile.userNam = isNuN(item.querySelector('ytm-media-item div.media-item-info ytm-badge-and-byline-renderer > span > span')) ? '' : item.querySelector('ytm-media-item div.media-item-info ytm-badge-and-byline-renderer > span > span').textContent;
+
+      const strData = device;
+      youtubeItem.ytTitle = strData.ytTitle;
+      youtubeItem.userNam = strData.userNam;
     }
 
     if (isNuN(youtubeItem.ytTitle)) { return false; }
