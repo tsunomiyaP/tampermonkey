@@ -22,7 +22,7 @@
   // 変数宣言
   const waitTime = 500;
   const alsoInFullscreen = true;
-  const isDebugMode = true;
+  const isMovieMode = true;
   const player = 'div#movie_player.html5-video-player';
   const regWatch = '/watch|/live';
   // 可変数
@@ -41,9 +41,10 @@
   elemStyle.textContent += '#player-container-inner, #full-bleed-container { padding-bottom: 55px !important; } #full-bleed-container div#container { height: calc(100% + 55px) !important; } #full-bleed-container div#container video { top: 0 !important; } div#movie_player.ended-mode:has(video) video { display: none !important; } ';
   elemStyle.textContent += 'div.ytp-chrome-bottom { z-index: 999; bottom: auto; top: calc(100% - 55px); opacity: 1 !important; background: #000; } ';
   // 動画要素非表示
-  if (!isDebugMode) {
+  if (!isMovieMode) {
     // pc
-    elemStyle.textContent += 'div#secondary { visibility: hidden !important; } div#related.ytd-watch-flexy { display: none !important; } ';
+    elemStyle.textContent += 'div#secondary { visibility: hidden !important; }';
+    // elemStyle.textContent += 'div#related.ytd-watch-flexy { display: none !important; } ';
   }
 
   // .ytp-scrubber-container
@@ -192,7 +193,7 @@
 
     isProgressBar(isWatch);
 
-    if (!isDebugMode) {
+    if (!isMovieMode) {
       if (!isNuN(moYt)) { moYt.disconnect(); }
 
       const columns = await waitQuerySelector('div#columns.ytd-watch-flexy');
