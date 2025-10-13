@@ -52,8 +52,7 @@
   elemStyle.textContent += tweet_main + ' div[data-testid="sidebarColumn"] div[aria-label="トレンド"] > div > div > div:nth-child(n+2) { display: none !important; } ';
   // トレンド
   elemStyle.textContent += '[aria-label="タイムライン: 話題を検索"i] > div > div:nth-of-type(n+1):nth-of-type(-n+3) { display: none !important; } ';
-  elemStyle.textContent += '[aria-label="タイムライン: 話題を検索"i] [data-testid="cellInnerDiv"i]:is(:has([data-testid="trend"i] > div.css-175oi2r.r-16y2uox.r-1t982j2.r-1b3ntt7.r-bnwqim),:has([data-testid="UserAvatar-Container-unknown"i])) { display: none !important; } ';
-  elemStyle.textContent += '[aria-label="タイムライン: 話題を検索"i] [data-testid="cellInnerDiv"i]:is(:has([class="css-175oi2r r-1igl3o0 r-qklmqi r-1adg3ll r-1ny4l3l"])) { display: none !important; } ';
+  elemStyle.textContent += '[aria-label="タイムライン: 話題を検索"i] [data-testid="cellInnerDiv"i]:is(:has([data-testid="trend"i] > div.css-175oi2r.r-16y2uox.r-1t982j2.r-1b3ntt7.r-bnwqim),:has([data-testid="UserAvatar-Container-unknown"i]),:has([data-testid="tweet"i])) { display: none !important; } ';
   elemStyle.textContent += 'a[href="/explore/tabs/news"i] { display: none !important; } ';
   elemStyle.textContent += 'a[href="/explore/tabs/sports"i] { display: none !important; } ';
   elemStyle.textContent += 'a[href="/explore/tabs/entertainment"i] { display: none !important; } ';
