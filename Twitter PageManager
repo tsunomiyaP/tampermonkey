@@ -1,0 +1,216 @@
+// ==UserScript==
+// @name         Twitter PageManager
+// @namespace    http://tampermonkey.net/
+// @version      4.0
+// @description  try to take over the world!
+// @author       You
+// @match        https://x.com/*
+// @grant        none
+// @icon         https://www.google.com/s2/favicons?domain=x.com
+// @run-at       document-body
+// @noframes
+// ==/UserScript==
+
+(function() {
+  'use strict';
+
+  // ==========================================================
+  // 変数宣言
+  const tweet_main = 'main[role="main"]';
+  const tweet_row_columns = 'div[aria-label*="タイムライン"] > div';
+  const tweet_items_column = 'div[data-testid="cellInnerDiv"]';
+  const regStatus = 'status';
+  const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
+  // 可変数
+  // ==========================================================
+  // 静的style適用エリア
+  const elemStyle = document.createElement('style');
+  elemStyle.id = 'xStylusManager';
+  document.head.insertAdjacentElement('beforeend', elemStyle);
+
+  // 動的style適用エリア
+  const elemDom = document.createElement('style');
+  elemDom.id = 'xStylusManagerDom';
+  document.head.insertAdjacentElement('beforeend', elemDom);
+  const elemTweet = document.createElement('style');
+  elemTweet.id = 'xStylusManagerTweet';
+  document.head.insertAdjacentElement('beforeend', elemTweet);
+
+  elemStyle.textContent += '.remove_item { display: none !important; } ';
+  // 画面非表示
+  // サイドバー
+  elemStyle.textContent += 'a[href="/i/grok"] { display: none !important; } ';
+  elemStyle.textContent += 'a[href$="/communities"] { display: none !important; } ';
+  elemStyle.textContent += 'a[href="/i/premium_sign_up"] { display: none !important; } ';
+  elemStyle.textContent += 'a[href="/i/verified-orgs-signup"] { display: none !important; } ';
+  elemStyle.textContent += 'a[href="/jobs"] { display: none !important; } ';
+  elemStyle.textContent += 'a[href="/i/chat"] { display: none !important; } ';
+  elemStyle.textContent += 'a[href="/i/monetization"] { display: none !important; } ';
+  elemStyle.textContent += 'a[href*="ads"] { display: none !important; } ';
+  // サイドメニュー おすすめ トレンド
+  elemStyle.textContent += tweet_main + ' div[data-testid="sidebarColumn"] div[aria-label="トレンド"] > div > div:nth-child(n+2) { display: none !important; } ';
+  elemStyle.textContent += tweet_main + ' div[data-testid="sidebarColumn"] div[aria-label="トレンド"] > div > div > div:nth-child(n+2) { display: none !important; } ';
+  // トレンド
+  elemStyle.textContent += '[aria-label="タイムライン: 話題を検索"i] > div > div:nth-of-type(n+1):nth-of-type(-n+3) { display: none !important; } ';
+  elemStyle.textContent += '[aria-label="タイムライン: 話題を検索"i] [data-testid="cellInnerDiv"i]:is(:has([data-testid="trend"i] > div.css-175oi2r.r-16y2uox.r-1t982j2.r-1b3ntt7.r-bnwqim),:has([data-testid="UserAvatar-Container-unknown"i])) { display: none !important; } ';
+  elemStyle.textContent += '[aria-label="タイムライン: 話題を検索"i] [data-testid="cellInnerDiv"i]:is(:has([class="css-175oi2r r-1igl3o0 r-qklmqi r-1adg3ll r-1ny4l3l"])) { display: none !important; } ';
+  elemStyle.textContent += 'a[href="/explore/tabs/news"i] { display: none !important; } ';
+  elemStyle.textContent += 'a[href="/explore/tabs/sports"i] { display: none !important; } ';
+  elemStyle.textContent += 'a[href="/explore/tabs/entertainment"i] { display: none !important; } ';
+
+  // おすすめユーザー
+  elemStyle.textContent += 'div:is([aria-label="タイムライン: ホームタイムライン"],[aria-label$="さんのポスト"],[aria-label="タイムライン: 話題を検索"],[aria-label="タイムライン: タイムラインを検索"]) > div > ' + tweet_items_column + ':is(:has(h2[role="heading"i].css-175oi2r.r-18u37iz.r-7cikom),:has(button[data-testid="UserCell"i]),:has(a[href*="/i/connect_people"i][role="link"i]),:has(a[href$="&src=hashtag_click&f=user"i][role="link"i]),:has(a[href$="&src=trend_click&f=user"i][role="link"i])) { display: none !important; } ';
+  // 広告
+  elemStyle.textContent += 'div:is([aria-label="タイムライン: ホームタイムライン"],[aria-label$="さんのポスト"],[aria-label="タイムライン: 話題を検索"],[aria-label="タイムライン: タイムラインを検索"]) > div > ' + tweet_items_column + ':has(svg.r-4qtqp9.r-yyyyoo.r-dnmrzs.r-bnwqim.r-lrvibr.r-m6rgpd.r-1q142lx.r-ip8ujx.r-1gs4q39.r-1bwzh9t) { display: none !important; } ';
+  // リツイート
+  elemStyle.textContent += tweet_items_column + ':has(span[data-testid="socialContext"i]) { display: none !important; } ';
+  // ==========================================================
+
+  // eslint-disable-next-line no-unused-vars
+  const isNuN = (selector) => {
+    if (selector === null || selector === undefined || selector === '') { return true; } else { return false; }
+  };
+  // eslint-disable-next-line no-unused-vars
+  const waitQuerySelector = async (selector, node = document) => {
+    let obj = null;
+    while (!obj) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+      obj = node.querySelector(selector);
+    }
+    return obj;
+  };
+  // eslint-disable-next-line no-unused-vars
+  const waitQuerySelectorCount = async (cnt, selector, node = document) => {
+    await new Promise(resolve => setTimeout(resolve, 1000 * cnt));
+    return node.querySelector(selector);
+  };
+  // eslint-disable-next-line no-unused-vars
+  const waitQuerySelectorIframe = async (selector1, selector2, node = document) => {
+    let obj = null;
+    while (!obj) {
+      // iframe.contentWindow.document === iframe.contentDocument
+      await new Promise(resolve => setTimeout(resolve, 500));
+      obj = node.querySelector(selector1).contentDocument.querySelector(selector2);
+    }
+    return obj;
+  };
+  // eslint-disable-next-line no-unused-vars
+  const deleteParam = (searchUrl, param) => {
+    const base = new URL(location.protocol + '//' + location.hostname);
+    const url = new URL(searchUrl, base);
+    // URLSearchParamsオブジェクトを取得
+    const params = url.searchParams;
+    params.delete(param);
+
+    return url;
+  };
+  // eslint-disable-next-line no-unused-vars
+  const searchParams = (searchUrl, param) => {
+    const base = new URL(location.protocol + '//' + location.hostname);
+    const url = new URL(searchUrl, base);
+    console.log('url section', url);
+    // URLSearchParamsオブジェクトを取得
+    const params = url.searchParams;
+
+    return params.get(param);
+  };
+  // eslint-disable-next-line no-unused-vars
+  const getParam = (name, url) => {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\\[\]]/g, '\\$&');
+    let regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+    let results = regex.exec(url);
+
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+  };
+  // eslint-disable-next-line no-unused-vars
+  const userAgent = () => {
+    const userDevice = navigator.userAgent;
+    if (userDevice.indexOf('iPhone') > 0 || userDevice.indexOf('iPod') > 0 || userDevice.indexOf('Android') > 0 && userDevice.indexOf('Mobile') > 0) {
+      return false;
+    } else if (userDevice.indexOf('iPad') > 0 || userDevice.indexOf('Android') > 0) {
+      return false;
+    } else {
+      // pc
+      return true;
+    }
+  };
+
+  const removeElements = () => {
+    const status = new RegExp(regStatus, 'gis');
+    if (status.test(location.pathname)) { return false; }
+
+    for (const item of document.querySelectorAll(tweet_items_column + ':not(.remove_item)')) {
+      if (item.classList.contains('remove_item')) { continue; }
+
+      const mode = {'pc': {}, 'mobile': {}};
+      // pc
+      mode.pc.twTextA = isNuN(item.querySelector('div[data-testid="tweetText"]')) ? '' : item.querySelector('div[data-testid="tweetText"]').textContent;
+      mode.pc.userNam = isNuN(item.querySelector('div[data-testid="User-Name"] span')) ? '' : item.querySelector('div[data-testid="User-Name"] span').textContent;
+      // mobile
+      mode.mobile.twTextA = isNuN(item.querySelector('div[data-testid="tweetText"]')) ? '' : item.querySelector('div[data-testid="tweetText"]').textContent;
+      mode.mobile.userNam = isNuN(item.querySelector('div[data-testid="User-Name"] span')) ? '' : item.querySelector('div[data-testid="User-Name"] span').textContent;
+
+      const device = 'x.com' !== location.hostname ? mode.mobile : mode.pc;
+      const strData = device;
+
+      const xItem = {};
+      xItem.twTextA = strData.twTextA;
+      xItem.userNam = strData.userNam;
+
+      if (isNuN(xItem.twTextA)) { return false; }
+      if (isNuN(xItem.userNam)) { return false; }
+
+      const words = isNuN(abc) ? [] : abc.hideword;
+
+      for (const word of words) {
+        const regw = new RegExp(word, 'gis');
+        if (regw.test(xItem.twTextA) || regw.test(xItem.userNam)) {
+          item.classList.add('remove_item');
+          xItem.word = word;
+          console.log('> hide all words : ', xItem);
+          break;
+        }
+      }
+    }
+  };
+  const initial = async () => {
+    await waitQuerySelector(tweet_main);
+    await waitQuerySelector(tweet_items_column);
+
+    removeElements();
+
+    for await (const row of document.querySelectorAll(tweet_row_columns)) {
+      const config_tweet = { 'attributes': false, 'childList': true, 'subtree': true };
+      const obs_tweet = new MutationObserver(async () => {
+        // tweet 非表示
+        removeElements();
+      });
+      obs_tweet.observe(row, config_tweet);
+    }
+  };
+  const changeUrl = async () => {
+    let href;
+
+    const url_config = { 'attributes': false, 'childList': true, 'subtree': true };
+    const url_obs = new MutationObserver(async () => {
+      const href_path = location.pathname;
+      // const href_path = location.pathname + '/' + location.search;
+      if (href != href_path) {
+        // console.log('Before:', href);
+        // console.log('After:', location.href);
+        href = href_path;
+
+        // style 初期化
+        elemDom.textContent = '';
+        await initial();
+      }
+    });
+    url_obs.observe(document, url_config);
+  };
+
+  // URLが変更されたとき
+  changeUrl();
+})();
