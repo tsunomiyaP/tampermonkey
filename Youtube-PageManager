@@ -69,6 +69,8 @@
   elemStyle.textContent += 'ytd-guide-renderer > div#footer { display: none !important; } ';
   // 任意チャンネルエリア 削除
   elemStyle.textContent += 'div[role="tablist"] > yt-tab-shape[tab-title="ホーム"], div[role="tablist"] > yt-tab-shape[tab-title="ショート"], div.yt-tab-group-shape-wiz__slider, div.tabGroupShapeSlider { display: none !important; } ';
+  // 動画
+  elemStyle.textContent += 'ytd-watch-flexy > div#full-bleed-container { display: none !important; } ';
   // 動画再生後の動画一覧非表示
   elemStyle.textContent += 'div[class="html5-endscreen ytp-player-content videowall-endscreen"], div[class*="ytp-ce-element"], div[class="ytp-endscreen-content"] { display: none !important; } ';
   // 動画表示切り替えボタン削除
@@ -435,3 +437,4 @@
   // URLが変更されたとき
   changeUrl();
 })();
+
