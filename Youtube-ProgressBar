@@ -38,7 +38,7 @@
   elemStyle.textContent += 'div.annotation.annotation-type-custom.iv-branding { display: none; } ';
   elemStyle.textContent += 'button.ytp-suggested-action-badge-content-forward { display: none; } ';
   // 常時表示
-  elemStyle.textContent += 'div#player, #full-bleed-container { padding-bottom: 55px !important; } ytd-player#ytd-player, #full-bleed-container div#container { height: calc(100% + 55px) !important; } div#movie_player.html5-video-player > div.html5-video-container > video, #full-bleed-container div#container video { top: 0 !important; } div#movie_player.ended-mode:has(video) video { display: none !important; } ';
+  elemStyle.textContent += 'div#columns div#player, #full-bleed-container { padding-bottom: 55px !important; } div#columns ytd-player#ytd-player, #full-bleed-container div#container { height: calc(100% + 55px) !important; } div#columns div#movie_player.html5-video-player > div.html5-video-container > video, #full-bleed-container div#container video { top: 0 !important; } div#movie_player.ended-mode:has(video) video { display: none !important; } ';
   elemStyle.textContent += 'div.ytp-chrome-bottom { z-index: 999; bottom: auto; top: calc(100% - 50px); opacity: 1 !important; background: #000; } ';
   // 動画要素非表示
   if (!isMovieMode) {
