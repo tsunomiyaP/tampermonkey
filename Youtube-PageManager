@@ -74,6 +74,7 @@
   elemStyle.textContent += 'ytd-watch-flexy > div#full-bleed-container:not(:has(div#player-container)) { display: none !important; } ';
   // 動画再生後の動画一覧非表示
   elemStyle.textContent += 'div[class="html5-endscreen ytp-player-content videowall-endscreen"], div[class*="ytp-ce-element"], div[class="ytp-endscreen-content"] { display: none !important; } ';
+  elemStyle.textContent += 'div.ytp-fullscreen-grid { display: none !important; } ';
   // 動画表示切り替えボタン削除
   elemStyle.textContent += 'button.ytp-size-button { display: none !important; } ';
   // チャンネル動画、チャンネル削除 (pc)
