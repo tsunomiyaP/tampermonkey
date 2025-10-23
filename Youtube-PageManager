@@ -96,14 +96,16 @@
 
   if (!isChatMode) { elemStyle.textContent += 'div#chat-container { display: none !important; } '; }
 
-  // [ショート]動画 削除
-  elemStyle.textContent += '.target:has(a[href*="/shorts"]) { display: none; } ';
-  // [Mix & playlist] [他(headline)]動画 削除
-  elemStyle.textContent += '.target:has(a[href*="&list="], #rich-shelf-header-container, .rich-shelf-header, chips-shelf-with-video-shelf-renderer, ytd-brand-video-singleton-renderer) { display: none; } ';
   // 初期表示
-  elemStyle.textContent += '.target:not(.show) { display: none !important; visibility: hidden !important; } ';
   for (const yt of itemsArray) {
+    // 非表示
+    elemStyle.textContent += yt.area + ' .target:not(.show) { display: none !important; visibility: hidden !important; } ';
+    // 拡大縮小
     elemStyle.textContent += yt.area + ' .target.minScale:not(:has(div[class*="subheader"])) > * { ' + yt.stylus + ' transform: ' + scale + ' !important; pointer-events: none !important; } ';
+    // [ショート]動画 削除
+    elemStyle.textContent += yt.area + ' .target:has(a[href*="/shorts"]) { display: none; } ';
+    // [Mix & playlist] [他(headline)]動画 削除
+    elemStyle.textContent += yt.area + ' .target:has(a[href*="&list="], #rich-shelf-header-container, .rich-shelf-header, chips-shelf-with-video-shelf-renderer, ytd-brand-video-singleton-renderer) { display: none; } ';
   }
 
   // Modal画面
