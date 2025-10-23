@@ -103,7 +103,7 @@
   // 初期表示
   elemStyle.textContent += '.target:not(.show) { display: none !important; visibility: hidden !important; } ';
   for (const yt of itemsArray) {
-    elemStyle.textContent += '.target.minScale:not(:has(div[class*="subheader"])) > * { ' + yt.stylus + ' transform: ' + scale + ' !important; pointer-events: none !important; } ';
+    elemStyle.textContent += yt.area + ' .target.minScale:not(:has(div[class*="subheader"])) > * { ' + yt.stylus + ' transform: ' + scale + ' !important; pointer-events: none !important; } ';
   }
 
   // Modal画面
