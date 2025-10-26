@@ -59,7 +59,7 @@
 
   // ツイート
   elemStyle.textContent += 'div[aria-label="タイムライン: 会話"i] article[data-testid="tweet"i] > div > div > div[class="css-175oi2r r-18u37iz"i] > div > div[class="css-175oi2r r-1bimlpy r-f8sm7e r-m5arl1 r-16y2uox r-14gqq1x"i] { display: none !important; } ';
-  elemStyle.textContent += 'div[aria-label="タイムライン: 会話"i] article[data-testid="tweet"i] > div > div > div[class="css-175oi2r"i] > div[class="css-175oi2r r-18u37iz"i] > div[class="css-175oi2r r-18kxxzh r-ogg1b9 r-1mrc8m9 r-15zivkp"i] { display: none !important; } ';
+  elemStyle.textContent += 'div[aria-label="タイムライン: 会話"i] article[data-testid="tweet"i] > div > div > div[class="css-175oi2r"i] > div[class="css-175oi2r r-18u37iz"i] { display: none !important; } ';
   elemStyle.textContent += 'div[aria-label="タイムライン: 会話"i] div[data-testid="cellInnerDiv"i] > div[class="css-175oi2r r-j5o65s r-qklmqi r-1adg3ll r-1ny4l3l"i]:not(:has(article[data-testid="tweet"i])) { display: none !important; } ';
   // ツイート内引用
   elemStyle.textContent += 'div[aria-label="タイムライン: 会話"i] > div > div[data-testid="cellInnerDiv"i]:nth-of-type(n+2):has([data-testid="tweet"i] > div > div > div > div > div[aria-labelledby][id]) { display: none !important; } ';
