@@ -94,6 +94,9 @@
   elemStyle.textContent += 'div[tab-title="ホーム"] ytm-rich-grid-renderer > div > ytm-statement-banner-renderer { display: none; } ';
   elemStyle.textContent += 'div[tab-title="ホーム"] ytm-rich-grid-renderer > div > ytm-rich-item-renderer.is-in-first-col:has(ad-slot-renderer) { display: none; } ';
 
+  // アプリで開く(サインイン)
+  elemStyle.textContent += 'header.mobile-topbar-header div.mobile-topbar-header-sign-in-button { display: none !important; } ';
+
   if (!isChatMode) { elemStyle.textContent += 'div#chat-container { display: none !important; } '; }
 
   // 初期表示
