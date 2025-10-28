@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube LoopPlayer
 // @namespace    http://tampermonkey.net/
-// @version      3.0
+// @version      4.0
 // @description  try to take over the world!
 // @author       You
 // @match        https://*.youtube.com/*
@@ -28,10 +28,18 @@
   const elemStyle = document.createElement('style');
   elemStyle.id = 'ytStylusLoop';
   document.head.insertAdjacentElement('beforeend', elemStyle);
-
-  elemStyle.textContent += '[id^="loop_off"] { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: inline-block; background-color: #fff; border: solid 2px #0000ff; color: #000000; border-radius: 10px; padding: 10px 30px; text-decoration: none; font-size: 1em; transition: all .3s ease 0s; } ';
-  elemStyle.textContent += '[id^="loop_on"] { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: inline-block; background-color: #fff; border: solid 2px #ff0000; color: #000000; border-radius: 10px; padding: 10px 30px; text-decoration: none; font-size: 1em; transition: all .3s ease 0s; } ';
-  elemStyle.textContent += '[id^="loop_"]:hover { color: #000000; background-color: #fff; transform: scale(1.2); } ';
+  // pc
+  elemStyle.textContent += 'ytd-app:has(ytd-watch-flexy[full-bleed-player]) ~ [id^="loop_off"] { position: fixed; bottom: 80px; right: 20px; z-index: 9999; display: inline-block; background-color: #fff; border: solid 2px #0000ff; color: #000000; border-radius: 10px; padding: 10px 30px; text-decoration: none; font-size: 1em; transition: all .3s ease 0s; } ';
+  elemStyle.textContent += 'ytd-app:has(ytd-watch-flexy[full-bleed-player]) ~ [id^="loop_on"] { position: fixed; bottom: 80px; right: 20px; z-index: 9999; display: inline-block; background-color: #fff; border: solid 2px #ff0000; color: #000000; border-radius: 10px; padding: 10px 30px; text-decoration: none; font-size: 1em; transition: all .3s ease 0s; } ';
+  elemStyle.textContent += 'ytd-app:has(ytd-watch-flexy[full-bleed-player]) = [id^="loop_"]:hover { color: #000000; background-color: #fff; transform: scale(1.2); } ';
+  // not full
+  elemStyle.textContent += 'ytd-app:not(:has(ytd-watch-flexy[full-bleed-player])) ~ [id^="loop_off"] { position: fixed; bottom: 10px; right: 20px; z-index: 9999; display: inline-block; background-color: #fff; border: solid 2px #0000ff; color: #000000; border-radius: 10px; padding: 10px 30px; text-decoration: none; font-size: 1em; transition: all .3s ease 0s; } ';
+  elemStyle.textContent += 'ytd-app:not(:has(ytd-watch-flexy[full-bleed-player])) ~ [id^="loop_on"] { position: fixed; bottom: 10px; right: 20px; z-index: 9999; display: inline-block; background-color: #fff; border: solid 2px #ff0000; color: #000000; border-radius: 10px; padding: 10px 30px; text-decoration: none; font-size: 1em; transition: all .3s ease 0s; } ';
+  elemStyle.textContent += 'ytd-app:not(:has(ytd-watch-flexy[full-bleed-player])) ~ [id^="loop_"]:hover { color: #000000; background-color: #fff; transform: scale(1.2); } ';
+  // mobile
+  elemStyle.textContent += 'ytm-app[id="app"] ~ [id^="loop_off"] { position: fixed; bottom: 0px; right: 20px; z-index: 9999; display: inline-block; background-color: #fff; border: solid 2px #0000ff; color: #000000; border-radius: 10px; padding: 10px 30px; text-decoration: none; font-size: 1em; transition: all .3s ease 0s; } ';
+  elemStyle.textContent += 'ytm-app[id="app"] ~ [id^="loop_on"] { position: fixed; bottom: 0px; right: 20px; z-index: 9999; display: inline-block; background-color: #fff; border: solid 2px #ff0000; color: #000000; border-radius: 10px; padding: 10px 30px; text-decoration: none; font-size: 1em; transition: all .3s ease 0s; } ';
+  elemStyle.textContent += 'ytm-app[id="app"] ~ [id^="loop_"]:hover { color: #000000; background-color: #fff; transform: scale(1.2); } ';
   // ==========================================================
 
   // eslint-disable-next-line no-unused-vars
