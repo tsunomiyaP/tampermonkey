@@ -137,7 +137,9 @@
     const stats = ytPlayer.getVideoStats() || {};
     console.log('> youtube Live status : ' + stats.live);
     if (stats.live === 'live' || stats.live === 'dvr' || stats.live === 'lp') {
-      //
+      // 
+      document.querySelector('[id^="loop_off"]').style.display = 'none';
+      document.querySelector('[id^="loop_on"]').style.display = 'none';
     } else {
       if (!isNuN(document.querySelector('#loop_on'))) { return false; }
       console.log('> youtube movie create loop button');
