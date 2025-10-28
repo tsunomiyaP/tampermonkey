@@ -18,7 +18,7 @@
 
   // ==========================================================
   // 変数宣言
-  const manager = 'ytd-app, ytm-app[id="app"]';
+  const manager = 'ytd-page-manager#page-manager, ytm-app[id="app"]';
   const player = 'div#movie_player.html5-video-player';
   const regWatch = '/watch|/live';
   // 可変数
