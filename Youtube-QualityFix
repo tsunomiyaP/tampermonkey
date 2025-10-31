@@ -21,7 +21,7 @@
   const player = 'div#movie_player.html5-video-player';
   // youtube 画質 [0 : 1080, 1 : 720, 2 : 480, 3 : 360, 4 : 240, 5 : 144, 6 : auto]
   const qualitys = ['hd1080', 'hd720', 'large', 'medium', 'small', 'tiny', 'auto'];
-  const target = 2;
+  const target = 1;
   const itemsArray = [
     { device: 'www.youtube.com', path: '/watch|/live' },
     { device: 'm.youtube.com', path: '/watch|/live' },
