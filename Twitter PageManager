@@ -17,7 +17,6 @@
   // ==========================================================
   // 変数宣言
   const tweet_main = 'main[role="main"]';
-  const tweet_row_columns = 'div[aria-label*="タイムライン"] > div';
   const tweet_items_column = 'div[data-testid="cellInnerDiv"]';
   const regStatus = 'status';
   const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
@@ -149,8 +148,9 @@
     const status = new RegExp(regStatus, 'gis');
     if (status.test(location.pathname)) { return false; }
 
-    for (const item of document.querySelectorAll(tweet_items_column + ':not(.remove_item)')) {
+    for (const item of document.querySelectorAll(tweet_items_column + ':not(.andT)')) {
       if (item.classList.contains('remove_item')) { continue; }
+      item.classList.add('andT');
 
       const mode = {'pc': {}, 'mobile': {}};
       // pc
@@ -189,14 +189,11 @@
 
     removeElements();
 
-    for await (const row of document.querySelectorAll(tweet_row_columns)) {
-      const config_tweet = { 'attributes': false, 'childList': true, 'subtree': true };
-      const obs_tweet = new MutationObserver(async () => {
-        // tweet 非表示
-        removeElements();
-      });
-      obs_tweet.observe(row, config_tweet);
-    }
+    const config_tweet = { 'attributes': false, 'childList': true, 'subtree': true };
+    const obs_tweet = new MutationObserver(async () => {
+      removeElements();
+    });
+    obs_tweet.observe(document, config_tweet);
   };
   const changeUrl = async () => {
     let href;
