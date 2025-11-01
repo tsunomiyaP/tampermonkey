@@ -239,8 +239,11 @@
         href = location.pathname + location.search;
         if (!isNuN(moYt)) { moYt.disconnect(); }
 
-        await new Promise(resolve => setTimeout(resolve, waitTime * 10));
-        reWatch();
+        const watcher = new RegExp(regWatch, 'gis');
+        if (watcher) {
+          await new Promise(resolve => setTimeout(resolve, waitTime * 10));
+          reWatch();
+        }
       }
     });
     url_obs.observe(document, url_config);
