@@ -36,7 +36,7 @@
   ];
   const regWatch = '^/watch|^/live';
   const regSearch = '^/results';
-  const regChannel = '^/@.+|^/channel/|^/c/|^/user/|^/u/';
+  const regChannel = '^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+';
   const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
   // 可変数
   let userName = window.sessionStorage.getItem('channel') || '';
@@ -383,6 +383,11 @@
         // console.log('Before:', href);
         // console.log('After:', location.href);
         href = href_path;
+
+        const path = new RegExp('(^/$)|(^/feed/subscriptions)|(^/watch|^/live)|(^/results)|(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)', 'gis');
+        const reg = path.test(location.pathname);
+        if (!reg) { return false; }
+
         // 動画エリア初期非表示
         for (const yt of itemsArray) {
           elemMov.textContent += yt.area + ' { display: none; } ';
