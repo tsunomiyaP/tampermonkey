@@ -227,14 +227,25 @@
     const device = 'www.youtube.com' !== location.hostname ? mode.mobile : mode.pc;
     const youtubeItem = {};
 
+    const ytColumns = {
+      'pc': [ // chrome, firefox
+        'yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container span',
+        'yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span'
+      ],
+      'mobile': [ // chrome, firefox
+        'div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline > span, ytm-media-item div.media-item-info .media-item-headline > span[role="text"], div.details h3.media-item-headline > span',
+        'div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline > span, ytm-media-item div.media-item-info ytm-badge-and-byline-renderer > span > span, div.details ytm-badge-and-byline-renderer span.YtmBadgeAndBylineRendererItemByline > span'
+      ]
+    };
+
     if (watcher.test(location.pathname)) {
       await waitQuerySelector('div#owner ytd-video-owner-renderer ytd-channel-name#channel-name #text-container > yt-formatted-string#text[title], ytm-slim-owner-renderer h3.slim-owner-channel-name span');
       // pc 動画
-      mode.pc.ytTitle = isNuN(item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container span')) ? '' : item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container span').textContent;
-      mode.pc.userNam = isNuN(item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span')) ? '' : item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span').textContent;
+      mode.pc.ytTitle = isNuN(item.querySelector(ytColumns.pc[0])) ? '' : item.querySelector(ytColumns.pc[0]).textContent;
+      mode.pc.userNam = isNuN(item.querySelector(ytColumns.pc[1])) ? '' : item.querySelector(ytColumns.pc[1]).textContent;
       // mobile
-      mode.mobile.ytTitle = isNuN(item.querySelector('ytm-media-item div.media-item-info .media-item-headline > span[role="text"], div.details h3.media-item-headline > span, div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline > span')) ? '' : item.querySelector('ytm-media-item div.media-item-info .media-item-headline > span[role="text"], div.details h3.media-item-headline > span, div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline > span').textContent;
-      mode.mobile.userNam = isNuN(item.querySelector('ytm-media-item div.media-item-info ytm-badge-and-byline-renderer > span > span, div.details ytm-badge-and-byline-renderer span.YtmBadgeAndBylineRendererItemByline > span, div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline > span')) ? '' : item.querySelector('ytm-media-item div.media-item-info ytm-badge-and-byline-renderer > span > span, div.details ytm-badge-and-byline-renderer span.YtmBadgeAndBylineRendererItemByline > span, div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline > span').textContent;
+      mode.mobile.ytTitle = isNuN(item.querySelector(ytColumns.mobile[0])) ? '' : item.querySelector(ytColumns.mobile[0]).textContent;
+      mode.mobile.userNam = isNuN(item.querySelector(ytColumns.mobile[1])) ? '' : item.querySelector(ytColumns.mobile[1]).textContent;
 
       const strData = device;
       youtubeItem.ytTitle = strData.ytTitle;
@@ -254,11 +265,11 @@
       if (user !== youtubeItem.userNam) { item.classList.add('remove_item'); }
     } else {
       // pc 動画
-      mode.pc.ytTitle = isNuN(item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container span')) ? '' : item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container span').textContent;
-      mode.pc.userNam = isNuN(item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span')) ? '' : item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span').textContent;
+      mode.pc.ytTitle = isNuN(item.querySelector(ytColumns.pc[0])) ? '' : item.querySelector(ytColumns.pc[0]).textContent;
+      mode.pc.userNam = isNuN(item.querySelector(ytColumns.pc[1])) ? '' : item.querySelector(ytColumns.pc[1]).textContent;
       // mobile
-      mode.mobile.ytTitle = isNuN(item.querySelector('div.details h3.media-item-headline > span, div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline > span')) ? '' : item.querySelector('div.details h3.media-item-headline > span, div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline > span').textContent;
-      mode.mobile.userNam = isNuN(item.querySelector('div.details ytm-badge-and-byline-renderer span.YtmBadgeAndBylineRendererItemByline > span, div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline > span')) ? '' : item.querySelector('div.details ytm-badge-and-byline-renderer span.YtmBadgeAndBylineRendererItemByline > span, div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline > span').textContent;
+      mode.mobile.ytTitle = isNuN(item.querySelector(ytColumns.mobile[0])) ? '' : item.querySelector(ytColumns.mobile[0]).textContent;
+      mode.mobile.userNam = isNuN(item.querySelector(ytColumns.mobile[1])) ? '' : item.querySelector(ytColumns.mobile[1]).textContent;
 
       const strData = device;
       youtubeItem.ytTitle = strData.ytTitle;
