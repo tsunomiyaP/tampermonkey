@@ -267,15 +267,13 @@
       youtubeItem.userNam = strData.userNam;
     }
 
-    if (isNuN(youtubeItem.ytTitle)) { return false; }
-    if (isNuN(youtubeItem.userNam)) { return false; }
-
     const words = isNuN(abc) ? [] : abc.hideword;
     const excludes = isNuN(abc) ? [] : abc.execludeWords;
 
     for (const word of words) {
       const regw = new RegExp(word, 'gis');
-      if (regw.test(youtubeItem.ytTitle) || regw.test(youtubeItem.userNam)) {
+      const txt = youtubeItem.userNam + youtubeItem.ytTitle;
+      if (regw.test(txt)) {
         item.classList.add('remove_item');
         youtubeItem.word = word;
         console.log('> hide all words : ', youtubeItem);
@@ -284,7 +282,8 @@
     }
     for (const word of excludes) {
       const regw = new RegExp(word, 'gis');
-      if (regw.test(youtubeItem.ytTitle) || regw.test(youtubeItem.userNam)) {
+      const txt = youtubeItem.userNam + youtubeItem.ytTitle;
+      if (regw.test(txt)) {
         item.classList.remove('remove_item');
         // console.log('> un hide words : ', youtubeItem);
         break;
@@ -448,3 +447,4 @@
   // URLが変更されたとき
   changeUrl();
 })();
+
