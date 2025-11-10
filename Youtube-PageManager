@@ -191,10 +191,12 @@
     }
   };
 
-  const channelManager = async (name) => {
+  const channelManager = async (userName) => {
     // youtube Area Manager
     // console.log(pathChannelEtc.length);
-    window.sessionStorage.setItem('channel', name);
+    const flag = isNuN(excChannel) ? false : new RegExp(excChannel, 'gis').test(location.pathname);
+    if (flag) { return false; }
+    window.sessionStorage.setItem('channel', userName);
     const pathChannelEtc = location.pathname.split(/@|\/channel\/|\/c\/|\/user\/|\/u\//)[1].split('/');
 
     if (1 === pathChannelEtc.length) {
@@ -350,7 +352,7 @@
       const ytMutation = new MutationObserver(async () => {
         if (searcher.test(location.pathname)) {
           console.log('> ytMovie search result');
-  
+
           for (const result of ytArea.querySelectorAll('ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list')) {
             for (const ytItem of result.children) {
               scaleShowMovie(ytArea, ytItem);
@@ -358,7 +360,7 @@
           }
         } else {
           console.log('> ytMovie check result...');
-  
+
           for (const ytItem of ytArea.children) {
             scaleShowMovie(ytArea, ytItem);
           }
@@ -379,24 +381,24 @@
         // console.log('After:', location.href);
         href = href_path;
 
-        const channel = new RegExp(regChannel, 'gis');
-        if (channel.test(location.pathname)) {
-          const pathChannel = location.pathname.split(/@|\/channel\/|\/c\/|\/user\/|\/u\//)[1].split('/')[0];
-          if (userName !== pathChannel) { userName = pathChannel; }
-          console.log('> youtube channel name...', userName);
-        } else {
-          // チャンネルではなくなったら、ユーザー開放
-          userName = '';
-        }
         const path = new RegExp('(^/$)|(^/feed/subscriptions)|(^/watch|^/live)|(^/results)|(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)', 'gis');
-        const flag = isNuN(excChannel) ? false : new RegExp(excChannel, 'gis').test(location.pathname);
         const reg = path.test(location.pathname);
         if (!reg) { return false; }
-        if (flag) { return false; }
 
         // 動画エリア初期非表示
         for (const yt of itemsArray) {
           elemMov.textContent += yt.area + ' { display: none; } ';
+        }
+
+        // channel videos or stream
+        const channel = new RegExp(regChannel, 'gis');
+        if (channel.test(location.pathname)) {
+          const pathChannel = location.pathname.split(/@|\/channel\/|\/c\/|\/user\/|\/u\//)[1].split('/')[0];
+          if (userName !== pathChannel) { userName = pathChannel; channelManager(userName); }
+          console.log('> youtube channel name...', userName);
+        } else {
+          // チャンネルではなくなったら、ユーザー開放
+          userName = '';
         }
 
         // 動画URLから「t=」パラメータを排除
@@ -418,12 +420,6 @@
 
         // youtube Area Manager
         await waitQuerySelector(manager);
-
-        // channel replace
-        if (channel.test(location.pathname)) {
-          const pathChannel = location.pathname.split(/@|\/channel\/|\/c\/|\/user\/|\/u\//)[1].split('/')[0];
-          if (userName !== pathChannel) { channelManager(userName); }
-        }
 
         // movie contents
         const ytArray = itemsArray.filter((yt) => location.hostname === yt.device);
