@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube PageManager
 // @namespace    http://tampermonkey.net/
-// @version      4.0
+// @version      4.2
 // @description  try to take over the world!
 // @author       You
 // @match        https://*.youtube.com/*
@@ -41,7 +41,6 @@
   const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
   // 可変数
   let userName = window.sessionStorage.getItem('channel') || '';
-  let moScal;
   // ==========================================================
   // 静的style適用エリア
   const elemStyle = document.createElement('style');
@@ -322,56 +321,33 @@
     }
   };
   const initial = async (area) => {
-    if (!isNuN(moScal)) { moScal.disconnect(); }
+    const ytArea = await waitQuerySelector(area);
+    const ytMovies = ytArea.querySelectorAll('.target');
+    for (const ytTarget of ytMovies) {
+      ytTarget.classList.remove('target', 'show');
+    }
+    await new Promise(resolve => setTimeout(resolve, waitTime * 2));
 
-    let ytArea = await waitQuerySelector(area);
-
-    const watcher = new RegExp(regWatch, 'gis');
     const searcher = new RegExp(regSearch, 'gis');
-    if (searcher.test(location.pathname)) {
-      console.log('> ytMovie search result');
+    const config = { 'attributes': false, 'childList': true, 'subtree': true };
+    const moScal = new MutationObserver(async () => {
+      if (searcher.test(location.pathname)) {
+        console.log('> ytMovie search result');
 
-      for (const result of ytArea.querySelectorAll('ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list')) {
-        for (const ytItem of result.children) {
-          ytItem.classList.remove('target');
-          ytItem.classList.remove('show');
-
-          scaleShowMovie(area, ytItem);
-        }
-      }
-
-      const config = { 'attributes': false, 'childList': true, 'subtree': true };
-      moScal = new MutationObserver(async () => {
-        ytArea = await waitQuerySelector(area);
         for (const result of ytArea.querySelectorAll('ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list')) {
           for (const ytItem of result.children) {
             scaleShowMovie(area, ytItem);
           }
         }
-      });
-      moScal.observe(ytArea, config);
-    } else {
-      console.log('> ytMovie checker...');
-      for (const ytItem of ytArea.children) {
-        ytItem.classList.remove('target');
-        ytItem.classList.remove('show');
+      } else {
+        console.log('> ytMovie check result...');
 
-        scaleShowMovie(area, ytItem);
-      }
-
-      const config = { 'attributes': false, 'childList': true, 'subtree': true };
-      moScal = new MutationObserver(async () => {
-        ytArea = await waitQuerySelector(area);
         for (const ytItem of ytArea.children) {
           scaleShowMovie(area, ytItem);
         }
-      });
-      moScal.observe(ytArea, config);
-    }
-
-    if (watcher.test(location.pathname)) {
-      ytChatArea();
-    }
+      }
+    });
+    moScal.observe(document, config);
   };
   const changeUrl = async () => {
     let href;
@@ -415,7 +391,6 @@
 
         // youtube Area Manager
         await waitQuerySelector(manager);
-        if (!isNuN(moScal)) { moScal.disconnect(); }
 
         // channel replace
         const channel = new RegExp(regChannel, 'gis');
@@ -440,6 +415,10 @@
             console.log('> youtube get ...', path, yt.area);
             await initial(yt.area);
           }
+        }
+
+        if (watcher.test(location.pathname)) {
+          ytChatArea();
         }
         await new Promise(resolve => setTimeout(resolve, waitTime * 10));
 
