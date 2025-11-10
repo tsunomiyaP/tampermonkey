@@ -37,6 +37,7 @@
   const regWatch = '^/watch|^/live';
   const regSearch = '^/results';
   const regChannel = '^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+';
+  const excChannel = '@tsunomiyaP|UCSsBxdA7yg523PegCT7O7Mg';
   const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
   // 可変数
   let userName = window.sessionStorage.getItem('channel') || '';
@@ -327,8 +328,7 @@
 
     const watcher = new RegExp(regWatch, 'gis');
     const searcher = new RegExp(regSearch, 'gis');
-    const device = 'www.youtube.com' === location.hostname || 'm.youtube.com' === location.hostname ? true : false;
-    if (device && searcher.test(location.pathname)) {
+    if (searcher.test(location.pathname)) {
       console.log('> ytMovie search result');
 
       for (const result of ytArea.querySelectorAll('ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list')) {
@@ -352,9 +352,6 @@
       moScal.observe(ytArea, config);
     } else {
       console.log('> ytMovie checker...');
-      if (watcher.test(location.pathname)) {
-        ytChatArea();
-      }
       for (const ytItem of ytArea.children) {
         ytItem.classList.remove('target');
         ytItem.classList.remove('show');
@@ -371,6 +368,10 @@
       });
       moScal.observe(ytArea, config);
     }
+
+    if (watcher.test(location.pathname)) {
+      ytChatArea();
+    }
   };
   const changeUrl = async () => {
     let href;
@@ -385,8 +386,10 @@
         href = href_path;
 
         const path = new RegExp('(^/$)|(^/feed/subscriptions)|(^/watch|^/live)|(^/results)|(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)', 'gis');
+        const flag = isNuN(excChannel) ? false : new RegExp(excChannel, 'gis').test(location.pathname);
         const reg = path.test(location.pathname);
         if (!reg) { return false; }
+        if (flag) { return false; }
 
         // 動画エリア初期非表示
         for (const yt of itemsArray) {
