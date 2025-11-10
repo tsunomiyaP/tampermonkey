@@ -289,7 +289,7 @@
       }
     }
   };
-  const scaleShowMovie = async (area, item) => {
+  const scaleShowMovie = async (ytArea, item) => {
     if (!item.classList.contains('target')) {
       item.classList.add('target');
       // console.log('test2 1件ずつ', item);
@@ -299,7 +299,6 @@
       item.classList.add('minScale');
 
       document.addEventListener('click', async (e) => {
-        const ytArea = await waitQuerySelector(area);
         if (e.target.classList.contains('target')) {
 
           const device = 'www.youtube.com' === location.hostname || 'm.youtube.com' === location.hostname ? true : false;
@@ -321,8 +320,8 @@
     }
   };
   const initial = async (area) => {
-    const ytArea = await waitQuerySelector(area);
-    const ytMovies = ytArea.querySelectorAll('.target');
+    const yt = await waitQuerySelector(area);
+    const ytMovies = yt.querySelectorAll('.target');
     for (const ytTarget of ytMovies) {
       ytTarget.classList.remove('target', 'show');
     }
@@ -330,24 +329,43 @@
 
     const searcher = new RegExp(regSearch, 'gis');
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
-    const moScal = new MutationObserver(async () => {
+    const ytAreas = document.querySelectorAll(area);
+    for (const ytArea of ytAreas) {
       if (searcher.test(location.pathname)) {
         console.log('> ytMovie search result');
 
         for (const result of ytArea.querySelectorAll('ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list')) {
           for (const ytItem of result.children) {
-            scaleShowMovie(area, ytItem);
+            scaleShowMovie(ytArea, ytItem);
           }
         }
       } else {
         console.log('> ytMovie check result...');
 
         for (const ytItem of ytArea.children) {
-          scaleShowMovie(area, ytItem);
+          scaleShowMovie(ytArea, ytItem);
         }
       }
-    });
-    moScal.observe(document, config);
+
+      const ytMutation = new MutationObserver(async () => {
+        if (searcher.test(location.pathname)) {
+          console.log('> ytMovie search result');
+
+          for (const result of ytArea.querySelectorAll('ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list')) {
+            for (const ytItem of result.children) {
+              scaleShowMovie(ytArea, ytItem);
+            }
+          }
+        } else {
+          console.log('> ytMovie check result...');
+
+          for (const ytItem of ytArea.children) {
+            scaleShowMovie(ytArea, ytItem);
+          }
+        }
+      });
+      ytMutation.observe(ytArea, config);
+    }
   };
   const changeUrl = async () => {
     let href;
