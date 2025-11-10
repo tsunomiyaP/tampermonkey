@@ -167,14 +167,12 @@
       xItem.twTextA = strData.twTextA;
       xItem.userNam = strData.userNam;
 
-      if (isNuN(xItem.twTextA)) { return false; }
-      if (isNuN(xItem.userNam)) { return false; }
-
       const words = isNuN(abc) ? [] : abc.hideword;
 
+      const txt = xItem.userNam + xItem.twTextA;
       for (const word of words) {
         const regw = new RegExp(word, 'gis');
-        if (regw.test(xItem.twTextA) || regw.test(xItem.userNam)) {
+        if (regw.test(txt)) {
           item.classList.add('remove_item');
           xItem.word = word;
           console.log('> hide all words : ', xItem);
