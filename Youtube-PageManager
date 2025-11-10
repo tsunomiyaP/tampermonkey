@@ -102,7 +102,7 @@
   // 初期表示
   for (const yt of itemsArray) {
     // 非表示
-    elemStyle.textContent += yt.area + ' .target:not(.show) { display: none !important; visibility: hidden !important; } ';
+    elemStyle.textContent += yt.area + ' .target:not(.show) { display: none !important; /* visibility: hidden !important; **/ } ';
     // 拡大縮小
     elemStyle.textContent += yt.area + ' .target.minScale:not(:has(div[class*="subheader"i])) > * { ' + yt.stylus + ' } ';
     // [ショート]動画 削除
@@ -447,4 +447,5 @@
   // URLが変更されたとき
   changeUrl();
 })();
+
 
