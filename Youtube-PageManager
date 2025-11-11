@@ -269,9 +269,10 @@
       youtubeItem.userNam = strData.userNam;
     }
 
-    const words = isNuN(abc) ? [] : abc.hideword;
-    const excludes = isNuN(abc) ? [] : abc.execludeWords;
+    const words = isNuN(abc) ? '' : abc.hideword;
+    const excludes = isNuN(abc) ? '' : abc.execludeWords;
 
+    if (isNuN(words)) { return false; }
     const txt = youtubeItem.userNam + youtubeItem.ytTitle;
     for (const word of words) {
       const regw = new RegExp(word, 'gis');
@@ -282,6 +283,8 @@
         break;
       }
     }
+
+    if (isNuN(excludes)) { return false; }
     for (const word of excludes) {
       const regw = new RegExp(word, 'gis');
       if (regw.test(txt)) {
@@ -321,6 +324,22 @@
       });
     }
   };
+  const ytMovieList = async (area) => {
+    const searcher = new RegExp(regSearch, 'gis');
+    if (searcher.test(location.pathname)) {
+      console.log('> ytMovie search result');
+      for (const result of area.querySelectorAll('ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list')) {
+        for (const item of result.children) {
+          scaleShowMovie(area, item);
+        }
+      }
+    } else {
+      console.log('> ytMovie check result...');
+      for (const item of area.children) {
+        scaleShowMovie(area, item);
+      }
+    }
+  };
   const initial = async (area) => {
     const yt = await waitQuerySelector(area);
     const ytMovies = yt.querySelectorAll('.target');
@@ -329,43 +348,15 @@
     }
     await new Promise(resolve => setTimeout(resolve, waitTime * 2));
 
-    const searcher = new RegExp(regSearch, 'gis');
-    const config = { 'attributes': false, 'childList': true, 'subtree': true };
     const ytAreas = document.querySelectorAll(area);
     for (const ytArea of ytAreas) {
-      if (searcher.test(location.pathname)) {
-        console.log('> ytMovie search result');
-
-        for (const result of ytArea.querySelectorAll('ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list')) {
-          for (const ytItem of result.children) {
-            scaleShowMovie(ytArea, ytItem);
-          }
-        }
-      } else {
-        console.log('> ytMovie check result...');
-
-        for (const ytItem of ytArea.children) {
-          scaleShowMovie(ytArea, ytItem);
-        }
-      }
+      // initial
+      ytMovieList(ytArea);
 
       const ytMutation = new MutationObserver(async () => {
-        if (searcher.test(location.pathname)) {
-          console.log('> ytMovie search result');
-
-          for (const result of ytArea.querySelectorAll('ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list')) {
-            for (const ytItem of result.children) {
-              scaleShowMovie(ytArea, ytItem);
-            }
-          }
-        } else {
-          console.log('> ytMovie check result...');
-
-          for (const ytItem of ytArea.children) {
-            scaleShowMovie(ytArea, ytItem);
-          }
-        }
+        ytMovieList(ytArea);
       });
+      const config = { 'attributes': false, 'childList': true, 'subtree': true };
       ytMutation.observe(ytArea, config);
     }
   };
