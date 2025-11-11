@@ -201,8 +201,10 @@
 
     if (1 === pathChannelEtc.length) {
       if (!isNuN(document.querySelector('div[role="tablist"i] > yt-tab-shape[tab-title="ホーム"i]'))) { document.querySelector('div[role="tablist"i] > yt-tab-shape[tab-title="ホーム"i]').ariaSelected = false; }
+      await new Promise(resolve => setTimeout(resolve, waitTime * 4));
+      await waitQuerySelector('div[role="tablist"i] > yt-tab-shape[role="tab"i][tab-title="検索"i]');
+      // await waitQuerySelector('div[role="tablist"i] > :is(yt-tab-shape[role="tab"i][tab-title="ライブ"i], yt-tab-shape[role="tab"i][tab-title="動画"i], yt-tab-shape[role="tab"i][tab-title="検索"i])');
 
-      await waitQuerySelector('div[role="tablist"i] > yt-tab-shape[role="tab"i][tab-title="ライブ"i], div[role="tablist"i] > yt-tab-shape[role="tab"i][tab-title="動画"i]');
       if (!isNuN(document.querySelector('div[role="tablist"i] > yt-tab-shape[role="tab"i][tab-title="ライブ"i]'))) {
         // document.querySelector('div[role="tablist"i] > yt-tab-shape[role="tab"i][tab-title="ライブ"i]').click();
         location.replace(location.pathname + '/streams');
