@@ -167,8 +167,9 @@
       xItem.twTextA = strData.twTextA;
       xItem.userNam = strData.userNam;
 
-      const words = isNuN(abc) ? [] : abc.hideword;
+      const words = isNuN(abc) ? '' : abc.hideword;
 
+      if (isNuN(words)) { return false; }
       const txt = xItem.userNam + xItem.twTextA;
       for (const word of words) {
         const regw = new RegExp(word, 'gis');
