@@ -59,9 +59,6 @@
   // ツイート
   elemStyle.textContent += 'div[aria-label="タイムライン: 会話"i] article[data-testid="tweet"i] > div > div > div[class="css-175oi2r r-18u37iz"i] > div > div[class="css-175oi2r r-1bimlpy r-f8sm7e r-m5arl1 r-16y2uox r-14gqq1x"i] { visibility: hidden !important; } ';
   elemStyle.textContent += 'div[aria-label="タイムライン: 会話"i] article[data-testid="tweet"i] > div > div > div[class="css-175oi2r"i] > div[class="css-175oi2r r-18u37iz"i] > * { visibility: hidden !important; } ';
-  elemStyle.textContent += 'div[aria-label="タイムライン: 会話"i] div[data-testid="cellInnerDiv"i] > div[class="css-175oi2r r-j5o65s r-qklmqi r-1adg3ll r-1ny4l3l"i]:not(:has(article[data-testid="tweet"i])) { display: none !important; } ';
-  // ツイート内引用
-  elemStyle.textContent += 'div[aria-label="タイムライン: 会話"i] > div > div[data-testid="cellInnerDiv"i]:nth-of-type(n+2):has([data-testid="tweet"i] > div > div > div > div > div[aria-labelledby][id]) { display: none !important; } ';
   // おすすめユーザー
   elemStyle.textContent += 'div:is([aria-label="タイムライン: ホームタイムライン"i],[aria-label$="さんのポスト"i],[aria-label="タイムライン: 話題を検索"i],[aria-label="タイムライン: タイムラインを検索"i]) > div > ' + tweet_items_column + ':is(:has(h2[role="heading"i].css-175oi2r.r-18u37iz.r-7cikom),:has(button[data-testid="UserCell"i]),:has(a[href*="/i/connect_people"i][role="link"i]),:has(a[href$="&src=hashtag_click&f=user"i][role="link"i]),:has(a[href$="&src=trend_click&f=user"i][role="link"i])) { display: none !important; } ';
   // 広告
