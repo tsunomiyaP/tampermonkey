@@ -41,6 +41,7 @@
   const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
   // 可変数
   let userName = window.sessionStorage.getItem('channel') || '';
+  let ytMutation;
   // ==========================================================
   // 静的style適用エリア
   const elemStyle = document.createElement('style');
@@ -353,7 +354,7 @@
       // initial
       ytMovieList(ytArea);
 
-      const ytMutation = new MutationObserver(async () => {
+      ytMutation = new MutationObserver(async () => {
         ytMovieList(ytArea);
       });
       const config = { 'attributes': false, 'childList': true, 'subtree': true };
@@ -371,6 +372,8 @@
         // console.log('Before:', href);
         // console.log('After:', location.href);
         href = href_path;
+
+        if (!isNuN(ytMutation)) { ytMutation.disconnect(); }
 
         const path = new RegExp('(^/$)|(^/feed/subscriptions)|(^/watch|^/live)|(^/results)|(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)', 'gis');
         const reg = path.test(location.pathname);
