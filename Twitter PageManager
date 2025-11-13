@@ -21,6 +21,7 @@
   const regStatus = 'status';
   const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
   // 可変数
+  let twMutation;
   // ==========================================================
   // 静的style適用エリア
   const elemStyle = document.createElement('style');
@@ -188,10 +189,10 @@
     removeElements();
 
     const config_tweet = { 'attributes': false, 'childList': true, 'subtree': true };
-    const obs_tweet = new MutationObserver(async () => {
+    twMutation = new MutationObserver(async () => {
       removeElements();
     });
-    obs_tweet.observe(document, config_tweet);
+    twMutation.observe(document, config_tweet);
   };
   const changeUrl = async () => {
     let href;
@@ -204,6 +205,8 @@
         // console.log('Before:', href);
         // console.log('After:', location.href);
         href = href_path;
+
+        if (!isNuN(twMutation)) { twMutation.disconnect(); }
 
         // style 初期化
         elemDom.textContent = '';
