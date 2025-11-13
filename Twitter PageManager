@@ -36,7 +36,7 @@
   document.head.insertAdjacentElement('beforeend', elemTweet);
 
   elemStyle.textContent += '.remove_item { display: none !important; } ';
-  elemStyle.textContent += '* { color: rgba(0, 0, 0, 1) !important; background-color: rgba(255, 255, 255, 1) !important; backdrop-filter: none !important; } ';
+  elemStyle.textContent += '*:not(:is(div[class="css-175oi2r r-633pao r-u8s1d r-dkhcqf r-axxi2z r-18jm5s1 r-13qz1uu"]:has([role="status"]), div[class="css-175oi2r r-633pao r-u8s1d r-dkhcqf r-axxi2z r-18jm5s1 r-13qz1uu"]:has([role="status"]) *, button[aria-label="この動画を再生する"], button[aria-label="この動画を再生する"] *)) { color: rgba(0, 0, 0, 1) !important; background-color: rgba(255, 255, 255, 1) !important; backdrop-filter: none !important; } ';
   // 画面非表示
   // サイドバー
   elemStyle.textContent += 'a[href="/i/grok"i] { display: none !important; } ';
