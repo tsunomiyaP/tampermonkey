@@ -21,6 +21,7 @@
   const isChatMode = false;
   const scale = 'scale(0.8)';
   const waitTime = 500;
+  const waitNums = [1, 2]; // pc, mobile
   const manager = 'ytd-app, ytm-app[id="app"i]';
   const itemsArray = [
     { device: 'www.youtube.com', path: '^/$', area: '[page-subtype="home"i] div#primary > ytd-rich-grid-renderer > div#contents', stylus: 'transform: ' + scale + ' !important; pointer-events: none !important;' },
@@ -203,7 +204,8 @@
 
     if (1 === pathChannelEtc.length) {
       if (!isNuN(document.querySelector('div[role="tablist"i] > yt-tab-shape[tab-title="ホーム"i]'))) { document.querySelector('div[role="tablist"i] > yt-tab-shape[tab-title="ホーム"i]').ariaSelected = false; }
-      await new Promise(resolve => setTimeout(resolve, waitTime * 1));
+      const waitNum = 'www.youtube.com' === location.hostname ? waitNums[0] : waitNums[1];
+      await new Promise(resolve => setTimeout(resolve, waitTime * waitNum));
       // await waitQuerySelector('div[role="tablist"i] > yt-tab-shape[role="tab"i][tab-title="検索"i]');
       await waitQuerySelector('div[role="tablist"i] > :is(yt-tab-shape[role="tab"i][tab-title="ライブ"i], yt-tab-shape[role="tab"i][tab-title="動画"i], yt-tab-shape[role="tab"i][tab-title="検索"i])');
 
@@ -348,7 +350,8 @@
     for (const ytTarget of ytMovies) {
       ytTarget.classList.remove('target', 'show');
     }
-    await new Promise(resolve => setTimeout(resolve, waitTime * 2));
+    const waitNum = 'www.youtube.com' === location.hostname ? waitNums[0] : waitNums[1];
+    await new Promise(resolve => setTimeout(resolve, waitTime * waitNum));
 
     const ytAreas = document.querySelectorAll(area);
     for (const ytArea of ytAreas) {
@@ -430,7 +433,8 @@
         if (watcher.test(location.pathname)) {
           ytChatArea();
         }
-        await new Promise(resolve => setTimeout(resolve, waitTime * 10));
+        const waitNum = 'www.youtube.com' === location.hostname ? waitNums[0] : waitNums[1];
+        await new Promise(resolve => setTimeout(resolve, waitTime * waitNum));
 
         // style 無効化
         elemDom.textContent = '';
@@ -443,4 +447,5 @@
   // URLが変更されたとき
   changeUrl();
 })();
+
 
