@@ -52,8 +52,9 @@
   elemStyle.textContent += 'a[href="/i/monetization"i] { display: none !important; } ';
   elemStyle.textContent += 'a[href*="ads"i] { display: none !important; } ';
   // サイドメニュー おすすめ トレンド
-  elemStyle.textContent += tweet_main + ' div[data-testid="sidebarColumn"i] div[aria-label="トレンド"i] > div > div:nth-child(n+2) { display: none !important; } ';
-  elemStyle.textContent += tweet_main + ' div[data-testid="sidebarColumn"i] div[aria-label="トレンド"i] > div > div > div:nth-child(n+2) { display: none !important; } ';
+  elemStyle.textContent += tweet_main + ' div[data-testid="sidebarColumn"i] div[aria-label="トレンド"i] > div > div:not(:has(form[aria-label="検索"i])) { display: none !important; } ';
+  // elemStyle.textContent += tweet_main + ' div[data-testid="sidebarColumn"i] div[aria-label="トレンド"i] > div > div:nth-child(n+2) { display: none !important; } ';
+  // elemStyle.textContent += tweet_main + ' div[data-testid="sidebarColumn"i] div[aria-label="トレンド"i] > div > div > div:nth-child(n+2) { display: none !important; } ';
   // トレンド
   elemStyle.textContent += '[aria-label="タイムライン: 話題を検索"i] > div > div:nth-of-type(n+1):nth-of-type(-n+3) { display: none !important; } ';
   elemStyle.textContent += '[aria-label="タイムライン: 話題を検索"i] [data-testid="cellInnerDiv"i]:is(:has([data-testid="trend"i] > div.css-175oi2r.r-16y2uox.r-1t982j2.r-1b3ntt7.r-bnwqim),:has([data-testid="UserAvatar-Container-unknown"i]),:has([data-testid="tweet"i])) { display: none !important; } ';
