@@ -73,6 +73,7 @@
 
   // 動画
   elemStyle.textContent += 'ytd-watch-flexy > div#full-bleed-container:not(:has(div#player-container)) { display: none !important; } ';
+  elemStyle.textContent += 'div.player-controls-background-container { display: none !important; } ';
   // 動画再生後の動画一覧非表示
   elemStyle.textContent += 'div[class="html5-endscreen ytp-player-content videowall-endscreen"i], div[class*="ytp-ce-element"i], div[class="ytp-endscreen-content"i] { display: none !important; } ';
   elemStyle.textContent += 'div.ytp-fullscreen-grid { display: none !important; } ';
