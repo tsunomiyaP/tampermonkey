@@ -72,7 +72,7 @@
   elemStyle.textContent += 'div[role="tablist"i] > yt-tab-shape[tab-title="ホーム"i], div[role="tablist"i] > yt-tab-shape[tab-title="ショート"i], div.yt-tab-group-shape-wiz__slider, div.tabGroupShapeSlider { display: none !important; } ';
 
   // 動画
-  elemStyle.textContent += 'ytd-watch-flexy > div#full-bleed-container:not(:has(div#player-container)) { display: none !important; } ';
+  // 画面上影
   elemStyle.textContent += 'div.player-controls-background-container { display: none !important; } ';
   // 動画再生後の動画一覧非表示
   elemStyle.textContent += 'div[class="html5-endscreen ytp-player-content videowall-endscreen"i], div[class*="ytp-ce-element"i], div[class="ytp-endscreen-content"i] { display: none !important; } ';
@@ -443,3 +443,4 @@
   // URLが変更されたとき
   changeUrl();
 })();
+
