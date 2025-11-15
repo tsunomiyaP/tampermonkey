@@ -53,10 +53,6 @@
   elemStyle.textContent += 'a[href*="ads"i] { display: none !important; } ';
   // サイドメニュー おすすめ トレンド
   elemStyle.textContent += tweet_main + ' div[data-testid="sidebarColumn"i] div[aria-label="トレンド"i] > div > div:not(:has(form[aria-label="検索"i])) { display: none !important; } ';
-  // elemStyle.textContent += tweet_main + ' div[data-testid="sidebarColumn"i] div[aria-label="トレンド"i] > div > div:nth-child(n+2) { display: none !important; } ';
-  // elemStyle.textContent += tweet_main + ' div[data-testid="sidebarColumn"i] div[aria-label="トレンド"i] > div > div > div:nth-child(n+2) { display: none !important; } ';
-  // 検索バー
-  elemStyle.textContent += tweet_main + ' div[data-testid="sidebarColumn"i] div[aria-label="トレンド"i] form[aria-label="検索"i] > div > div.r-sdzlij { border-bottom-left-radius: 0px; border-bottom-right-radius: 0px; border-top-left-radius: 0px; border-top-right-radius: 0px; } ';
   // Grok
   elemStyle.textContent += '[data-testid="GrokDrawer"i] { display: none !important; } ';
   // DM
