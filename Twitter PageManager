@@ -71,7 +71,7 @@
   elemStyle.textContent += 'div[aria-label="タイムライン: 会話"i] article[data-testid="tweet"i] > div > div > div[class="css-175oi2r r-18u37iz"i] > div > div[class="css-175oi2r r-1bimlpy r-f8sm7e r-m5arl1 r-16y2uox r-14gqq1x"i] { visibility: hidden !important; } ';
   elemStyle.textContent += 'div[aria-label="タイムライン: 会話"i] article[data-testid="tweet"i] > div > div > div[class="css-175oi2r"i] > div[class="css-175oi2r r-18u37iz"i] > * { visibility: hidden !important; } ';
   // おすすめユーザー
-  elemStyle.textContent += 'div:is([aria-label="タイムライン: ホームタイムライン"i],[aria-label$="さんのポスト"i],[aria-label="タイムライン: 話題を検索"i],[aria-label="タイムライン: タイムラインを検索"i]) > div > ' + tweet_items_column + ':has(:is(div[class="css-175oi2r r-1adg3ll r-1ny4l3l"])) { display: none !important; } ';
+  elemStyle.textContent += 'div:is([aria-label="タイムライン: ホームタイムライン"i],[aria-label$="さんのポスト"i],[aria-label="タイムライン: 話題を検索"i],[aria-label="タイムライン: タイムラインを検索"i]) > div > ' + tweet_items_column + ':has(:is(div[class="css-175oi2r r-1adg3ll r-1ny4l3l"])):not(:has(div[data-testid="trend"])) { display: none !important; } ';
   // 広告 : プロモーション
   elemStyle.textContent += 'div:is([aria-label="タイムライン: ホームタイムライン"i],[aria-label$="さんのポスト"i],[aria-label="タイムライン: 話題を検索"i],[aria-label="タイムライン: タイムラインを検索"i]) > div > ' + tweet_items_column + ':has(div[class="css-175oi2r r-a1ub67"]) { display: none !important; } ';
   // リツイート
