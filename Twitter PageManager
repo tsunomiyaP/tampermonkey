@@ -55,6 +55,8 @@
   elemStyle.textContent += tweet_main + ' div[data-testid="sidebarColumn"i] div[aria-label="トレンド"i] > div > div:not(:has(form[aria-label="検索"i])) { display: none !important; } ';
   // elemStyle.textContent += tweet_main + ' div[data-testid="sidebarColumn"i] div[aria-label="トレンド"i] > div > div:nth-child(n+2) { display: none !important; } ';
   // elemStyle.textContent += tweet_main + ' div[data-testid="sidebarColumn"i] div[aria-label="トレンド"i] > div > div > div:nth-child(n+2) { display: none !important; } ';
+  // 検索バー
+  elemStyle.textContent += tweet_main + ' div[data-testid="sidebarColumn"i] div[aria-label="トレンド"i] form[aria-label="検索"i] > div > div.r-sdzlij { border-bottom-left-radius: 0px; border-bottom-right-radius: 0px; border-top-left-radius: 0px; border-top-right-radius: 0px; } ';
   // Grok
   elemStyle.textContent += '[data-testid="GrokDrawer"i] { display: none !important; } ';
   // DM
@@ -67,6 +69,8 @@
   elemStyle.textContent += 'a[href="/explore/tabs/sports"i] { display: none !important; } ';
   elemStyle.textContent += 'a[href="/explore/tabs/entertainment"i] { display: none !important; } ';
 
+  // 検索バー
+  elemStyle.textContent += tweet_main + ' form[aria-label="検索"i] > div > div.r-sdzlij { border-bottom-left-radius: 0px; border-bottom-right-radius: 0px; border-top-left-radius: 0px; border-top-right-radius: 0px; } ';
   // ツイート
   elemStyle.textContent += 'div[aria-label="タイムライン: 会話"i] article[data-testid="tweet"i] > div > div > div[class="css-175oi2r r-18u37iz"i] > div > div[class="css-175oi2r r-1bimlpy r-f8sm7e r-m5arl1 r-16y2uox r-14gqq1x"i] { visibility: hidden !important; } ';
   elemStyle.textContent += 'div[aria-label="タイムライン: 会話"i] article[data-testid="tweet"i] > div > div > div[class="css-175oi2r"i] > div[class="css-175oi2r r-18u37iz"i] > * { visibility: hidden !important; } ';
