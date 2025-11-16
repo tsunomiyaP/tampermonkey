@@ -146,7 +146,7 @@
       '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(deremkado).*)|デレム(\\s)*カド|(@)*deremkado$',
       // other groups nijisanji
       '@nijisanji|nijisanji(\\s)*en|(@)*nijisanji_en',
-      '#にじ|#NJU',
+      '#にじ|#NIJI|#NJU',
       'oriens|dytica|3skm',
       'くろのわ|くろなん|(@)*chronoir',
       'ろふまお|rof-mao|(@)*rofmao',
