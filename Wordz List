@@ -1,0 +1,203 @@
+// ==UserScript==
+// @name         ABC WordsList
+// @namespace    http://tampermonkey.net/
+// @version      2.2
+// @description  try to take over the world!
+// @author       You
+// @match        https://*.youtube.com/*
+// @match        https://x.com/*
+// @match        https://holo(live)*.holo(live)*pro.com/*
+// @match        https://www.nijisanji.jp/*
+// @exclude      https://music.youtube.com/*
+// @exclude      https://studio.youtube.com/*
+// @grant        none
+// @icon         https://www.google.com/s2/favicons?domain=www.google.com
+// @run-at       document-body
+// @noframes
+// ==/UserScript==
+
+(function() {
+  'use script';
+
+  const words = {
+    hideword: [
+      // ホロスターズ
+      '大道(\\s)*シノヴ',
+      '(?=.*(ホロ(スターズ)*|holo(stars)*))(?=.*(みやび).*)|花咲(\\s)*みやび|hanasaki(\\s)*miyabi|(@)*hanasakimiyabi',
+      '(?=.*(ホロ(スターズ)*|holo(stars)*))(?=.*(イヅル).*)|奏手(\\s)*イヅル|kanade(\\s)*izuru|(@)*kanadeizuru',
+      '(?=.*(ホロ(スターズ)*|holo(stars)*))(?=.*(アルさん).*)|アルランディス|(@)*arurandeisu',
+      '(?=.*(ホロ(スターズ)*|holo(stars)*))(?=.*(りっか).*)|律可|(@)*rikka',
+      '(?=.*(ホロ(スターズ)*|holo(stars)*))(?=.*(鏡見|キラ).*)|鏡見(\\s)*キラ|kagami(\\s)*kira|(@)*kagamikira',
+      '(?=.*(ホロ(スターズ)*|holo(stars)*))(?=.*(アステル|あすてる).*)|アステル(・･)*レダ|astel(\\s)*leda|(@)*astelleda',
+      '(?=.*(ホロ(スターズ)*|holo(stars)*))(?=.*(岸堂|天真).*)|岸堂(\\s)*天真|kishido(\\s)*temma|(@)*kishidotemma',
+      '(?=.*(ホロ(スターズ)*|holo(stars)*))(?=.*(夕刻|ロベル|ろべっさん).*)|夕刻(\\s)*ロベル|yukoku(\\s)*roberu|(@)*yukokuroberu',
+      '(?=.*(ホロ(スターズ)*|holo(stars)*))(?=.*(影山|シエン).*)|影山(\\s)*シエン|kageyama(\\s)*shien|(@)*kageyamashien',
+      '(?=.*(ホロ(スターズ)*|holo(stars)*))(?=.*(荒咬|オウガ).*)|荒咬(\\s)*オウガ|aragami(\\s)*oga|(@)*aragamioga',
+      '(?=.*(ホロ(スターズ)*|holo(stars)*))(?=.*(夜十神|封魔).*)|夜十神(\\s)*封魔|yatogami(\\s)*fuma|(@)*yatogamifuma',
+      '(?=.*(ホロ(スターズ)*|holo(stars)*))(?=.*(羽継|烏有).*)|羽継(\\s)*烏有|utsugi(\\s)*uyu|(@)*utsugiuyu',
+      '(?=.*(ホロ(スターズ)*|holo(stars)*))(?=.*(緋崎|ガンマ).*)|緋崎(\\s)*ガンマ|hizaki(\\s)*gamma|(@)*hizakigamma',
+      '(?=.*(ホロ(スターズ)*|holo(stars)*))(?=.*(水無世|燐央).*)|水無世(\\s)*燐央|minase(\\s)*rio|(@)*minaserio',
+      // en
+      '(?=.*(ホロ(スターズ)*|holo(stars)*))(?=.*(リージス|アルテア|regis|altare).*)|リージス[・･]*(\\s)*アルテア|regis(\\s)*altare|(@)*regisaltare',
+      '(?=.*(ホロ(スターズ)*|holo(stars)*))(?=.*(マグニ|デズモンド|magni|dezmond).*)|マグニ[・･]*(\\s)*デズモンド|magni(\\s)*dezmond|(@)*magnidezmond',
+      '(?=.*(ホロ(スターズ)*|holo(stars)*))(?=.*(アクセル|シリオス|axel|syrios).*)|アクセル[・･]*(\\s)*シリオス|axel(\\s)*syrios|(@)*axelsyrios',
+      '(?=.*(ホロ(スターズ)*|holo(stars)*))(?=.*(ノワール|ヴェスパー|noir|vesper).*)|ノワール[・･]*(\\s)*ヴェスパー|noir(\\s)*vesper|(@)*noirvesper',
+      '(?=.*(ホロ(スターズ)*|holo(stars)*))(?=.*(ガビス|ベッテル|gavis|bettel).*)|ガビス[・･]*(\\s)*ベッテル|gavis(\\s)*bettel|(@)*gavisbettel',
+      '(?=.*(ホロ(スターズ)*|holo(stars)*))(?=.*(マキナ|フレオン|machina|flayon).*)|マキナ[・･]*(\\s)*x[・･]*(\\s)*フレオン|machina(\\s)*x(\\s)*flayon|(@)*machinaxflayon',
+      '(?=.*(ホロ(スターズ)*|holo(stars)*))(?=.*(万象院|ハッカ|banzoin|hakka).*)|万象院(\\s)*ハッカ|banzoin(\\s)*hakka|(@)*banzoinhakka',
+      '(?=.*(ホロ(スターズ)*|holo(stars)*))(?=.*(定水寺|シンリ|josuiji|shinri).*)|定水寺(\\s)*シンリ|josuiji(\\s)*shinri|(@)*josuijishinri',
+      '(?=.*(ホロ(スターズ)*|holo(stars)*))(?=.*(ジュラルド|レクスフォード|jurard|rexford).*)|ジュラルド[・･]*(\\s)*ティー[・･]*(\\s)*レクスフォード|jurard(\\s)*t(\\s*)rexford|(@)*jurardtrexford',
+      '(?=.*(ホロ(スターズ)*|holo(stars)*))(?=.*(goldbullet).*)|ゴールドブレット|(@)*goldbulletch',
+      '(?=.*(ホロ(スターズ)*|holo(stars)*))(?=.*(octavio).*)|オクタビオ|(@)*octavio_en',
+      '(?=.*(ホロ(スターズ)*|holo(stars)*))(?=.*(クリムゾン|ルーズ|crimzon|ruze).*)|クリムゾン[・･]*(\\s)*ルーズ|(@)*crimzonruze',
+      // other groups ホロスターズ
+      'ホロスタ(ーズ)*|holostar(s)*|スタこれ',
+      'uproar|tempus|armis',
+
+      // nijisanji jp
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(月ノ|美兎).*)|月ノ(\\s)*美兎|(@)*tsukinomito',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(渋谷|ハジメ).*)|渋谷(\\s)*ハジメ|(@)*shibuyahajime',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(ギレザレン).*)|ギルザレンⅲ世|(@)*gilzareniii',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(剣持|刀也).*)|剣持(\\s)*刀也|(@)*kenmochitoya',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(伏見|ガク).*)|伏見(\\s)*ガク|(@)*fushimigaku',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(叶).*)|kanae(\\s)*channel|(@)*kanae',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(黛).*)|黛(\\s)*灰|(@)*mayuzumikai',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(卯月|コウ).*)|卯月(\\s)*コウ|(@)*uzukikou',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(花畑|チャイカ).*)|花畑(\\s)*チャイカ|(@)*hanabatakechaika',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(社|築).*)|社築|(@)*yashirokizuku',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(成瀬).*)|成瀬(\\s)*鳴|(@)*narusenaru',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(春崎|エアル).*)|春崎(\\s)*エアル|(@)*harusakiair',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(kuzuha).*)|葛葉|vamp_kuzu|kuzuha(\\s)*channel|(@)*kuzuha',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(神田|笑一).*)|神田(\\s)*笑一|(@)*kandashoichi',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(舞元|啓介).*)|舞元(\\s)*啓介|(@)*maimotokeisuke',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(ジョー|力一).*)|ジョー[・･]*(\\s)*力一|(@)*joerikiichi',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(ベルモンド).*)|ベルモンド[・･]*(\\s)*バンデラス|(@)*belmondbanderas',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(夢追).*)|夢追(\\s)*翔|(@)*yumeoikakeru',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(三枝|明那).*)|三枝(\\s)*明那|(@)*saegusaakina',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(ましろ).*)|ましろ爻|ましろメメ|(@)*mashiromeme',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(エクス).*)|エクス[・･]*(\\s)*アルビオ|(@)*exalbio',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(加賀美|社長).*)|加賀美(\\s)*ハヤト|(@)*kagamihayato',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(シェリン).*)|シェリン[・･]*(\\s)*バーガンディ|(@)*shellinburgundy',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(グウェル).*)|グウェル[・･]*(\\s)*オス[・･]*(\\s)*ガール|(@)*gweluosgar',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(不破).*)|不破(\\s)*湊|(@)*fuwaminato',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(ibrarahim).*)|イブラヒム|(@)*ibrahim$',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(甲斐田).*)|甲斐田(\\s)*晴|(@)*kaidaharu',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(弦月).*)|弦月(\\s)*藤士郎|(@)*genzukitojiro',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(長尾).*)|長尾(\\s)*景|(@)*nagaokei',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(オリバー).*)|オリバー[・･]*(\\s)*エバンス|(@)*oliverevans',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(レオス).*)|レオス[・･]*(\\s)*ヴィンセント|(@)*leosvincent',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(ローレン).*)|ローレン[・･]*(\\s)*イロアス|(@)*laureniroas',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(四季凪).*)|四季凪(\\s)*アキラ|(@)*shikinagiakira',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(セラフ).*)|セラフ[・･]*(\\s)*ダズルガーデン|(@)*seraphdazzlegarden',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(風楽|奏斗).*)|風楽(\\s)*奏斗|(@)*furakanato',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(渡会|雲雀).*)|渡会(\\s)*雲雀|(@)*wataraihibari',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(赤城|ウェン).*)|赤城(\\s)*ウェン|(@)*akagiwen',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(宇佐美|リト).*)|宇佐美(\\s)*リト|(@)*usamirito',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(佐伯|イッテツ).*)|佐伯(\\s)*イッテツ|(@)*saikiittetsu',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(緋八|マナ).*)|緋八(\\s)*マナ|(@)*hibachimana',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(伊波|ライ).*)|伊波(\\s)*ライ|(@)*inamirai',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(小柳|ロウ).*)|小柳(\\s)*ロウ|(@)*koyanagirou',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(星導|ショウ).*)|星導(\\s)*ショウ|(@)*hoshirubesho',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(叢雲|カゲツ).*)|叢雲(\\s)*カゲツ|(@)*murakumokagetsu',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(ミラン).*)|ミラン[・･]*(\\s)*ケストレル|(@)*milankestrel',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(kaisei).*)|魁星|(@)*kaisei$',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(北見|遊征).*)|北見(\\s)*遊征|(@)*kitamiyusei',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(榊|ネス).*)|榊(\\s)*ネス|(@)*sakakiness',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(酒寄|颯馬).*)|酒寄(\\s)*颯馬|(@)*sakayorisoma',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(渚|トラウト).*)|渚(\\s)*トラウト|(@)*nagisatrout',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(五木|左京).*)|五木(\\s)*左京|(@)*itsukisakyo',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(一橋|綾人).*)|一橋(\\s)*綾人|(@)*hitotsubashiayato',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(篠宮).*)|篠宮(\\s)*ゆの|(@)*shinomiyayuno',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(城瀬).*)|城瀬(\\s)*いすみ|(@)*shiroseisumi',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(れお).*)|皇(\\s)*れお|(@)*sumeragireo',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(花籠).*)|花籠(\\s)*つばさ|(@)*hanakagotsubasa',
+      // en
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(アイク|イーヴランド).*)|アイク[・･]*(\\s)*イーヴランド|(@)*ikeeveland',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(ルカ|カネシロ).*)|ルカ[・･]*(\\s)*カネシロ|(@)*lucakaneshiro',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(闇ノ|シュウ).*)|闇ノシュウ|(@)*shuyamino',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(ヴォックス).*)|ヴォックス[・･]*(\\s)*アクマ|(@)*voxakuma',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(アルバーン|ノックス).*)|アルバーン[・･]*(\\s)*ノックス|(@)*albanknox',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(ファルガー|オーヴィド).*)|ファルガー[・･]*(\\s)*オーヴィド|(@)*fulgurovid',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(サニー|ブリスコー).*)|サニー[・･]*(\\s)*ブリスコー|(@)*sonnybrisko',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(浮奇|ヴィオレタ).*)|浮奇[・･]*(\\s)*ヴィオレタ|(@)*ukivioleta',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(レン|ゾット).*)|レン(\\s)*ゾット|(@)*renzotto',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(ドッピオ|ドロップサイト).*)|ドッピオ(\\s)*ドロップサイト|(@)*doppiodropscythe',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(ヘックス|へイワイヤー).*)|ヘックス(\\s)*へイワイヤー|(@)*hexhaywire',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(ヴェール|ヴァーミリオン).*)|ヴェール(\\s)*ヴァーミリオン|(@)*ververmillion',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(ベンタクロウ|ブリンガー).*)|ベンタクロウ(\\s)*ブリンガー|(@)*vantacrowbringer',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(ヴェザリウス|バンデージ).*)|ヴェザリウス(\\s)*バンデージ|(@)*vezaliusbandage',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(ユウ|ウィルソン).*)|ユウ(\\s)*q(\\s)*ウィルソン|(@)*yuqwilson',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(クロード|クローマーク).*)|クロード(\\s)*クローマーク|(@)*claudeclawmark',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(凉舞|バレンウォート).*)|凉舞(\\s)*バレンウォート|(@)*ryomabarrenwort',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(アクシア|クローネ).*)|アクシア[・･]*(\\s)*クローネ|(@)*axiakrone',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(freodore).*)|フリオドール|(@)*freodore$',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(ケイリクス|デボネア).*)|ケイリクス[・･]*(\\s)*デボネア|(@)*kaelixdebonair',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(seible).*)|セイブル|(@)*seible$',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(ジール|ギンジョウカ).*)|ジール[・･]*(\\s)*ギンジョウカ|(@)*zealginjoka',
+      // kr
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(gaon).*)|ガオン|(@)*gaon$',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(ミン|スゥーハ).*)|ミン(\\s)*スゥーハ|(@)*minsuha',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(ohjiyu).*)|オ(\\s)*ジユ|(@)*ohjiyu$',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(hayun).*)|ハ(\\s)*ユン|(@)*hayun$',
+      // id
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(ライ|ガリレイ).*)|ライ(\\s)*ガリレイ|(@)*raigalilei',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(リクサ|ディレンドラ).*)|リクサ(\\s)*ディレンドラ|(@)*riksadhirendra',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(ボンニフィエール|プラナジャ).*)|ボンニフィエール(\\s)*プラナジャ|(@)*bonnivierpranaja',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(deremkado).*)|デレム(\\s)*カド|(@)*deremkado$',
+      // other groups nijisanji
+      '(@)*nijisanji|nijisanji(\\s)*en|(@)*nijisanji_en',
+      '#NJU',
+      'oriens|dytica|3skm',
+      'くろのわ|くろなん|(@)*chronoir',
+      'ろふまお|(@)*rofmao',
+      'ヴォルタクション|(@)*voltaction',
+      'ヴァルツ|VΔLZ|VALZ|ばるつ',
+      '七次元生徒会|(@)*seitokai_07',
+
+      // others vtuber
+      '佃煮のりお|犬山たまき|(@)*norioo_|(@)*noriopro|(@)*noripro',
+      'かなえ先生|(@)*KanaeVCriminologist',
+      '渋谷(\\s)*ハル|渋ハル|(@)*shibuyahal',
+      'コーサカ|(@)*monsterzmate',
+      '天開(\\s)*司|天開塾|(@)*tenkaitsukasa',
+      '歌衣(\\s)*メイカ|メイカちゃんねる|(@)*utaimeika',
+      // others youtube
+      'はじめしゃちょー|(@)*hajimesyacho',
+      'ヒカキン|(@)*hikakin|(@)*seikin',
+      'キヨ。|(@)*kiyoisgod',
+      'ガッチマン|(@)*gatchman666',
+      '岡田斗司夫|(@)*toshiookada0701',
+      '山田玲司|(@)*yamadareiji',
+      'コレコレ|(@)*korekorech',
+      'バキ童|(@)*bakibakidt',
+      'ドズル社|(@)*dozle',
+      'quizknock|(@)*quizknock',
+      // others streamer
+      'twitch.tv/yuyuta0702|ゆゆうた|(@)*(yuyuta0702|yuyutadesu)',
+      'twitch.tv/kenki521|けんき|(@)*(kenki521|kenki521)',
+      'twitch.tv/tachikawabr|立川|(@)*tachikawabr',
+      'twitch.tv/koujikog|小路kog|(@)*(koujikog|kog4586)',
+      'twitch.tv/k4sen|k4sen|(@)*zzxk4sen',
+      'twitch.tv/fps_shaka|釈迦|(@)*(fps_shaka|avashaka)',
+      'twitch.tv/vodkavdk|(ぼどか|ボドカ)|(@)*(vodkachaso|vodkavdk)',
+      'twitch.tv/zackraystream|ザクレイ|(@)*(zackraystream|zackray3056)',
+      'twitch.tv/ixa_inaba|(@)*(ixa_inaba|inaba360)',
+      'twitch.tv/acqua_0316|acqua|(@)*(acqua_0316|acqua316)',
+      'twitch.tv/shirayuki_reid|白雪(\\s)*レイド|(@)*shirayuki_reid',
+      'twitch.tv/5_mario|五月病(\\s)*マリオ|(@)*(5_mario|5mario)',
+      // other groups ...
+      'ぶいすぽ|vspo',
+      'ネオポリス',
+      'ハルヴァロ',
+      'monsterz(\\s)*mate|モンスターズメイト|(@)*mzm_kosaka',
+      'プロゲーマー',
+      // tips
+      '女性向け|考察|解説|中国|朝鮮|韓国',
+      '(?=.*(にじ(さんじ)*|cr|ストリーマー|獅白|kzh|lol|valo|apex))(?=.*(cup|カップ|杯|戦|祭|カスタム|大会|選手権|切り抜き|企画|まとめ).*)|(v(tuber)*最(協)*|ストグラ|スト鯖|mad(\\s)*town|コーチング|スクリム|交流戦|講座|顔合わせ)',
+    ],
+    execludeWords: []
+  };
+
+  window.sessionStorage.removeItem('ABC');
+  window.sessionStorage.setItem('ABC', JSON.stringify(words));
+})();
