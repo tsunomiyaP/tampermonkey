@@ -145,7 +145,7 @@
       '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(ボンニフィエール|プラナジャ).*)|ボンニフィエール(\\s)*プラナジャ|(@)*bonnivierpranaja',
       '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(deremkado).*)|デレム(\\s)*カド|(@)*deremkado$',
       // other groups nijisanji
-      '(@)*nijisanji|nijisanji(\\s)*en|(@)*nijisanji_en',
+      '(@)*nijisanji|(?!.*(【))にじさんじ(?!.*(】))|nijisanji(\\s)*en|(@)*nijisanji_en',
       '#NJU',
       'oriens|dytica|3skm',
       'くろのわ|くろなん|(@)*chronoir',
