@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ABC WordsList
 // @namespace    http://tampermonkey.net/
-// @version      2.2
+// @version      3.0
 // @description  try to take over the world!
 // @author       You
 // @match        https://*.youtube.com/*
@@ -149,7 +149,7 @@
       '#NJU',
       'oriens|dytica|3skm',
       'くろのわ|くろなん|(@)*chronoir',
-      'ろふまお|(@)*rofmao',
+      'ろふまお|rof-mao|(@)*rofmao',
       'ヴォルタクション|(@)*voltaction',
       'ヴァルツ|VΔLZ|VALZ|ばるつ',
       '七次元生徒会|(@)*seitokai_07',
@@ -164,6 +164,7 @@
       // others youtube
       'はじめしゃちょー|(@)*hajimesyacho',
       'ヒカキン|(@)*hikakin|(@)*seikin',
+      'よしなま|(@)*yoshinama0130',
       'キヨ。|(@)*kiyoisgod',
       'ガッチマン|(@)*gatchman666',
       '岡田斗司夫|(@)*toshiookada0701',
@@ -174,11 +175,12 @@
       'quizknock|(@)*quizknock',
       // others streamer
       'twitch.tv/yuyuta0702|ゆゆうた|(@)*(yuyuta0702|yuyutadesu)',
+      'twitch.tv/kato_junichi0817|加藤(\\s)*純一|うんこちゃん|(@)*(junchannel)',
       'twitch.tv/kenki521|けんき|(@)*(kenki521|kenki521)',
       'twitch.tv/tachikawabr|立川|(@)*tachikawabr',
       'twitch.tv/koujikog|小路kog|(@)*(koujikog|kog4586)',
       'twitch.tv/k4sen|k4sen|(@)*zzxk4sen',
-      'twitch.tv/fps_shaka|釈迦|(@)*(fps_shaka|avashaka)',
+      'twitch.tv/fps_shaka|釈迦|(@)*(fps_shaka|avashaka|shaka)',
       'twitch.tv/vodkavdk|(ぼどか|ボドカ)|(@)*(vodkachaso|vodkavdk)',
       'twitch.tv/zackraystream|ザクレイ|(@)*(zackraystream|zackray3056)',
       'twitch.tv/ixa_inaba|(@)*(ixa_inaba|inaba360)',
