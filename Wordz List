@@ -60,7 +60,7 @@
       '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(ギレザレン).*)|ギルザレンⅲ世|(@)*gilzareniii',
       '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(剣持|刀也).*)|剣持(\\s)*刀也|(@)*kenmochitoya',
       '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(伏見|ガク).*)|伏見(\\s)*ガク|(@)*fushimigaku',
-      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(叶).*)|kanae(\\s)*channel|(@)*kanae',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(叶).*)|叶(?!.*(え))|kanae(\\s)*channel|(@)*kanae',
       '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(黛).*)|黛(\\s)*灰|(@)*mayuzumikai',
       '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(卯月|コウ).*)|卯月(\\s)*コウ|(@)*uzukikou',
       '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(花畑|チャイカ).*)|花畑(\\s)*チャイカ|(@)*hanabatakechaika',
