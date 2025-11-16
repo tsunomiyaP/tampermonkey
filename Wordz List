@@ -57,7 +57,7 @@
       // nijisanji jp
       '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(月ノ|美兎).*)|月ノ(\\s)*美兎|(@)*tsukinomito',
       '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(渋谷|ハジメ).*)|渋谷(\\s)*ハジメ|(@)*shibuyahajime',
-      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(ギレザレン).*)|ギルザレンⅲ世|(@)*gilzareniii',
+      '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(ギルザレン).*)|ギルザレンⅲ世|(@)*gilzareniii',
       '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(剣持|刀也).*)|剣持(\\s)*刀也|(@)*kenmochitoya',
       '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(伏見|ガク).*)|伏見(\\s)*ガク|(@)*fushimigaku',
       '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(叶).*)|叶(?!.*(え))|kanae(\\s)*channel|(@)*kanae',
