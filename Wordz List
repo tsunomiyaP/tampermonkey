@@ -173,6 +173,7 @@
       'バキ童|(@)*bakibakidt',
       'ドズル社|(@)*dozle',
       'quizknock|(@)*quizknock',
+      '(ぽこピー|ピーナッツくん)|(@)*pokopea',
       // others streamer
       'twitch.tv/yuyuta0702|ゆゆうた|(@)*(yuyuta0702|yuyutadesu)',
       'twitch.tv/kato_junichi0817|加藤(\\s)*純一|うんこちゃん|(@)*(junchannel)',
@@ -195,7 +196,8 @@
       'プロゲーマー',
       // tips
       '女性向け|考察|解説|中国|朝鮮|韓国',
-      '(?=.*(にじ(さんじ)*|cr|ストリーマー|獅白|kzh|lol|valo|apex))(?=.*(cup|カップ|杯|戦|祭|カスタム|大会|選手権|切り抜き|企画|まとめ).*)|(v(tuber)*最(協)*|ストグラ|スト鯖|mad(\\s)*town|コーチング|スクリム|交流戦|講座|顔合わせ)',
+      '(?=.*(にじ(さんじ)*|cr|ストリーマー|獅白|kzh|lol|valo|apex))(?=.*(cup|カップ|杯|戦|祭|カスタム|大会|選手権|切り抜き|企画|まとめ).*)',
+      '(v(tuber)*最(協)*|v(tuber)*祭(協)*|ストグラ|スト鯖|mad(\\s)*town|コーチング|スクリム|交流戦|講座|顔合わせ)',
     ],
     execludeWords: []
   };
