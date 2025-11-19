@@ -71,7 +71,7 @@
   // 検索
   elemStyle.textContent += 'ytd-search :is(ytd-ad-slot-renderer, grid-shelf-view-model, ytd-video-renderer:has([title*="#shorts"i]), ytd-shelf-renderer, ytd-video-renderer:has(a[href*="/shorts/"i]), ytd-video-renderer:has(a[href*="&start_radio="i]), ytd-video-renderer:has(a[href*="&list="i]), ytd-horizontal-card-list-renderer) { display: none !important; } ';
   // チャンネル
-  elemStyle.textContent += '[page-subtype="channels"i] :is(ytd-item-section-renderer:has(ytd-channel-video-player-renderer), ytd-item-section-renderer:has(ytd-channel-featured-content-renderer), ytd-item-section-renderer:has([title*="#shorts"i]), ytd-item-section-renderer:has(a[href*="/shorts/"i]), ytd-item-section-renderer:has(a[href*="&start_radio="i]), ytd-item-section-renderer:has(a[href*="&list="i]), div[role="tablist"i] > yt-tab-shape[tab-title="ホーム"i], div[role="tablist"i] > yt-tab-shape[tab-title="ショート"i], div.yt-tab-group-shape-wiz__slider, div.tabGroupShapeSlide) { display: none !important; } ';
+  elemStyle.textContent += '[page-subtype="channels"i] :is(ytd-item-section-renderer:has(ytd-channel-video-player-renderer), ytd-item-section-renderer:has(ytd-channel-featured-content-renderer), ytd-item-section-renderer:has([title*="#shorts"i]), ytd-item-section-renderer:has(a[href*="/shorts/"i]), ytd-item-section-renderer:has(a[href*="&start_radio="i]), ytd-item-section-renderer:has(a[href*="&list="i])) { display: none !important; } ';
   /** サイドバー */
   // ショート系
   elemStyle.textContent += 'ytd-guide-section-renderer > div#items.ytd-guide-section-renderer > ytd-guide-entry-renderer > a#endpoint[title="ショート"i] { display: none !important; } ';
@@ -79,12 +79,14 @@
   // おすすめ
   elemStyle.textContent += 'ytd-guide-renderer > div#sections > *:nth-child(n+2) { display: none !important; } ';
   elemStyle.textContent += 'ytd-guide-renderer > div#footer { display: none !important; } ';
-  // mobile channel home
-  elemStyle.textContent += 'yt-tab-shape[tab-title="ショート"i] { display: none !important; } ';
+  // ヘッダー
+  elemStyle.textContent += 'div[role="tablist"i] > yt-tab-shape[tab-title="ホーム"i], div[role="tablist"i] > yt-tab-shape[tab-title="ショート"i], div.yt-tab-group-shape-wiz__slider, div.tabGroupShapeSlide { display: none !important; } ';
+  // mobile
+  // ホーム、チャンネル
   elemStyle.textContent += 'div[class="tab-content"i]:is([tab-title="ホーム"], [tab-title="動画"], [tab-title="ライブ"]) :is(ytm-item-section-renderer:has(ytm-channel-featured-video-renderer), ytm-item-section-renderer:has(a[href*="/shorts/"i]), ytm-statement-banner-renderer, ytm-rich-item-renderer.is-in-first-col:has(ad-slot-renderer), ytm-rich-item-renderer:has(ytm-radio-renderer), ytm-rich-item-renderer:has(a[href*="/shorts/"i]), ytm-rich-item-renderer:has(a[href*="&start_radio="i]), ytm-rich-item-renderer:has(a[href*="&list="i]), ytm-rich-section-renderer) { display: none !important; } ';
-  // watch
+  // 動画
   elemStyle.textContent += 'ytm-watch :is(ytm-companion-slot, ytm-item-section-renderer:has(ad-slot-renderer), ytm-item-section-renderer ytm-video-with-context-renderer:has(a[href*="/shorts/"i]), ytm-item-section-renderer ytm-video-with-context-renderer:has(a[href*="&start_radio="i]), ytm-item-section-renderer ytm-video-with-context-renderer:has(a[href*="&list="i]), div.ytVideoMetadataCarouselViewModelCarouselContainer:has(yt-carousel-item-view-model[aria-label="コメント"i])), ytm-custom-control div#player-control-overlay div.player-controls-background-container { display: none !important; } ';
-  // search
+  // 検索
   elemStyle.textContent += 'ytm-search :is(ytm-universal-watch-card-renderer, ytm-horizontal-card-list-renderer, ytm-reel-shelf-renderer:has(a[href*="/shorts/"i]), ytm-video-with-context-renderer:has(a[href*="/shorts/"i]), ytm-video-with-context-renderer:has(a[href*="&start_radio="i]), ytm-video-with-context-renderer:has(a[href*="&list="i]), ytm-video-with-context-renderer:has([aria-label*="#shorts"i]), ytm-compact-channel-renderer, ytm-compact-playlist-renderer, ytm-compact-radio-renderer, grid-shelf-view-model) { display: none !important; } ';
 
   // アプリで開く(サインイン)
@@ -437,5 +439,6 @@
   // URLが変更されたとき
   changeUrl();
 })();
+
 
 
