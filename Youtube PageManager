@@ -61,6 +61,8 @@
 
   elemStyle.textContent += ' .remove_item { display: none !important; } ';
 
+  // ヘッダー
+  elemStyle.textContent += ':is(yt-tab-shape[tab-title="ホーム"i][role="tab"i], yt-tab-shape[tab-title="ショート"i][role="tab"i], div.tabGroupShapeSlider) { display: none !important; } ';
   // pc
   elemStyle.textContent += 'div[id="masthead-ad"i]:has(ytd-ad-slot-renderer) { display: none !important; } ';
   // ホーム
@@ -79,8 +81,6 @@
   // おすすめ
   elemStyle.textContent += 'ytd-guide-renderer > div#sections > *:nth-child(n+2) { display: none !important; } ';
   elemStyle.textContent += 'ytd-guide-renderer > div#footer { display: none !important; } ';
-  // ヘッダー
-  elemStyle.textContent += 'yt-tab-shape[tab-title="ホーム"i][role="tab"i], yt-tab-shape[tab-title="ショート"i][role="tab"i], yt-tab-group-shape { display: none !important; } ';
   // mobile
   // ホーム、チャンネル
   elemStyle.textContent += 'div[class="tab-content"i]:is([tab-title="ホーム"i], [tab-title="動画"i], [tab-title="ライブ"i]) :is(ytm-item-section-renderer:has(ytm-channel-featured-video-renderer), ytm-item-section-renderer:has(a[href*="/shorts/"i]), ytm-statement-banner-renderer, ytm-rich-item-renderer.is-in-first-col:has(ad-slot-renderer), ytm-rich-item-renderer:has(ytm-radio-renderer), ytm-rich-item-renderer:has(a[href*="/shorts/"i]), ytm-rich-item-renderer:has(a[href*="&start_radio="i]), ytm-rich-item-renderer:has(a[href*="&list="i]), ytm-rich-section-renderer) { display: none !important; } ';
