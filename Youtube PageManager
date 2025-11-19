@@ -62,7 +62,7 @@
   elemStyle.textContent += ' .remove_item { display: none !important; } ';
 
   // ヘッダー
-  elemStyle.textContent += ':is(yt-tab-shape[tab-title="ホーム"i][role="tab"i], yt-tab-shape[tab-title="ショート"i][role="tab"i], div.tabGroupShapeSlider) { display: none !important; } ';
+  elemStyle.textContent += ':is(yt-tab-shape[tab-title="ホーム"i][role="tab"i], yt-tab-shape[tab-title="ショート"i], div.tabGroupShapeSlider) { display: none !important; } ';
   // pc
   elemStyle.textContent += 'div[id="masthead-ad"i]:has(ytd-ad-slot-renderer) { display: none !important; } ';
   // ホーム
@@ -439,3 +439,4 @@
   // URLが変更されたとき
   changeUrl();
 })();
+
