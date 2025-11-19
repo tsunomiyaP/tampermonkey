@@ -62,7 +62,7 @@
   elemStyle.textContent += ' .remove_item { display: none !important; } ';
 
   // ヘッダー
-  elemStyle.textContent += ':is(yt-tab-shape[tab-title="ホーム"i][role="tab"i], yt-tab-shape[tab-title="ショート"i], div.tabGroupShapeSlider) { display: none !important; } ';
+  elemStyle.textContent += ':is(yt-tab-shape[tab-title="ホーム"i][role="tab"i], yt-tab-shape[tab-title="ショート"i][role="tab"i, div.tabGroupShapeSlider) { display: none !important; } ';
   // pc
   elemStyle.textContent += 'div[id="masthead-ad"i]:has(ytd-ad-slot-renderer) { display: none !important; } ';
   // ホーム
@@ -89,7 +89,8 @@
   // 検索
   elemStyle.textContent += 'ytm-search :is(ytm-universal-watch-card-renderer, ytm-horizontal-card-list-renderer, ytm-reel-shelf-renderer:has(a[href*="/shorts/"i]), ytm-video-with-context-renderer:has(a[href*="/shorts/"i]), ytm-video-with-context-renderer:has(a[href*="&start_radio="i]), ytm-video-with-context-renderer:has(a[href*="&list="i]), ytm-video-with-context-renderer:has([aria-label*="#shorts"i]), ytm-compact-channel-renderer, ytm-compact-playlist-renderer, ytm-compact-radio-renderer, grid-shelf-view-model) { display: none !important; } ';
 
-  // アプリで開く(サインイン)
+  // ext
+  elemStyle.textContent += 'ytm-pivot-bar-item-renderer:has(div.pivot-bar-item-tab.pivot-shorts) { display: none !important; } ';
   elemStyle.textContent += 'header.mobile-topbar-header div.mobile-topbar-header-sign-in-button { display: none !important; } ';
 
   if (!isChatMode) { elemStyle.textContent += 'div#chat-container { display: none !important; } '; }
@@ -439,4 +440,3 @@
   // URLが変更されたとき
   changeUrl();
 })();
-
