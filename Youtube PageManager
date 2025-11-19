@@ -21,7 +21,7 @@
   const isChatMode = false;
   const scale = 'scale(0.8)';
   const waitTime = 500;
-  const waitNums = [1, 2]; // pc, mobile
+  const waitNums = [2, 2]; // pc, mobile
   const manager = 'ytd-app, ytm-app[id="app"i]';
   const itemsArray = [
     { device: 'www.youtube.com', path: '^/$', area: '[page-subtype="home"i] div#primary > ytd-rich-grid-renderer > div#contents', stylus: 'transform: ' + scale + ' !important; pointer-events: none !important;' },
@@ -220,6 +220,36 @@
     console.log('> chat area create...');
     const chat = await waitQuerySelectorCount(5, 'div#chat-container');
     if (!isNuN(chat)) { chat.remove(); }
+  };
+  const ytStableVolume = async () => {
+    const watcher = new RegExp(regWatch, 'gis');
+    if (!watcher.test(location.pathname)) { return false; }
+    if ('www.youtube.com' === location.hostname) {
+      // pc
+      const menuButton = await waitQuerySelector('button.ytp-settings-button');
+      const drcMenuItem = await waitQuerySelector('div.ytp-drc-menu-item[role="menuitemcheckbox"]');
+      if (drcMenuItem.getAttribute('aria-checked') === 'true') {
+        drcMenuItem.setAttribute('aria-checked', 'false');
+        console.log('Disabled DRC Audio');
+	  } else {
+        console.log('DRC Audio is already disabled');
+	  }
+    }
+    if ('m.youtube.com' === location.hostname) {
+      // mobile
+      const settingBtn = await waitQuerySelector('button.player-settings-icon[aria-label="再生設定"]')
+      settingBtn.click();
+      const menuButton = await waitQuerySelector('bottom-sheet-layout player-settings-menu');
+      const drcMenuItem = await waitQuerySelector('stable-volume-toggle switch-button-view-model > button.ytSwitchButtonViewModelButton[role="switch"]');
+      if (drcMenuItem.getAttribute('aria-checked') === 'true') {
+        drcMenuItem.click();
+        console.log('Disabled DRC Audio');
+ 	  } else {
+        console.log('DRC Audio is already disabled');
+	  }
+      const closeBtn = await waitQuerySelector('ytw-scrim.ytWebScrimHost');
+      closeBtn.click();
+   }
   };
   const removeMovieInformation = async (item) => {
     const mode = {'pc': {}, 'mobile': {}};
@@ -423,9 +453,9 @@
           }
         }
 
-        if (watcher.test(location.pathname)) {
-          ytChatArea();
-        }
+        ytChatArea();
+        ytStableVolume();
+
         const waitNum = 'www.youtube.com' === location.hostname ? waitNums[0] : waitNums[1];
         await new Promise(resolve => setTimeout(resolve, waitTime * waitNum));
 
