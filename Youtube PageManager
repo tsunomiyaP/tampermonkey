@@ -80,10 +80,10 @@
   elemStyle.textContent += 'ytd-guide-renderer > div#sections > *:nth-child(n+2) { display: none !important; } ';
   elemStyle.textContent += 'ytd-guide-renderer > div#footer { display: none !important; } ';
   // ヘッダー
-  elemStyle.textContent += 'div[role="tablist"i] > yt-tab-shape[tab-title="ホーム"i], div[role="tablist"i] > yt-tab-shape[tab-title="ショート"i], div.yt-tab-group-shape-wiz__slider, div.tabGroupShapeSlide { display: none !important; } ';
+  elemStyle.textContent += 'yt-tab-shape[tab-title="ホーム"i][role="tab"i], yt-tab-shape[tab-title="ショート"i][role="tab"i], yt-tab-group-shape { display: none !important; } ';
   // mobile
   // ホーム、チャンネル
-  elemStyle.textContent += 'div[class="tab-content"i]:is([tab-title="ホーム"], [tab-title="動画"], [tab-title="ライブ"]) :is(ytm-item-section-renderer:has(ytm-channel-featured-video-renderer), ytm-item-section-renderer:has(a[href*="/shorts/"i]), ytm-statement-banner-renderer, ytm-rich-item-renderer.is-in-first-col:has(ad-slot-renderer), ytm-rich-item-renderer:has(ytm-radio-renderer), ytm-rich-item-renderer:has(a[href*="/shorts/"i]), ytm-rich-item-renderer:has(a[href*="&start_radio="i]), ytm-rich-item-renderer:has(a[href*="&list="i]), ytm-rich-section-renderer) { display: none !important; } ';
+  elemStyle.textContent += 'div[class="tab-content"i]:is([tab-title="ホーム"i], [tab-title="動画"i], [tab-title="ライブ"i]) :is(ytm-item-section-renderer:has(ytm-channel-featured-video-renderer), ytm-item-section-renderer:has(a[href*="/shorts/"i]), ytm-statement-banner-renderer, ytm-rich-item-renderer.is-in-first-col:has(ad-slot-renderer), ytm-rich-item-renderer:has(ytm-radio-renderer), ytm-rich-item-renderer:has(a[href*="/shorts/"i]), ytm-rich-item-renderer:has(a[href*="&start_radio="i]), ytm-rich-item-renderer:has(a[href*="&list="i]), ytm-rich-section-renderer) { display: none !important; } ';
   // 動画
   elemStyle.textContent += 'ytm-watch :is(ytm-companion-slot, ytm-item-section-renderer:has(ad-slot-renderer), ytm-item-section-renderer ytm-video-with-context-renderer:has(a[href*="/shorts/"i]), ytm-item-section-renderer ytm-video-with-context-renderer:has(a[href*="&start_radio="i]), ytm-item-section-renderer ytm-video-with-context-renderer:has(a[href*="&list="i]), div.ytVideoMetadataCarouselViewModelCarouselContainer:has(yt-carousel-item-view-model[aria-label="コメント"i])), ytm-custom-control div#player-control-overlay div.player-controls-background-container { display: none !important; } ';
   // 検索
@@ -439,6 +439,3 @@
   // URLが変更されたとき
   changeUrl();
 })();
-
-
-
