@@ -146,7 +146,7 @@
       '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(deremkado).*)|デレム(\\s)*カド|(@)*deremkado$',
       // other groups nijisanji
       '@nijisanji|nijisanji(\\s)*en|(@)*nijisanji_en',
-      '#(にじ|NIJI|NJU)',
+      '#(にじ|NIJI|NJ)',
       'oriens|dytica|3skm',
       'くろのわ|くろなん|(@)*chronoir',
       'ろふまお|rof-mao|(@)*rofmao',
@@ -171,9 +171,8 @@
       '山田玲司|(@)*yamadareiji',
       'コレコレ|(@)*korekorech',
       'バキ童|(@)*bakibakidt',
-      'ドズル社|(@)*dozle',
-      'quizknock|(@)*quizknock',
-      '(ぽこピー|ピーナッツくん)|(@)*pokopea',
+      'ドズル社|(@)*dozle|(@)*quizknock',
+      'ぽこピー|ピーナッツくん|(@)*pokopea',
       // others streamer
       'twitch.tv/yuyuta0702|ゆゆうた|(@)*(yuyuta0702|yuyutadesu)',
       'twitch.tv/kato_junichi0817|加藤(\\s)*純一|うんこちゃん|(@)*(junchannel)',
