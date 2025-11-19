@@ -53,6 +53,7 @@
       // other groups ホロスターズ
       'ホロスタ(ーズ)*|holostar(s)*|スタこれ',
       'uproar|tempus|armis',
+      'スバル|すばる',
 
       // nijisanji jp
       '(?=.*(にじ(さんじ)*|nijisanji))(?=.*(月ノ|美兎).*)|月ノ(\\s)*美兎|(@)*tsukinomito',
