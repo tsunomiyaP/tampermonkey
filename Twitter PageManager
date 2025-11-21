@@ -40,46 +40,60 @@
   // user icon, 再生ボタン, 画像グループ, 動画再生, GIF再生, 設定画面(tablet, pc)
   // chromenium
   elemStyle.textContent += 'main[role="main"]:not(:has(:is(section[aria-label^="セクション"], [class="css-175oi2r r-jxzhtn r-1ua6aaf r-th6na r-1phboty r-16y2uox r-1wbh5a2"], [class="css-175oi2r r-18bvks7 r-1ua6aaf r-th6na r-1phboty r-16y2uox r-1wbh5a2"], [class="css-175oi2r r-1kqtdi0 r-1ua6aaf r-th6na r-1phboty r-16y2uox r-1wbh5a2"]))) *:not(:is(div[data-testid^="UserAvatar-Container-"], div[data-testid^="UserAvatar-Container-"] *, div[data-testid="Tweet-User-Avatar"] *, div[class="css-175oi2r r-633pao r-u8s1d r-dkhcqf r-axxi2z r-18jm5s1 r-13qz1uu"]:has([role="status"]), div[class="css-175oi2r r-633pao r-u8s1d r-dkhcqf r-axxi2z r-18jm5s1 r-13qz1uu"]:has([role="status"]) *, button[aria-label="この動画を再生する"], button[aria-label="この動画を再生する"] *, div[role="group"][aria-roledescription="carousel"], div[role="group"][aria-roledescription="carousel"] *, div[data-testid="videoComponent"], div[data-testid="videoComponent"] *, div[data-testid="previewInterstitial"], div[data-testid="previewInterstitial"] *)) { color: rgba(0, 0, 0, 1) !important; background-color: rgba(255, 255, 255, 1) !important; backdrop-filter: none !important; } ';
+  // ツイート 枠 radius
+  elemStyle.textContent += tweet_items_column + ' .r-1867qdf { border-radius: 0px !important; } ';
+  // 検索バー
+  elemStyle.textContent += 'form[aria-label="検索"i] > div > div.r-sdzlij { border-bottom-left-radius: 0px !important; border-bottom-right-radius: 0px !important; border-top-left-radius: 0px !important; border-top-right-radius: 0px !important; } ';
   // 画面非表示
   elemStyle.textContent += 'div[role="progressbar"] { display: none !important; } ';
-  // サイドバー
-  elemStyle.textContent += 'a[href="/i/grok"i] { display: none !important; } ';
-  elemStyle.textContent += 'a[href$="/communities"i] { display: none !important; } ';
-  elemStyle.textContent += 'a[href="/i/premium_sign_up"i] { display: none !important; } ';
-  elemStyle.textContent += 'a[href="/i/verified-orgs-signup"i] { display: none !important; } ';
-  elemStyle.textContent += 'a[href="/jobs"i] { display: none !important; } ';
-  elemStyle.textContent += 'a[href="/i/chat"i] { display: none !important; } ';
-  elemStyle.textContent += 'a[href="/i/monetization"i] { display: none !important; } ';
-  elemStyle.textContent += 'a[href*="ads"i] { display: none !important; } ';
-  // サイドメニュー おすすめ トレンド
-  elemStyle.textContent += tweet_main + ' div[data-testid="sidebarColumn"i] div[aria-label="トレンド"i] > div > div:not(:has(form[aria-label="検索"i])) { display: none !important; } ';
-  // Grok
-  elemStyle.textContent += '[data-testid="GrokDrawer"i] { display: none !important; } ';
-  // DM
-  elemStyle.textContent += '[data-testid="DMDrawer"i] { display: none !important; } ';
 
+  // おすすめユーザー
+  elemStyle.textContent += 'div:is([aria-label="タイムライン: ホームタイムライン"i],[aria-label$="さんのポスト"i],[aria-label="タイムライン: 話題を検索"i],[aria-label="タイムライン: タイムラインを検索"i]) > div > div[data-testid="cellInnerDiv"i]:has(:is(div[class="css-175oi2r r-1adg3ll r-1ny4l3l"i])):not(:has(div[data-testid="trend"i])) { display: none !important; } ';
+  // 広告 : プロモーション
+  elemStyle.textContent += 'div:is([aria-label="タイムライン: ホームタイムライン"i],[aria-label$="さんのポスト"i],[aria-label="タイムライン: 話題を検索"i],[aria-label="タイムライン: タイムラインを検索"i]) > div > div[data-testid="cellInnerDiv"i]:has(div[class="css-175oi2r r-a1ub67"i]) { display: none !important; } ';
+  // x side bar moments
+  // Grok
+  elemStyle.textContent += 'a[href="/i/grok"i] { display: none !important; } ';
+  // コミュニティ
+  elemStyle.textContent += 'a[href$="/communities"i] { display: none !important; } ';
+  // プレミアム
+  elemStyle.textContent += 'a[href="/i/premium_sign_up"i] { display: none !important; } ';
+  // 認証済み組織
+  elemStyle.textContent += 'a[href="/i/verified-orgs-signup"i] { display: none !important; } ';
+  // 求人
+  elemStyle.textContent += 'a[href="/jobs"i] { display: none !important; } ';
+  // チャット
+  elemStyle.textContent += 'a[href="/i/chat"i] { display: none !important; } ';
+  // 収益化
+  elemStyle.textContent += 'a[href="/i/monetization"i] { display: none !important; } ';
+  // サイドバー
+  elemStyle.textContent += '[aria-label="トレンド"i] > div > div:not(:has(form[aria-label="検索"i])) { display: none !important; } ';
   // トレンド
   elemStyle.textContent += '[aria-label="タイムライン: 話題を検索"i] > div > div:nth-of-type(n+1):nth-of-type(-n+3) { display: none !important; } ';
   elemStyle.textContent += '[aria-label="タイムライン: 話題を検索"i] [data-testid="cellInnerDiv"i]:is(:has([data-testid="trend"i] > div.css-175oi2r.r-16y2uox.r-1t982j2.r-1b3ntt7.r-bnwqim),:has([data-testid="UserAvatar-Container-unknown"i]),:has([data-testid="tweet"i])) { display: none !important; } ';
+  // トレンド ニュース
   elemStyle.textContent += 'a[href="/explore/tabs/news"i] { display: none !important; } ';
+  // トレンド スポーツ
   elemStyle.textContent += 'a[href="/explore/tabs/sports"i] { display: none !important; } ';
+  // トレンド エンターテイメント
   elemStyle.textContent += 'a[href="/explore/tabs/entertainment"i] { display: none !important; } ';
-
-  // 検索バー
-  elemStyle.textContent += tweet_main + ' form[aria-label="検索"i] > div > div.r-sdzlij { border-bottom-left-radius: 0px; border-bottom-right-radius: 0px; border-top-left-radius: 0px; border-top-right-radius: 0px; } ';
-  // ツイート
-  elemStyle.textContent += 'div[aria-label="タイムライン: 会話"i] article[data-testid="tweet"i] > div > div > div[class="css-175oi2r r-18u37iz"i] > div > div[class="css-175oi2r r-1bimlpy r-f8sm7e r-m5arl1 r-16y2uox r-14gqq1x"i] { visibility: hidden !important; } ';
-  elemStyle.textContent += 'div[aria-label="タイムライン: 会話"i] article[data-testid="tweet"i] > div > div > div[class="css-175oi2r"i] > div[class="css-175oi2r r-18u37iz"i] > * { visibility: hidden !important; } ';
-  // おすすめユーザー
-  elemStyle.textContent += 'div:is([aria-label="タイムライン: ホームタイムライン"i],[aria-label$="さんのポスト"i],[aria-label="タイムライン: 話題を検索"i],[aria-label="タイムライン: タイムラインを検索"i]) > div > ' + tweet_items_column + ':has(:is(div[class="css-175oi2r r-1adg3ll r-1ny4l3l"])):not(:has(div[data-testid="trend"])) { display: none !important; } ';
-  // 広告 : プロモーション
-  elemStyle.textContent += 'div:is([aria-label="タイムライン: ホームタイムライン"i],[aria-label$="さんのポスト"i],[aria-label="タイムライン: 話題を検索"i],[aria-label="タイムライン: タイムラインを検索"i]) > div > ' + tweet_items_column + ':has(div[class="css-175oi2r r-a1ub67"]) { display: none !important; } ';
+  // Grok メッセージ
+  elemStyle.textContent += '[data-testid="GrokDrawer"i] { display: none !important; } ';
+  // DM
+  elemStyle.textContent += '[data-testid="DMDrawer"i] { display: none !important; } ';
+  // 返信 兄弟要素　後：前
+  // div[data-testid="Tweet-User-Avatar"i] + div[class="css-175oi2r r-1bnu78o r-f8sm7e r-m5arl1 r-16y2uox r-14gqq1x"i]
+  // article[data-testid="tweet"i] > div > div > div[class="css-175oi2r"i]:has(+ div:has([data-testid="Tweet-User-Avatar"i]))
+  // div[aria-label="タイムライン: 会話"i] div[data-testid="cellInnerDiv"i] > div[class="css-175oi2r r-j5o65s r-qklmqi r-1adg3ll r-1ny4l3l"i]:not(:has(article[data-testid="tweet"i]))
+  elemStyle.textContent += 'div[aria-label="タイムライン: 会話"i] article[data-testid="tweet"i] > div > div > div[class="css-175oi2r r-18u37iz"i] > div > div[class="css-175oi2r r-1bimlpy r-f8sm7e r-m5arl1 r-16y2uox r-14gqq1x"i] {visibility: hidden !important; } ';
+  elemStyle.textContent += 'div[aria-label="タイムライン: 会話"i] article[data-testid="tweet"i] > div > div > div[class="css-175oi2r"i] > div[class="css-175oi2r r-18u37iz"i] { visibility: hidden !important; } ';
+  // 引用
+  // div[data-testid="cellInnerDiv"i]:has([data-testid="tweet"i] > div > div > div > div > div[aria-labelledby][id])
+  // div[aria-label="タイムライン: 会話"i] > div > div[data-testid="cellInnerDiv"i]:nth-of-type(n+2):has([data-testid="tweet"i] > div > div > div > div > div[aria-labelledby][id])
+  // ツイート 内 Grok
+  elemStyle.textContent += 'div[data-testid="cellInnerDiv"i] button[aria-label^="Grok"i] { display: none !important; } ';
   // リツイート
-  elemStyle.textContent += tweet_items_column + ':has(span[data-testid="socialContext"i]) { display: none !important; } ';
-  // ツイート 内Grok
-  elemStyle.textContent += tweet_items_column + ' button[aria-label^="Grok"] { display: none !important; } ';
-  // ツイート 枠 radius
-  elemStyle.textContent += tweet_items_column + ' .r-1867qdf { border-radius: 0px !important; } ';
+  elemStyle.textContent += 'div[data-testid="cellInnerDiv"i]:has(span[data-testid="socialContext"i]) { display: none !important; } ';
   // ==========================================================
 
   // eslint-disable-next-line no-unused-vars
