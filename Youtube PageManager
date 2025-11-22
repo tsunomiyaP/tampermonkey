@@ -228,23 +228,26 @@
       // pc
       const menuButton = await waitQuerySelector('button.ytp-settings-button');
       menuButton.click();
-      const drcMenuItem = await waitQuerySelector('div.ytp-drc-menu-item[role="menuitemcheckbox"]');
+      const drcMenuItem = await waitQuerySelectorCount(2, 'div.ytp-drc-menu-item[role="menuitemcheckbox"]');
+      if (isNuN(drcMenuItem)) { menuButton.click(); }
       if (drcMenuItem.getAttribute('aria-checked') === 'true') {
         drcMenuItem.click();
+        menuButton.click();
         console.log('Disabled DRC Audio');
       } else {
         console.log('DRC Audio is already disabled');
       }
-      menuButton.click();
     }
     if ('m.youtube.com' === location.hostname) {
       // mobile
       const menuButton = await waitQuerySelector('button.player-settings-icon[aria-label="再生設定"]');
       menuButton.click();
       await waitQuerySelector('bottom-sheet-layout player-settings-menu');
-      const drcMenuItem = await waitQuerySelector('stable-volume-toggle switch-button-view-model > button.ytSwitchButtonViewModelButton[role="switch"]');
+      const drcMenuItem = await waitQuerySelectorCount(2, 'stable-volume-toggle switch-button-view-model > button.ytSwitchButtonViewModelButton[role="switch"]');
+      if (isNuN(drcMenuItem)) { menuButton.click(); }
       if (drcMenuItem.getAttribute('aria-checked') === 'true') {
         drcMenuItem.click();
+        menuButton.click();
         console.log('Disabled DRC Audio');
       } else {
         console.log('DRC Audio is already disabled');
