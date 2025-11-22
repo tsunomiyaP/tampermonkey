@@ -81,7 +81,7 @@
   elemStyle.textContent += '[data-testid="GrokDrawer"i] { display: none !important; } ';
   // DM
   elemStyle.textContent += '[data-testid="DMDrawer"i] { display: none !important; } ';
-  // 返信 兄弟要素　後：前
+  // 返信 兄弟要素 後：前
   // div[data-testid="Tweet-User-Avatar"i] + div[class="css-175oi2r r-1bnu78o r-f8sm7e r-m5arl1 r-16y2uox r-14gqq1x"i]
   // article[data-testid="tweet"i] > div > div > div[class="css-175oi2r"i]:has(+ div:has([data-testid="Tweet-User-Avatar"i]))
   // div[aria-label="タイムライン: 会話"i] div[data-testid="cellInnerDiv"i] > div[class="css-175oi2r r-j5o65s r-qklmqi r-1adg3ll r-1ny4l3l"i]:not(:has(article[data-testid="tweet"i]))
