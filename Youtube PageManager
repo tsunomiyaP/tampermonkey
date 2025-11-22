@@ -229,13 +229,14 @@
       const menuButton = await waitQuerySelector('button.ytp-settings-button');
       menuButton.click();
       const drcMenuItem = await waitQuerySelectorCount(2, 'div.ytp-drc-menu-item[role="menuitemcheckbox"]');
-      if (isNuN(drcMenuItem)) { menuButton.click(); }
-      if (drcMenuItem.getAttribute('aria-checked') === 'true') {
-        drcMenuItem.click();
+      if (isNuN(drcMenuItem)) { menuButton.click(); } else {
+        if (drcMenuItem.getAttribute('aria-checked') === 'true') {
+          drcMenuItem.click();
+          console.log('Disabled DRC Audio');
+        } else {
+          console.log('DRC Audio is already disabled');
+        }
         menuButton.click();
-        console.log('Disabled DRC Audio');
-      } else {
-        console.log('DRC Audio is already disabled');
       }
     }
     if ('m.youtube.com' === location.hostname) {
@@ -244,13 +245,14 @@
       menuButton.click();
       await waitQuerySelector('bottom-sheet-layout player-settings-menu');
       const drcMenuItem = await waitQuerySelectorCount(2, 'stable-volume-toggle switch-button-view-model > button.ytSwitchButtonViewModelButton[role="switch"]');
-      if (isNuN(drcMenuItem)) { menuButton.click(); }
-      if (drcMenuItem.getAttribute('aria-checked') === 'true') {
-        drcMenuItem.click();
+      if (isNuN(drcMenuItem)) { menuButton.click(); } else {
+        if (drcMenuItem.getAttribute('aria-checked') === 'true') {
+          drcMenuItem.click();
+          console.log('Disabled DRC Audio');
+        } else {
+          console.log('DRC Audio is already disabled');
+        }
         menuButton.click();
-        console.log('Disabled DRC Audio');
-      } else {
-        console.log('DRC Audio is already disabled');
       }
       const closeBtn = await waitQuerySelector('ytw-scrim.ytWebScrimHost');
       closeBtn.click();
@@ -264,10 +266,10 @@
     const youtubeItem = {};
 
     if (watcher.test(location.pathname)) {
-      await waitQuerySelector('div#owner ytd-video-owner-renderer ytd-channel-name#channel-name #text-container > yt-formatted-string#text[title], ytm-slim-owner-renderer h3.slim-owner-channel-name span');
+      await waitQuerySelector('div#owner ytd-channel-name div#text-container a.yt-formatted-string');
       // pc 動画
-      mode.pc.ytTitle = isNuN(item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container span')) ? '' : item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container span').textContent;
-      mode.pc.userNam = isNuN(item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span')) ? '' : item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span').textContent;
+      mode.pc.ytTitle = isNuN(item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container a.yt-lockup-metadata-view-model__title span.yt-core-attributed-string')) ? '' : item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container a.yt-lockup-metadata-view-model__title span.yt-core-attributed-string').textContent;
+      mode.pc.userNam = isNuN(item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container yt-content-metadata-view-model span')) ? '' : item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container yt-content-metadata-view-model span').textContent;
       // mobile
       mode.mobile.ytTitle = isNuN(item.querySelector('div.details h3.media-item-headline > span, div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline > span')) ? '' : item.querySelector('div.details h3.media-item-headline > span, div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline > span').textContent;
       mode.mobile.userNam = isNuN(item.querySelector('div.details ytm-badge-and-byline-renderer span.YtmBadgeAndBylineRendererItemByline > span, div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline > span')) ? '' : item.querySelector('div.details ytm-badge-and-byline-renderer span.YtmBadgeAndBylineRendererItemByline > span, div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline > span').textContent;
@@ -290,8 +292,8 @@
       if (user !== youtubeItem.userNam) { item.classList.add('remove_item'); }
     } else {
       // pc 動画
-      mode.pc.ytTitle = isNuN(item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container span')) ? '' : item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container span').textContent;
-      mode.pc.userNam = isNuN(item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span')) ? '' : item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span').textContent;
+      mode.pc.ytTitle = isNuN(item.querySelector('yt-lockup-metadata-view-model div.yt-lockup-metadata-view-model__text-container span[role="text"], div#meta a[id^="video-title"] > yt-formatted-string')) ? '' : item.querySelector('yt-lockup-metadata-view-model div.yt-lockup-metadata-view-model__text-container span[role="text"], div#meta a[id^="video-title"] > yt-formatted-string').textContent;
+      mode.pc.userNam = isNuN(item.querySelector('yt-lockup-metadata-view-model div.yt-lockup-metadata-view-model__metadata a, ytd-channel-name div#text-container a.yt-formatted-string')) ? '' : item.querySelector('yt-lockup-metadata-view-model div.yt-lockup-metadata-view-model__metadata a, ytd-channel-name div#text-container a.yt-formatted-string').textContent;
       // mobile
       mode.mobile.ytTitle = isNuN(item.querySelector('div.details h3.media-item-headline > span, div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline > span')) ? '' : item.querySelector('div.details h3.media-item-headline > span, div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline > span').textContent;
       mode.mobile.userNam = isNuN(item.querySelector('div.details ytm-badge-and-byline-renderer span.YtmBadgeAndBylineRendererItemByline > span, div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline > span')) ? '' : item.querySelector('div.details ytm-badge-and-byline-renderer span.YtmBadgeAndBylineRendererItemByline > span, div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline > span').textContent;
