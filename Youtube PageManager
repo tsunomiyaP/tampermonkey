@@ -290,7 +290,7 @@
       mode.pc.ytTitle = isNuN(item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container span')) ? '' : item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container span').textContent;
       mode.pc.userNam = isNuN(item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span')) ? '' : item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span').textContent;
       // mobile
-      mode.mobile.ytTitle = isNuN(item.querySelector('div.details div.media-item-metadata a[href^="/watch?v="] span[role="text"], div.YtmCompactMediaItemHost > div.YtmCompactMediaItemMetadata .YtmCompactMediaItemHeadline > span[role="text"]')) ? '' : item.querySelector('div.details div.media-item-metadata a[href^="/watch?v="] span[role="text"], div.YtmCompactMediaItemHost > div.YtmCompactMediaItemMetadata .YtmCompactMediaItemHeadline > span[role="text"]').textContent;
+      mode.mobile.ytTitle = isNuN(item.querySelector('div.details div.media-item-metadata a[href^="/watch?v="] span[role="text"], ytm-compact-video-renderer div.YtmCompactMediaItemMetadata .YtmCompactMediaItemHeadline > span[role="text"]')) ? '' : item.querySelector('div.details div.media-item-metadata a[href^="/watch?v="] span[role="text"], ytm-compact-video-renderer div.YtmCompactMediaItemMetadata .YtmCompactMediaItemHeadline > span[role="text"]').textContent;
       mode.mobile.userNam = isNuN(item.querySelector('div.details div.media-item-metadata ytm-badge-and-byline-renderer span.yt-core-attributed-string')) ? '' : item.querySelector('div.details div.media-item-metadata ytm-badge-and-byline-renderer span.yt-core-attributed-string').textContent;
 
       const strData = device;
