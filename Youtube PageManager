@@ -258,9 +258,6 @@
 
     const watcher = new RegExp(regWatch, 'gis');
     const device = 'www.youtube.com' === location.hostname ? mode.pc : mode.mobile;
-    const deviceUSER = 'www.youtube.com' === location.hostname ? 'pc' : 'mobile';
-    alert(deviceUSER);
-    console.log(deviceUSER);
     const youtubeItem = {};
 
     if (watcher.test(location.pathname)) {
@@ -475,4 +472,5 @@
   // URLが変更されたとき
   changeUrl();
 })();
+
 
