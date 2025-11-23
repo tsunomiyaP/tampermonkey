@@ -388,6 +388,7 @@
       });
       const config = { 'attributes': false, 'childList': true, 'subtree': true };
       ytMutation.observe(ytArea, config);
+    }
   };
   const changeUrl = async () => {
     let href;
