@@ -32,7 +32,7 @@
     { device: 'm.youtube.com', path: '^/$', area: 'div.tab-content[tab-identifier="FEwhat_to_watch"i] div.rich-grid-renderer-contents', stylus: 'display: block; transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'm.youtube.com', path: '^/feed/subscriptions', area: 'div.tab-content[tab-identifier="FEsubscriptions"i] > ytm-tab-renderer > * > lazy-list', stylus: 'display: block; transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'm.youtube.com', path: '^/watch|^/live', area: ':is([section-identifier="related-items"] > lazy-list, div.related-items-container lazy-list)', stylus: 'display: block; transform: ' + scale + ' !important; pointer-events: none !important;' },
-    { device: 'm.youtube.com', path: '^/@.+/(videos|streams)|^/channel/.+/(videos|streams)|^/c/.+/(videos|streams)|^/user/.+/(videos|streams)|^/u/.+/(videos|streams)', area: 'ytm-tab-renderer div.rich-grid-renderer-contents', stylus: 'display: block; transform: ' + scale + ' !important; pointer-events: none !important;' },
+    { device: 'm.youtube.com', path: '^/@.+/(videos|streams)|^/channel/.+/(videos|streams)|^/c/.+/(videos|streams)|^/user/.+/(videos|streams)|^/u/.+/(videos|streams)', area: 'ytm-tab-renderer > ytm-rich-grid-renderer > div.rich-grid-renderer-contents', stylus: 'display: block; transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'm.youtube.com', path: '^/results', area: 'ytm-search > ytm-section-list-renderer > lazy-list', stylus: 'display: block; transform: ' + scale + ' !important; pointer-events: none !important;' },
   ];
   const regWatch = '^/watch|^/live';
@@ -478,3 +478,4 @@
   // URLが変更されたとき
   changeUrl();
 })();
+
