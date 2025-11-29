@@ -110,21 +110,24 @@
     return obj;
   };
   // eslint-disable-next-line no-unused-vars
-  const waitCountUp = async () => {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-  };
   const waitQuerySelectorCount = async (cnt, selector, node = document) => {
     let obj = null;
     let num = 0;
-    while (await waitCountUp()) {
+    while (!obj) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
       if (num < cnt) {
         obj = node.querySelector(selector);
         num++;
         if (!obj) { return obj; }
       } else {
-        return null;
-	    }
+        break;
+      }
     }
+    while (!obj) {
+      await new Promise(resolve => setTimeout(resolve, 10000));
+      obj = node.querySelector(selector);
+    }
+    return obj;
   };
   // eslint-disable-next-line no-unused-vars
   const waitQuerySelectorIframe = async (selector1, selector2, node = document) => {
