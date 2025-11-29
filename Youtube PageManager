@@ -139,12 +139,11 @@
       if (num < cnt) {
         obj = node.querySelector(selector);
         num++;
-        if (!obj) { return break; }
+        if (!obj) { return obj; }
       } else {
-        return break;
+        return null;
 	  }
     }
-    return node.querySelector(selector);
   };
   // eslint-disable-next-line no-unused-vars
   const waitQuerySelectorIframe = async (selector1, selector2, node = document) => {
@@ -485,6 +484,7 @@
   // URLが変更されたとき
   changeUrl();
 })();
+
 
 
 
