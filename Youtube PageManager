@@ -129,8 +129,21 @@
     return obj;
   };
   // eslint-disable-next-line no-unused-vars
+  const waitCountUp = async () => {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+  };
   const waitQuerySelectorCount = async (cnt, selector, node = document) => {
-    await new Promise(resolve => setTimeout(resolve, 1000 * cnt));
+    let obj = null;
+    let num = 0;
+    while (await waitCountUp()) {
+      if (num < cnt) {
+        obj = node.querySelector(selector);
+        num++;
+        if (!obj) { return break; }
+      } else {
+        return break;
+	  }
+    }
     return node.querySelector(selector);
   };
   // eslint-disable-next-line no-unused-vars
@@ -472,5 +485,6 @@
   // URLが変更されたとき
   changeUrl();
 })();
+
 
 
