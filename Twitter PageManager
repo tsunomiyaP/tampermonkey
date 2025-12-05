@@ -48,7 +48,7 @@
   elemStyle.textContent += 'div[role="progressbar"] { display: none !important; } ';
 
   // おすすめユーザー
-  elemStyle.textContent += 'div:is([aria-label="タイムライン: ホームタイムライン"i],[aria-label$="さんのポスト"i],[aria-label="タイムライン: 話題を検索"i],[aria-label="タイムライン: タイムラインを検索"i]) > div > div[data-testid="cellInnerDiv"i]:has(:is(div[class="css-175oi2r r-1adg3ll r-1ny4l3l"i])):not(:has(:is(div[data-testid="tweet"i], div[data-testid="trend"i], li[role="listitem"]))) { display: none !important; } ';
+  elemStyle.textContent += 'div:is([aria-label="タイムライン: ホームタイムライン"i],[aria-label$="さんのポスト"i],[aria-label="タイムライン: 話題を検索"i],[aria-label="タイムライン: タイムラインを検索"i]) > div > div[data-testid="cellInnerDiv"i]:has(:is(div[class="css-175oi2r r-1adg3ll r-1ny4l3l"i])):not(:has(:is(article[data-testid="tweet"i], div[data-testid="trend"i], li[role="listitem"]))) { display: none !important; } ';
   // 広告 : プロモーション
   elemStyle.textContent += 'div:is([aria-label="タイムライン: ホームタイムライン"i],[aria-label$="さんのポスト"i],[aria-label="タイムライン: 話題を検索"i],[aria-label="タイムライン: タイムラインを検索"i]) > div > div[data-testid="cellInnerDiv"i]:has(div[class="css-175oi2r r-a1ub67"i]) { display: none !important; } ';
   // x side bar moments
