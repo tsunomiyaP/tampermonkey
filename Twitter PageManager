@@ -39,7 +39,7 @@
   elemStyle.textContent += '.remove_item { display: none !important; } ';
   // 設定画面(tablet, pc), UserIcon, 画像, 動画, GIF, 再生ボタン背景
   // chromenium
-  elemStyle.textContent += 'main[role="main"]:not(:has(:is(section[aria-label^="セクション"], div[aria-label$="メディアビューアー"]))) *:not(:is(:is(div[class="css-175oi2r r-633pao r-u8s1d r-dkhcqf r-axxi2z r-18jm5s1 r-13qz1uu"], div[class="css-175oi2r r-633pao r-u8s1d r-dkhcqf r-axxi2z r-18jm5s1 r-13qz1uu"] *), :is(div[data-testid^="UserAvatar-Container-"i], div[data-testid^="UserAvatar-Container-"i] *, div[data-testid="Tweet-User-Avatar"i], div[data-testid="Tweet-User-Avatar"i] *), :is(div[data-testid="tweetPhoto"], div[data-testid="tweetPhoto"] *, button[data-testid="playButton"], button[data-testid="playButton"] *))) { color: rgba(0, 0, 0, 1) !important; background-color: rgba(255, 255, 255, 1) !important; backdrop-filter: none !important; } ';
+  elemStyle.textContent += 'main[role="main"]:not(:has(:is(section[aria-label^="セクション"], div[aria-label$="メディアビューアー"], div[data-testid="aboutText"]))) *:not(:is(:is(div[class="css-175oi2r r-633pao r-u8s1d r-dkhcqf r-axxi2z r-18jm5s1 r-13qz1uu"], div[class="css-175oi2r r-633pao r-u8s1d r-dkhcqf r-axxi2z r-18jm5s1 r-13qz1uu"] *), :is(div[data-testid^="UserAvatar-Container-"i], div[data-testid^="UserAvatar-Container-"i] *, div[data-testid="Tweet-User-Avatar"i], div[data-testid="Tweet-User-Avatar"i] *), :is(div[data-testid="tweetPhoto"], div[data-testid="tweetPhoto"] *, button[data-testid="playButton"], button[data-testid="playButton"] *))) { color: rgba(0, 0, 0, 1) !important; background-color: rgba(255, 255, 255, 1) !important; backdrop-filter: none !important; } ';
   // ツイート 枠 radius
   elemStyle.textContent += tweet_items_column + ' .r-1867qdf { border-radius: 0px !important; } ';
   // 検索バー
@@ -66,6 +66,13 @@
   elemStyle.textContent += 'a[href="/i/chat"i] { display: none !important; } ';
   // 収益化
   elemStyle.textContent += 'a[href="/i/monetization"i] { display: none !important; } ';
+  // つながる
+  elemStyle.textContent += 'a[href="/i/connect_people"] { display: none !important; } ';
+  // creator studio
+  elemStyle.textContent += 'a[href="/i/jf/creators/studio"] { display: none !important; } ';
+  // 広告
+  elemStyle.textContent += 'a[href*="ads.x.com/"] { display: none !important; } ';
+
   // サイドバー
   elemStyle.textContent += '[aria-label="トレンド"i] > div > div:not(:has(form[aria-label="検索"i])) { display: none !important; } ';
   // トレンド
