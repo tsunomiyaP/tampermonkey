@@ -53,23 +53,23 @@
   elemStyle.textContent += 'div:is([aria-label="タイムライン: ホームタイムライン"i],[aria-label$="さんのポスト"i],[aria-label="タイムライン: 話題を検索"i],[aria-label="タイムライン: タイムラインを検索"i]) > div > div[data-testid="cellInnerDiv"i]:has(div[class="css-175oi2r r-a1ub67"i]) { display: none !important; } ';
   // x side bar moments
   // Grok
-  elemStyle.textContent += 'a[href="/i/grok"i] { display: none !important; } ';
+  elemStyle.textContent += 'a[href^="/i/grok"i] { display: none !important; } ';
   // コミュニティ
   elemStyle.textContent += 'a[href$="/communities"i] { display: none !important; } ';
   // プレミアム
-  elemStyle.textContent += 'a[href="/i/premium"i] { display: none !important; } ';
+  elemStyle.textContent += 'a[href^="/i/premium"i] { display: none !important; } ';
   // 認証済み組織
-  elemStyle.textContent += 'a[href="/i/verified-orgs-signup"i] { display: none !important; } ';
+  elemStyle.textContent += 'a[href^="/i/verified-orgs-signup"i] { display: none !important; } ';
   // 求人
-  elemStyle.textContent += 'a[href="/jobs"i] { display: none !important; } ';
+  elemStyle.textContent += 'a[href^="/jobs"i] { display: none !important; } ';
   // チャット
-  elemStyle.textContent += 'a[href="/i/chat"i] { display: none !important; } ';
+  elemStyle.textContent += 'a[href^="/i/chat"i] { display: none !important; } ';
   // 収益化
-  elemStyle.textContent += 'a[href="/i/monetization"i] { display: none !important; } ';
+  elemStyle.textContent += 'a[href^="/i/monetization"i] { display: none !important; } ';
   // つながる
-  elemStyle.textContent += 'a[href="/i/connect_people"] { display: none !important; } ';
+  elemStyle.textContent += 'a[href^="/i/connect_people"] { display: none !important; } ';
   // creator studio
-  elemStyle.textContent += 'a[href="/i/jf/creators/studio"] { display: none !important; } ';
+  elemStyle.textContent += 'a[href^="/i/jf/creators/studio"] { display: none !important; } ';
   // 広告
   elemStyle.textContent += 'a[href*="ads.x.com/"] { display: none !important; } ';
 
