@@ -37,13 +37,13 @@
   elemStyle.textContent += 'div.html5-video-player { background-color: #000; } ';
   elemStyle.textContent += 'div.annotation.annotation-type-custom.iv-branding { display: none; } ';
   elemStyle.textContent += 'button.ytp-suggested-action-badge-content-forward { display: none; } ';
-  elemStyle.textContent += 'div.ytp-progress-bar-container { top: 5px !important; } ';
+  elemStyle.textContent += 'div.ytp-progress-bar-container { top: 5px !important; height: 10px !important; } ';
   // 常時表示
   //elemStyle.textContent += 'ytd-watch-flexy[full-bleed-player][is-vertical-video_] div#full-bleed-container { z-index: 999; } ytd-watch-flexy[full-bleed-player][is-vertical-video_] div#columns { z-index: 998; } ytd-watch-flexy[full-bleed-player][is-vertical-video_] div#columns.ytd-watch-flexy { padding-top: 55px !important; } ytd-watch-flexy[full-bleed-player][is-vertical-video_] ytd-player#ytd-player { height: calc(100% + 55px) !important; } ytd-watch-flexy[full-bleed-player][is-vertical-video_] div#container div.html5-video-container > video { top: 0 !important; } ytd-watch-flexy[full-bleed-player][is-vertical-video_] div#movie_player.ended-mode:has(video) video { display: none !important; } ';
   //elemStyle.textContent += 'ytd-watch-flexy[full-bleed-player]:not([is-vertical-video_]) div#full-bleed-container { z-index: 999; } ytd-watch-flexy[full-bleed-player]:not([is-vertical-video_]) div#columns { z-index: 998; } ytd-watch-flexy[full-bleed-player]:not([is-vertical-video_]) div#columns.ytd-watch-flexy { padding-top: 55px !important; } ytd-watch-flexy[full-bleed-player]:not([is-vertical-video_]) ytd-player#ytd-player { height: calc(100% + 55px) !important; } ytd-watch-flexy[full-bleed-player]:not([is-vertical-video_]) div#container div.html5-video-container > video { top: 0 !important; } ytd-watch-flexy[full-bleed-player]:not([is-vertical-video_]) div#movie_player.ended-mode:has(video) video { display: none !important; } ';
   //elemStyle.textContent += 'ytd-watch-flexy:not([full-bleed-player]) div#columns div#player { z-index: 999; } ytd-watch-flexy:not([full-bleed-player]) div#columns div#below { z-index: 998; } ytd-watch-flexy:not([full-bleed-player]) div#columns div#primary-inner > div#below { padding-top: 55px !important; } ytd-watch-flexy:not([full-bleed-player]) div#columns ytd-player#ytd-player { height: calc(100% + 55px) !important; } ytd-watch-flexy:not([full-bleed-player]) div#columns div.html5-video-container > video { top: 0 !important; } ytd-watch-flexy:not([full-bleed-player]) div#movie_player.ended-mode:has(video) video { display: none !important; } ';
   elemStyle.textContent += 'ytd-watch-flexy div#full-bleed-container, ytd-watch-flexy div#player { z-index: 999/** 2147483647 */ !important; } ';
-  elemStyle.textContent += 'div.ytp-chrome-bottom { position: fixed; bottom: 10px; inset: auto 0 0 !important; margin: auto; opacity: 1 !important; background: #000; } ';
+  elemStyle.textContent += 'div.ytp-chrome-bottom { position: fixed !important; inset: auto 0 0 !important; margin: auto !important; opacity: 1 !important; background: #000 !important; } ';
   // 動画要素非表示
   if (!isMovieMode) {
     // pc
@@ -54,6 +54,7 @@
   // .ytp-scrubber-container
   elemStyle.textContent += 'div.ytp-chrome-bottom .ytp-progress-bar[role="slider"] > * { display: none !important; } ';
   elemStyle.textContent += 'div.ytp-gradient-bottom { display: none !important; } ';
+  elemStyle.textContent += 'div.ytp-heat-map-container { display: none !important; } ';
   // ==========================================================
 
   // eslint-disable-next-line no-unused-vars
@@ -146,7 +147,7 @@
   // style progress bar
   const bar = document.createElement('div');
   bar.style.backgroundColor = '#FF1600'; // gray instead of red to avoid confusion with original progress bar
-  bar.style.height = '4px';
+    bar.style.height = '10px';
   if (alsoInFullscreen) {
     bar.style.position = 'absolute';
     bar.style.top = '5px';
