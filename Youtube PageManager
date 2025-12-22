@@ -241,7 +241,7 @@
     if (!watcher.test(location.pathname)) { return false; }
     const menuButton = await waitQuerySelector(menuArea);
     menuButton.click();
-    const drcMenuItem = document.querySelector(drcBtn);
+    const drcMenuItem = await waitQuerySelectorCount(2, drcBtn);
     if (isNuN(drcMenuItem)) {
       document.querySelector(manager).click();
       console.log('DRC Audio is already disabled');
