@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube PageManager
 // @namespace    http://tampermonkey.net/
-// @version      4.2
+// @version      4.4
 // @description  try to take over the world!
 // @author       You
 // @match        https://*.youtube.com/*
@@ -143,7 +143,7 @@
       }
     }
     while (!obj) {
-      await new Promise(resolve => setTimeout(resolve, 10000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
       obj = node.querySelector(selector);
     }
     return obj;
@@ -236,35 +236,23 @@
     const chat = await waitQuerySelectorCount(5, 'div#chat-container');
     if (!isNuN(chat)) { chat.remove(); }
   };
-  const ytStableVolume = async () => {
+  const ytStableVolume = async (menuArea, drcBtn) => {
     const watcher = new RegExp(regWatch, 'gis');
     if (!watcher.test(location.pathname)) { return false; }
-    if ('www.youtube.com' === location.hostname) {
-      // pc
-      const menuButton = await waitQuerySelector('button.ytp-settings-button');
-      menuButton.click();
-      const drcMenuItem = await waitQuerySelectorCount(5, 'div.ytp-drc-menu-item[role="menuitemcheckbox"]');
+    const menuButton = await waitQuerySelector(menuArea);
+    menuButton.click();
+    const drcMenuItem = document.querySelector(drcBtn);
+    if (isNuN(drcMenuItem)) {
+      document.querySelector(manager).click();
+      console.log('DRC Audio is already disabled');
+    } else {
       if (drcMenuItem.getAttribute('aria-checked') === 'true') {
         drcMenuItem.click();
         console.log('Disabled DRC Audio');
       } else {
         console.log('DRC Audio is already disabled');
       }
-      menuButton.click();
-    }
-    if ('m.youtube.com' === location.hostname) {
-      // mobile
-      const menuButton = await waitQuerySelector('button.player-settings-icon[aria-label="再生設定"]');
-      menuButton.click();
-      const drcMenuItem = await waitQuerySelectorCount(5, 'stable-volume-toggle switch-button-view-model > button.ytSwitchButtonViewModelButton[role="switch"]');
-      if (drcMenuItem.getAttribute('aria-checked') === 'true') {
-        drcMenuItem.click();
-        console.log('Disabled DRC Audio');
-      } else {
-        console.log('DRC Audio is already disabled');
-      }
-      const closeBtn = await waitQuerySelector('ytw-scrim.ytWebScrimHost');
-      closeBtn.click();
+      document.querySelector(manager).click();
     }
   };
   const removeMovieInformation = async (item) => {
@@ -469,8 +457,14 @@
           }
         }
 
-        ytChatArea();
-        ytStableVolume();
+        if ('www.youtube.com' === location.hostname) {
+          // pc
+          ytChatArea();
+          ytStableVolume('button.ytp-settings-button', 'div.ytp-drc-menu-item[role="menuitemcheckbox"]');
+        } else if ('m.youtube.com' === location.hostname) {
+          // mobile
+          ytStableVolume('button.player-settings-icon[aria-label="再生設定"]', 'stable-volume-toggle switch-button-view-model > button.ytSwitchButtonViewModelButton[role="switch"]');
+        }
 
         const waitNum = 'www.youtube.com' === location.hostname ? waitNums[0] : waitNums[1];
         await new Promise(resolve => setTimeout(resolve, waitTime * waitNum));
