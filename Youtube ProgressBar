@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube ProgressBar
 // @namespace    http://tampermonkey.net/
-// @version      4.0
+// @version      4.4
 // @description  try to take over the world!
 // @author       You
 // @match        https://www.youtube.com/*
@@ -147,7 +147,7 @@
   // style progress bar
   const bar = document.createElement('div');
   bar.style.backgroundColor = '#FF1600'; // gray instead of red to avoid confusion with original progress bar
-    bar.style.height = '10px';
+  bar.style.height = '10px';
   if (alsoInFullscreen) {
     bar.style.position = 'absolute';
     bar.style.top = '5px';
