@@ -54,26 +54,38 @@
   // x side bar moments
   // Grok
   elemStyle.textContent += 'nav[role="navigation"] > a[href*="/i/grok"i] { display: none !important; } ';
+  elemStyle.textContent += 'div[role="dialog"] div:has(> a[href*="/i/grok"i]) { display: none !important; } ';
   // コミュニティ
   elemStyle.textContent += 'nav[role="navigation"] > a[href$="/communities"i] { display: none !important; } ';
+  elemStyle.textContent += 'div[role="dialog"] div:has(> a[href$="/communities"i]) { display: none !important; } ';
   // プレミアム
   elemStyle.textContent += 'nav[role="navigation"] > a[href*="/i/premium"i] { display: none !important; } ';
+  elemStyle.textContent += 'div[role="dialog"] div:has(> a[href*="/i/premium"i]) { display: none !important; } ';
   // 認証済み組織
   elemStyle.textContent += 'nav[role="navigation"] > a[href*="/i/verified-orgs-signup"i] { display: none !important; } ';
+  elemStyle.textContent += 'div[role="dialog"] div:has(> a[href*="/i/verified-orgs-signup"i]) { display: none !important; } ';
   // 求人
   elemStyle.textContent += 'nav[role="navigation"] > a[href*="/jobs"i] { display: none !important; } ';
+  elemStyle.textContent += 'div[role="dialog"] div:has(> a[href*="/jobs"i]) { display: none !important; } ';
   // チャット
   elemStyle.textContent += 'nav[role="navigation"] > a[href*="/i/chat"i] { display: none !important; } ';
+  elemStyle.textContent += 'div[role="dialog"] div:has(> a[href*="/i/chat"i]) { display: none !important; } ';
   // 収益化
   elemStyle.textContent += 'nav[role="navigation"] > a[href*="/i/monetization"i] { display: none !important; } ';
+  elemStyle.textContent += 'div[role="dialog"] div:has(> a[href*="/i/monetization"i]) { display: none !important; } ';
   // つながる
   elemStyle.textContent += 'nav[role="navigation"] > a[href*="/i/connect_people"] { display: none !important; } ';
+  elemStyle.textContent += 'div[role="dialog"] div:has(> a[href*="/i/connect_people"i]) { display: none !important; } ';
   // プレミアム
   elemStyle.textContent += 'div[role="menu"] div[data-testid="Dropdown"] a[href*="/i/premium"i] { display: none !important; } ';
+  elemStyle.textContent += 'div[role="dialog"] div:has(> a[href*="/i/premium"i]) { display: none !important; } ';
   // creator studio
   elemStyle.textContent += 'div[role="menu"] div[data-testid="Dropdown"] a[href*="/i/jf/creators/studio"] { display: none !important; } ';
+  elemStyle.textContent += 'div[role="dialog"] div:has(> a[href="/i/jf/creators/studio"i]) { display: none !important; } ';
   // 広告
   elemStyle.textContent += 'div[role="menu"] div[data-testid="Dropdown"] a[href*="ads.x.com/"] { display: none !important; } ';
+  elemStyle.textContent += 'div[role="dialog"] div:has(> a[href*="ads.x.com/"i]) { display: none !important; } ';
+
 
   // サイドバー
   elemStyle.textContent += '[aria-label="トレンド"i] > div > div:not(:has(form[aria-label="検索"i])) { display: none !important; } ';
