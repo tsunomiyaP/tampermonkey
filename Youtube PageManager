@@ -236,14 +236,14 @@
     const chat = await waitQuerySelectorCount(5, 'div#chat-container');
     if (!isNuN(chat)) { chat.remove(); }
   };
-  const ytStableVolume = async (menuArea, drcBtn) => {
+  const ytStableVolume = async (menuArea, drcBtn, closeArea) => {
     const watcher = new RegExp(regWatch, 'gis');
     if (!watcher.test(location.pathname)) { return false; }
     const menuButton = await waitQuerySelector(menuArea);
     menuButton.click();
     const drcMenuItem = await waitQuerySelectorCount(2, drcBtn);
     if (isNuN(drcMenuItem)) {
-      document.querySelector(manager).click();
+      document.querySelector(closeArea).click();
       console.log('DRC Audio is already disabled');
     } else {
       if (drcMenuItem.getAttribute('aria-checked') === 'true') {
@@ -252,7 +252,7 @@
       } else {
         console.log('DRC Audio is already disabled');
       }
-      document.querySelector(manager).click();
+      document.querySelector(closeArea).click();
     }
   };
   const removeMovieInformation = async (item) => {
@@ -460,10 +460,10 @@
         if ('www.youtube.com' === location.hostname) {
           // pc
           ytChatArea();
-          ytStableVolume('button.ytp-settings-button', 'div.ytp-drc-menu-item[role="menuitemcheckbox"]');
+          ytStableVolume('button.ytp-settings-button', 'div.ytp-drc-menu-item[role="menuitemcheckbox"]', manager);
         } else if ('m.youtube.com' === location.hostname) {
           // mobile
-          ytStableVolume('button.player-settings-icon[aria-label="再生設定"]', 'stable-volume-toggle switch-button-view-model > button.ytSwitchButtonViewModelButton[role="switch"]');
+          ytStableVolume('button.player-settings-icon[aria-label="再生設定"]', 'stable-volume-toggle switch-button-view-model > button.ytSwitchButtonViewModelButton[role="switch"]', 'bottom-sheet-container > ytw-scrim');
         }
 
         const waitNum = 'www.youtube.com' === location.hostname ? waitNums[0] : waitNums[1];
