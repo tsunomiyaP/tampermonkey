@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube PageManager
 // @namespace    http://tampermonkey.net/
-// @version      4.4
+// @version      4.5
 // @description  try to take over the world!
 // @author       You
 // @match        https://*.youtube.com/*
@@ -92,6 +92,17 @@
   // ext
   elemStyle.textContent += 'ytm-pivot-bar-item-renderer:has(div.pivot-bar-item-tab.pivot-shorts) { display: none !important; } ';
   elemStyle.textContent += 'header.mobile-topbar-header div.mobile-topbar-header-sign-in-button { display: none !important; } ';
+
+  // preview : 無効化
+  elemStyle.textContent += `
+    ytd-video-preview { display: none !important; }
+    .ytd-thumbnail-overlay-loading-preview-renderer { display: none !important; }
+    .ytp-inline-preview-ui { display: none !important; }
+    .ytp-inline-preview-scrip { display: none !important; }
+    #preview { display: none !important; }
+    ytd-thumbnail[now-playing] ytd-thumbnail-overlay-time-status-renderer.ytd-thumbnail { display: flex !important; }
+    ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-time-status-renderer.ytd-thumbnail { display: flex !important; }
+  `;
 
   if (!isChatMode) { elemStyle.textContent += 'div#chat-container { display: none !important; } '; }
 
