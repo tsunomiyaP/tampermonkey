@@ -38,7 +38,7 @@
 
   elemStyle.textContent += '.remove_item { display: none !important; } ';
   // chromenium navbar custome
-  elemStyle.textContent += 'main[role="main"] * { backdrop-filter: none !important; } main[role="main"] :not(div[data-testid="toolBar"]) > nav[role="navigation"] > div > div > div[role="tablist"] { color: rgba(255, 255, 255, 1) !important; background-color: rgba(0, 0, 0, 1) !important; backdrop-filter: none !important; } ';
+  elemStyle.textContent += 'main[role="main"] * { backdrop-filter: none !important; } main[role="main"] div[class="css-175oi2r r-1e5uvyk r-ii8lfi"]:has(:not(div[data-testid="toolBar"]) > nav[role="navigation"] > div > div > div[role="tablist"]) { color: rgba(255, 255, 255, 1) !important; background-color: rgba(0, 0, 0, 1) !important; backdrop-filter: none !important; } ';
   // img, gif, movie, web card
   elemStyle.textContent += tweet_items_column + ' :is(div[data-testid="tweetPhoto"]:has(> [alt="画像"]), div[data-testid="tweetPhoto"]:not(:has(> [alt="画像"])) div[data-testid="previewInterstitial"], div[data-testid="previewInterstitial"], div[data-testid="card.wrapper"] > div) { visibility: hidden !important; } ' + tweet_items_column + ':hover :is(div[data-testid="tweetPhoto"]:has(> [alt="画像"]), div[data-testid="tweetPhoto"]:not(:has(> [alt="画像"])) div[data-testid="previewInterstitial"], div[data-testid="previewInterstitial"], div[data-testid="card.wrapper"] > div) { visibility: visible !important; } ';
   // ツイート 枠 radius
