@@ -24,12 +24,12 @@
   const waitNums = [2, 2]; // pc, mobile
   const manager = 'ytd-app, ytm-app[id="app"i]';
   const itemsArray = [
-    { device: 'www.youtube.com', path: '^/$', area: '[page-subtype="home"i] div#primary > ytd-rich-grid-renderer > div#contents', stylus: 'transform: ' + scale + ' !important; pointer-events: none !important;' },
+    { device: 'www.youtube.com', path: '(^/$|^/index)', area: '[page-subtype="home"i] div#primary > ytd-rich-grid-renderer > div#contents', stylus: 'transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'www.youtube.com', path: '^/feed/subscriptions', area: '[page-subtype="subscriptions"i] div#primary > ytd-rich-grid-renderer > div#contents', stylus: 'transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'www.youtube.com', path: '^/watch|^/live', area: 'ytd-watch-flexy div#related div#items', stylus: 'transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'www.youtube.com', path: '^/@.+/(videos|streams)|^/channel/.+/(videos|streams)|^/c/.+/(videos|streams)|^/user/.+/(videos|streams)|^/u/.+/(videos|streams)', area: '[page-subtype="channels"i] div#primary > ytd-rich-grid-renderer > div#contents', stylus: 'transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'www.youtube.com', path: '^/results', area: 'ytd-two-column-search-results-renderer > div#primary > ytd-section-list-renderer > div#contents', stylus: 'transform: ' + scale + ' !important; pointer-events: none !important;' },
-    { device: 'm.youtube.com', path: '^/$', area: 'div.tab-content[tab-identifier="FEwhat_to_watch"i] div.rich-grid-renderer-contents', stylus: 'display: block; transform: ' + scale + ' !important; pointer-events: none !important;' },
+    { device: 'm.youtube.com', path: '(^/$|^/index)', area: 'div.tab-content[tab-identifier="FEwhat_to_watch"i] div.rich-grid-renderer-contents', stylus: 'display: block; transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'm.youtube.com', path: '^/feed/subscriptions', area: 'div.tab-content[tab-identifier="FEsubscriptions"i] > ytm-tab-renderer > * > lazy-list', stylus: 'display: block; transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'm.youtube.com', path: '^/watch|^/live', area: ':is([section-identifier="related-items"] > lazy-list, div.related-items-container lazy-list)', stylus: 'display: block; transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'm.youtube.com', path: '^/@.+/(videos|streams)|^/channel/.+/(videos|streams)|^/c/.+/(videos|streams)|^/user/.+/(videos|streams)|^/u/.+/(videos|streams)', area: 'ytm-tab-renderer div.rich-grid-renderer-contents', stylus: 'display: block; transform: ' + scale + ' !important; pointer-events: none !important;' },
@@ -417,7 +417,7 @@
 
         if (!isNuN(ytMutation)) { ytMutation.disconnect(); }
 
-        const path = new RegExp('(^/$)|(^/feed/subscriptions)|(^/watch|^/live)|(^/results)|(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)', 'gis');
+        const path = new RegExp('(^/$|^/index)|(^/feed/subscriptions)|(^/watch|^/live)|(^/results)|(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)', 'gis');
         const reg = path.test(location.pathname);
         if (!reg) { return false; }
 
@@ -491,5 +491,3 @@
   // URLが変更されたとき
   changeUrl();
 })();
-
-
