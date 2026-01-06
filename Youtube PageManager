@@ -83,11 +83,11 @@
   elemStyle.textContent += 'ytd-guide-renderer > div#footer { display: none !important; } ';
   // mobile
   // ホーム、チャンネル
-  elemStyle.textContent += 'div[class="tab-content"i]:is([tab-title="ホーム"i], [tab-title="動画"i], [tab-title="ライブ"i]) :is(ytm-item-section-renderer:has(ytm-channel-featured-video-renderer), ytm-item-section-renderer:has(a[href*="/shorts/"i]), ytm-statement-banner-renderer, ytm-rich-item-renderer.is-in-first-col:has(ad-slot-renderer), ytm-rich-item-renderer:has(ytm-radio-renderer), ytm-rich-item-renderer:has(a[href*="/shorts/"i]), ytm-rich-item-renderer:has(a[href*="&start_radio="i]), ytm-rich-item-renderer:has(a[href*="&list="i]), ytm-rich-section-renderer) { display: none !important; } ';
+  elemStyle.textContent += 'div[class="tab-content"i]:is([tab-title="ホーム"i], [tab-title="動画"i], [tab-title="ライブ"i]) :is(ytm-item-section-renderer:has(ytm-channel-featured-video-renderer), ytm-item-section-renderer:has(a[href*="/shorts/"i]), ytm-statement-banner-renderer, ytm-rich-item-renderer.is-in-first-col:has(ad-slot-renderer), ytm-rich-item-renderer:has(ytm-radio-renderer), ytm-rich-item-renderer:has(a[href*="/shorts/"i]), ytm-rich-item-renderer:has(a[href*="&start_radio="i]), ytm-rich-item-renderer:has(a[href*="&list="i]), ytm-rich-item-renderer:has(ytm-badge-supported-renderer), ytm-rich-section-renderer) { display: none !important; } ';
   // 動画
-  elemStyle.textContent += 'ytm-watch :is(ytm-compact-playlist-renderer, ytm-compact-radio-renderer, ytm-item-section-renderer ytm-video-with-context-renderer:has(a[href*="/shorts/"i]), ytm-item-section-renderer ytm-video-with-context-renderer:has(a[href*="&start_radio="i]), ytm-item-section-renderer ytm-video-with-context-renderer:has(a[href*="&list="i]), div.ytVideoMetadataCarouselViewModelCarouselContainer:has(yt-carousel-item-view-model[aria-label="コメント"i])), ytm-custom-control div#player-control-overlay div.player-controls-background-container { display: none !important; } ';
+  elemStyle.textContent += 'ytm-watch :is(ytm-compact-playlist-renderer, ytm-compact-radio-renderer, ytm-item-section-renderer ytm-video-with-context-renderer:has(a[href*="/shorts/"i]), ytm-item-section-renderer ytm-video-with-context-renderer:has(a[href*="&start_radio="i]), ytm-item-section-renderer ytm-video-with-context-renderer:has(a[href*="&list="i]), ytm-video-with-context-renderer:has(ytm-badge-supported-renderer), div.ytVideoMetadataCarouselViewModelCarouselContainer:has(yt-carousel-item-view-model[aria-label="コメント"i])), ytm-custom-control div#player-control-overlay div.player-controls-background-container { display: none !important; } ';
   // 検索
-  elemStyle.textContent += 'ytm-search :is(ytm-universal-watch-card-renderer, ytm-horizontal-card-list-renderer, ytm-reel-shelf-renderer:has(a[href*="/shorts/"i]), ytm-video-with-context-renderer:has(a[href*="/shorts/"i]), ytm-video-with-context-renderer:has(a[href*="&start_radio="i]), ytm-video-with-context-renderer:has(a[href*="&list="i]), ytm-video-with-context-renderer:has([aria-label*="#shorts"i]), ytm-compact-channel-renderer, ytm-compact-playlist-renderer, ytm-compact-radio-renderer, grid-shelf-view-model) { display: none !important; } ';
+  elemStyle.textContent += 'ytm-search :is(ytm-universal-watch-card-renderer, ytm-horizontal-card-list-renderer, ytm-reel-shelf-renderer:has(a[href*="/shorts/"i]), ytm-video-with-context-renderer:has(a[href*="/shorts/"i]), ytm-video-with-context-renderer:has(a[href*="&start_radio="i]), ytm-video-with-context-renderer:has(a[href*="&list="i]), ytm-video-with-context-renderer:has(ytm-badge-supported-renderer), ytm-video-with-context-renderer:has([aria-label*="#shorts"i]), ytm-compact-channel-renderer, ytm-compact-playlist-renderer, ytm-compact-radio-renderer, grid-shelf-view-model) { display: none !important; } ';
 
   // ext
   elemStyle.textContent += 'ytm-pivot-bar-item-renderer:has(div.pivot-bar-item-tab.pivot-shorts) { display: none !important; } ';
@@ -369,14 +369,14 @@
   const ytMovieList = async (area) => {
     const searcher = new RegExp(regSearch, 'gis');
     if (searcher.test(location.pathname)) {
-      console.log('> ytMovie search result');
+      // console.log('> ytMovie search result');
       for (const result of area.querySelectorAll('ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list')) {
         for (const item of result.children) {
           scaleShowMovie(area, item);
         }
       }
     } else {
-      console.log('> ytMovie check result...');
+      // console.log('> ytMovie check result...');
       for (const item of area.children) {
         scaleShowMovie(area, item);
       }
