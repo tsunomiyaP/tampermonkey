@@ -19,6 +19,7 @@
   const waitTime = 500;
   const regWatch = '/watch';
   const ncvid = 'div#watchVideoContainer.watch-Video_Container > video';
+  const pload = 'div.watch-Player_Loading';
   const ncbtn = 'div.watch-OpeningPlayerInfo_Container > button#jsWatchThisPage.watch-OpeningPlayerInfo_PlayButton';
   // 可変数
   // ==========================================================
@@ -119,9 +120,17 @@
 
   const playingWatch = async () => {
     await waitQuerySelector('div.watch-Player_Container');
+    let intervalLoad;
+    if (intervalLoad) { clearInterval(intervalLoad); }
+    intervalLoad = setInterval(() => {
+      if (document.querySelector(pload).ariaHidden === 'true') {
+        clearInterval(intervalLoad);
+      }
+    }, waitTime);
+    await new Promise(resolve => setTimeout(resolve, waitTime * 4));
+
     await waitQuerySelector(ncvid);
     await waitQuerySelector(ncbtn);
-    await new Promise(resolve => setTimeout(resolve, waitTime * 4));
     document.querySelector(ncbtn).click();
 
     const obs = new MutationObserver(async () => {
