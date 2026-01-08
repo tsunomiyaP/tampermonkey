@@ -122,7 +122,7 @@
     await waitQuerySelector(ncvid);
     await waitQuerySelector(ncbtn);
     await new Promise(resolve => setTimeout(resolve, waitTime * 4));
-    document.querySelector(button).click();
+    document.querySelector(ncbtn).click();
 
     const obs = new MutationObserver(async () => {
       if (document.querySelector('div.watch-Player_Container').classList.contains('is-playing')) { // 再生開始
