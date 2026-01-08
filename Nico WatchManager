@@ -7,9 +7,11 @@
 // @match        https://sp.nicovideo.jp/*
 // @grant        none
 // @icon         https://www.google.com/s2/favicons?domain=www.nicovideo.jp
-// @run-at       document-body
+// @run-at       document-idle
 // @noframes
 // ==/UserScript==
+
+/** https://ameblo.jp/personwritep/entry-12454114411.html */
 
 (function() {
   'use strict';
@@ -19,7 +21,6 @@
   const waitTime = 500;
   const regWatch = '/watch';
   const ncvid = 'div#watchVideoContainer.watch-Video_Container > video';
-  const pload = 'div.watch-Player_Loading';
   const ncbtn = 'div.watch-OpeningPlayerInfo_Container > button#jsWatchThisPage.watch-OpeningPlayerInfo_PlayButton';
   // 可変数
   // ==========================================================
@@ -120,15 +121,7 @@
 
   const playingWatch = async () => {
     await waitQuerySelector('div.watch-Player_Container');
-    let intervalLoad;
-    if (intervalLoad) { clearInterval(intervalLoad); }
-    intervalLoad = setInterval(() => {
-      if (document.querySelector(pload).ariaHidden === 'true') {
-        clearInterval(intervalLoad);
-      }
-    }, waitTime);
     await new Promise(resolve => setTimeout(resolve, waitTime * 4));
-
     await waitQuerySelector(ncvid);
     await waitQuerySelector(ncbtn);
     document.querySelector(ncbtn).click();
