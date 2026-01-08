@@ -150,6 +150,7 @@
 
     const url_config = { 'attributes': false, 'childList': true, 'subtree': true };
     const url_obs = new MutationObserver(async () => {
+      dialogHide();
       if (href != location.pathname + location.search) {
         // console.log('Before:', href);
         // console.log('After:', location.href);
@@ -161,22 +162,24 @@
           playingWatch();
         }
       }
-
-      // 動画読み込みに失敗
-      if (document.querySelector('div#jsModalDialogContainer') !== null) {
-        document.querySelector('div#jsModalDialogContainer').style.display = 'none';
-      }
-      if (document.querySelector('div#jsMarqueeContainer') !== null) {
-        document.querySelector('div#jsMarqueeContainer').style.display = 'none';
-      }
-      if (document.querySelector('div#jsSmartAppBanner') !== null) {
-        document.querySelector('div#jsSmartAppBanner').style.display = 'none';
-      }
-      if (document.querySelector('a.common-header-oidyxs') !== null) {
-        document.querySelector('a.common-header-oidyxs').style.display = 'none';
-      }
     });
     url_obs.observe(document, url_config);
+  };
+
+  const dialogHide = () => {
+    // 動画読み込みに失敗
+    if (document.querySelector('div#jsModalDialogContainer') !== null) {
+      document.querySelector('div#jsModalDialogContainer').style.display = 'none';
+    }
+    if (document.querySelector('div#jsMarqueeContainer') !== null) {
+      document.querySelector('div#jsMarqueeContainer').style.display = 'none';
+    }
+    if (document.querySelector('div#jsSmartAppBanner') !== null) {
+      document.querySelector('div#jsSmartAppBanner').style.display = 'none';
+    }
+    if (document.querySelector('a.common-header-oidyxs') !== null) {
+      document.querySelector('a.common-header-oidyxs').style.display = 'none';
+    }
   };
 
   // URLが変更されたとき
