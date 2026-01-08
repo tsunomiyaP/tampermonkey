@@ -18,7 +18,8 @@
   // 変数宣言
   const waitTime = 500;
   const regWatch = '/watch';
-  const button = 'div.watch-OpeningPlayerInfo_Container > button.watch-OpeningPlayerInfo_PlayButton#jsWatchThisPage';
+  const ncvid = 'div#watchVideoContainer.watch-Video_Container > video';
+  const ncbtn = 'div.watch-OpeningPlayerInfo_Container > button#jsWatchThisPage.watch-OpeningPlayerInfo_PlayButton';
   // 可変数
   // ==========================================================
   // 静的style適用エリア
@@ -118,7 +119,8 @@
 
   const playingWatch = async () => {
     await waitQuerySelector('div.watch-Player_Container');
-    await waitQuerySelector(button);
+    await waitQuerySelector(ncvid);
+    await waitQuerySelector(ncbtn);
     await new Promise(resolve => setTimeout(resolve, waitTime * 4));
     document.querySelector(button).click();
 
