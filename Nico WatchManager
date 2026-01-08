@@ -1,0 +1,182 @@
+// ==UserScript==
+// @name         Nico WatchManager
+// @namespace    http://tampermonkey.net/
+// @version      1.1
+// @description  try to take over the world!
+// @author       You
+// @match        https://sp.nicovideo.jp/*
+// @grant        none
+// @icon         https://www.google.com/s2/favicons?domain=www.nicovideo.jp
+// @run-at       document-body
+// @noframes
+// ==/UserScript==
+
+(function() {
+  'use strict';
+
+  // ==========================================================
+  // 変数宣言
+  const regWatch = '/watch';
+  const button = 'button.watch-OpeningPlayerInfo_PlayButton';
+  // 可変数
+  // ==========================================================
+  // 静的style適用エリア
+  const elemStyle = document.createElement('style');
+  elemStyle.id = 'nicoStylusManager';
+  document.head.insertAdjacentElement('beforeend', elemStyle);
+
+  elemStyle.textContent += 'a[href*="/premium"] { display: none !important; } ';
+  // ==========================================================
+
+  // eslint-disable-next-line no-unused-vars
+  const isNuN = (selector) => {
+    if (selector === null || selector === undefined || selector === '') { return true; } else { return false; }
+  };
+  // eslint-disable-next-line no-unused-vars
+  const waitQuerySelector = async (selector, node = document) => {
+    let obj = null;
+    while (!obj) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+      obj = node.querySelector(selector);
+    }
+    return obj;
+  };
+  // eslint-disable-next-line no-unused-vars
+  const waitQuerySelectorCount = async (cnt, selector, node = document) => {
+    let obj = null;
+    let num = 0;
+    while (!obj) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      if (num < cnt) {
+        obj = node.querySelector(selector);
+        num++;
+        if (!obj) { return obj; }
+      } else {
+        break;
+      }
+    }
+    while (!obj) {
+      await new Promise(resolve => setTimeout(resolve, 10000));
+      obj = node.querySelector(selector);
+    }
+    return obj;
+  };
+  // eslint-disable-next-line no-unused-vars
+  const waitQuerySelectorIframe = async (selector1, selector2, node = document) => {
+    let obj = null;
+    while (!obj) {
+      // iframe.contentWindow.document === iframe.contentDocument
+      await new Promise(resolve => setTimeout(resolve, 500));
+      obj = node.querySelector(selector1).contentDocument.querySelector(selector2);
+    }
+    return obj;
+  };
+  // eslint-disable-next-line no-unused-vars
+  const deleteParam = (searchUrl, param) => {
+    const base = new URL(location.protocol + '//' + location.hostname);
+    const url = new URL(searchUrl, base);
+    // URLSearchParamsオブジェクトを取得
+    const params = url.searchParams;
+    params.delete(param);
+
+    return url;
+  };
+  // eslint-disable-next-line no-unused-vars
+  const searchParams = (searchUrl, param) => {
+    const base = new URL(location.protocol + '//' + location.hostname);
+    const url = new URL(searchUrl, base);
+    console.log('url section', url);
+    // URLSearchParamsオブジェクトを取得
+    const params = url.searchParams;
+
+    return params.get(param);
+  };
+  // eslint-disable-next-line no-unused-vars
+  const getParam = (name, url) => {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\\[\]]/g, '\\$&');
+    let regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+    let results = regex.exec(url);
+
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+  };
+  // eslint-disable-next-line no-unused-vars
+  const userAgent = () => {
+    const userDevice = navigator.userAgent;
+    if (userDevice.indexOf('iPhone') > 0 || userDevice.indexOf('iPod') > 0 || userDevice.indexOf('Android') > 0 && userDevice.indexOf('Mobile') > 0) {
+      return false;
+    } else if (userDevice.indexOf('iPad') > 0 || userDevice.indexOf('Android') > 0) {
+      return false;
+    } else {
+      // pc
+      return true;
+    }
+  };
+
+  const playingWatch = async () => {
+    await waitQuerySelector('div.watch-Player_Container');
+    await waitQuerySelector(button);
+    document.querySelector(button).click();
+
+    const obs = new MutationObserver(async () => {
+      if (document.querySelector('div.watch-Player_Container').classList.contains('is-playing')) { // 再生開始
+        if (document.querySelector('div.watch-PlayerUpperControllerDock_CommentToggle') !== null) {
+          if (!document.querySelector('div.watch-PlayerUpperControllerDock_CommentToggle').classList.contains('off')) {
+            document.querySelector('div.watch-PlayerUpperControllerDock_CommentToggle').click();
+          }
+        }
+        if (document.querySelector('button.watch-OpenCommentListButton') !== null) {
+          if (document.querySelector('div.watch-OpenCommentListButton_Count').textContent != '閉じる') {
+            document.querySelector('button.watch-OpenCommentListButton').click();
+          }
+        }
+      } else if (document.querySelector('div.watch-Player_Container').classList.contains('screen-close')) { // 次のシリーズがあれば遷移
+        if (document.querySelector('div.watch-VideoDescription-Body_Series') !== null) {
+          let series = document.querySelector('div.watch-VideoDescription-Body_Series');
+          if (series.querySelector('a.watch-VideoDescription-Body_SeriesNext') !== null) {
+            series.querySelector('a.watch-VideoDescription-Body_SeriesNext').click();
+          }
+        }
+      }
+    });
+    obs.observe(document.querySelector('div.watch-Player_Container'), { 'attributes': true, 'childList': false, 'subtree': false });
+  };
+  const changeUrl = async () => {
+    let href;
+
+    const url_config = { 'attributes': false, 'childList': true, 'subtree': true };
+    const url_obs = new MutationObserver(async () => {
+      if (href != location.pathname + location.search) {
+        // console.log('Before:', href);
+        // console.log('After:', location.href);
+        href = location.pathname + location.search;
+
+        const watch = new RegExp(regWatch, 'gis');
+        const isWatch = watch.test(location.pathname);
+        if (isWatch) {
+          playingWatch();
+        }
+      }
+
+      // 動画読み込みに失敗
+      if (document.querySelector('div#jsModalDialogContainer') !== null) {
+        document.querySelector('div#jsModalDialogContainer').style.display = 'none';
+      }
+      if (document.querySelector('div#jsMarqueeContainer') !== null) {
+        document.querySelector('div#jsMarqueeContainer').style.display = 'none';
+      }
+      if (document.querySelector('div#jsSmartAppBanner') !== null) {
+        document.querySelector('div#jsSmartAppBanner').style.display = 'none';
+      }
+      if (document.querySelector('a.common-header-oidyxs') !== null) {
+        document.querySelector('a.common-header-oidyxs').style.display = 'none';
+      }
+    });
+    url_obs.observe(document, url_config);
+  };
+
+  // URLが変更されたとき
+  changeUrl();
+})();
