@@ -16,8 +16,9 @@
 
   // ==========================================================
   // 変数宣言
+  const waitTime = 500;
   const regWatch = '/watch';
-  const button = 'button.watch-OpeningPlayerInfo_PlayButton';
+  const button = 'div.watch-OpeningPlayerInfo_Container > button.watch-OpeningPlayerInfo_PlayButton';
   // 可変数
   // ==========================================================
   // 静的style適用エリア
@@ -117,8 +118,9 @@
 
   const playingWatch = async () => {
     await waitQuerySelector('div.watch-Player_Container');
-    await waitQuerySelector(button);
-    document.querySelector(button).click();
+    await new Promise(resolve => setTimeout(resolve, waitTime * 4));
+    const btn = await waitQuerySelector(button);
+    btn.click();
 
     const obs = new MutationObserver(async () => {
       if (document.querySelector('div.watch-Player_Container').classList.contains('is-playing')) { // 再生開始
