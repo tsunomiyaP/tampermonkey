@@ -118,9 +118,9 @@
 
   const playingWatch = async () => {
     await waitQuerySelector('div.watch-Player_Container');
+    await waitQuerySelector(button);
     await new Promise(resolve => setTimeout(resolve, waitTime * 4));
-    const btn = await waitQuerySelector(button);
-    btn.click();
+    document.querySelector(button).click();
 
     const obs = new MutationObserver(async () => {
       if (document.querySelector('div.watch-Player_Container').classList.contains('is-playing')) { // 再生開始
