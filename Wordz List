@@ -165,7 +165,7 @@
       '歌衣(\\s)*メイカ|メイカちゃんねる|(@)*utaimeika$',
       // others youtube
       'はじめしゃちょー|(@)*hajimesyacho$',
-      'ヒカキン|(@)*hikakin|(@)*seikin$',
+      'ヒカキン|(@)*hikakin$|(@)*seikin$',
       '東海オンエア|ロードシルク|(@)*tokaionair$',
       'フィッシャーズ|(@)*fischers$',
       'よしなま|(@)*yoshinama0130$',
