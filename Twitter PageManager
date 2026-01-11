@@ -68,6 +68,9 @@
   // 求人
   elemStyle.textContent += 'nav[role="navigation"i] > a[href$="/jobs"i] { display: none !important; } ';
   elemStyle.textContent += 'div[role="dialog"i] div:has(> a[href$="/jobs"i]) { display: none !important; } ';
+  // creator studio
+  elemStyle.textContent += 'nav[role="navigation"i] > a[href$="/i/jf/creators/studio"i] { display: none !important; } ';
+  elemStyle.textContent += 'div[role="dialog"i] div:has(> a[href$="/i/jf/creators/studio"i]) { display: none !important; } ';
   // チャット
   elemStyle.textContent += 'nav[role="navigation"i] > a[href$="/i/chat"i] { display: none !important; } ';
   elemStyle.textContent += 'div[role="dialog"i] div:has(> a[href$="/i/chat"i]) { display: none !important; } ';
