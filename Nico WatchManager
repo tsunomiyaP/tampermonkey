@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         Nico WatchManager
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      2.0
 // @description  サイト設定 自動再生オンにすること > 自動遷移後の再生のため
 // @author       You
-// @match        https://sp.nicovideo.jp/*
+// @match        https://*.nicovideo.jp/*
 // @grant        none
 // @icon         https://www.google.com/s2/favicons?domain=www.nicovideo.jp
 // @run-at       document-body
@@ -21,6 +21,7 @@
   const ncvid = 'div#watchVideoContainer.watch-Video_Container > video';
   const ncbtn = 'div.watch-OpeningPlayerInfo_Container > button#jsWatchThisPage.watch-OpeningPlayerInfo_PlayButton';
   // 可変数
+  let ncMutation;
   // ==========================================================
   // 静的style適用エリア
   const elemStyle = document.createElement('style');
@@ -58,7 +59,7 @@
       }
     }
     while (!obj) {
-      await new Promise(resolve => setTimeout(resolve, 10000));
+      await new Promise(resolve => setTimeout(resolve, waitTime));
       obj = node.querySelector(selector);
     }
     return obj;
@@ -154,15 +155,56 @@
     const url_config = { 'attributes': false, 'childList': true, 'subtree': true };
     const url_obs = new MutationObserver(async () => {
 
-      dialogHide();
       if (href != location.pathname + location.search) {
         // console.log('Before:', href);
         // console.log('After:', location.href);
         href = location.pathname + location.search;
 
+        if (!isNuN(ncMutation)) { ncMutation.disconnect(); }
+
+        dialogHide();
         const watch = new RegExp(regWatch, 'gis');
         const isWatch = watch.test(location.pathname);
-        if (isWatch) {
+        if (!isWatch) { return false; }
+
+        if ('www.nicovideo.jp' == location.hostname) {
+          console.log('pc > ');
+          const player = await waitQuerySelector('div[class^="grid-area_"][class*="player"] div.PlayerPresenter video');
+
+          // 広場、広告エリア 削除
+          const ncHiroba = document.querySelector('button[data-element-name="hiroba_navigation"]');
+          if (!isNuN(ncHiroba)) {
+            ncHiroba.closest('div.d_flex.flex-d_column').remove();
+          }
+          for (const img of document.querySelectorAll('div[class^="grid-area_"][class*="sidebar"] > div > div:not(:has([data-scope="tabs"]))[class*="pos_relative"] > div:has(div[id^="img_"])')) {
+            img.remove();
+          }
+          for (const img of document.querySelectorAll('div[class^="grid-area_"][class*="sidebar"] > div > div[data-scope="tabs"][data-part="root"] > div[data-scope="tabs"][data-part="content"] > div > div[id^="img_"]')) {
+            img.remove();
+          }
+          ncMutation = new MutationObserver(async () => {
+            const ncHiroba = document.querySelector('button[data-element-name="hiroba_navigation"]');
+            if (!isNuN(ncHiroba)) {
+              ncHiroba.closest('div.d_flex.flex-d_column').remove();
+            }
+            for (const img of document.querySelectorAll('div[class^="grid-area_"][class*="sidebar"] > div > div:not(:has([data-scope="tabs"]))[class*="pos_relative"] > div:has(div[id^="img_"])')) {
+              img.remove();
+            }
+            for (const img of document.querySelectorAll('div[class^="grid-area_"][class*="sidebar"] > div > div[data-scope="tabs"][data-part="root"] > div[data-scope="tabs"][data-part="content"] > div > div[id^="img_"]')) {
+              img.remove();
+            }
+          });
+          const config = { 'attributes': false, 'childList': true, 'subtree': true };
+          ncMutation.observe(document.querySelector('div[class^="grid-area_"][class*="sidebar"]'), config);
+
+          player.addEventListener('ended', async (event) => {
+            console.log('ended');
+            const bottomPrev = await waitQuerySelectorCount(5, 'div[class^="grid-area_"][class*="bottom"] div.gap_base > a[data-anchor-page="watch"][data-anchor-area="series"][data-anchor-detail="prev"]');
+            const bottomNext = await waitQuerySelectorCount(5, 'div[class^="grid-area_"][class*="bottom"] div.gap_base > a[data-anchor-page="watch"][data-anchor-area="series"][data-anchor-detail="next"]');
+            location.href = bottomNext.href;
+          });
+        } else {
+          console.log('sp > ');
           playingWatch();
         }
       }
