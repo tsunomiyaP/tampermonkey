@@ -147,7 +147,7 @@
         }
       }
     });
-    const config = { 'attributes': false, 'childList': false, 'subtree': false };
+    const config = { 'attributes': true, 'childList': false, 'subtree': false };
     ncMutation.observe(document.querySelector('div.watch-Player_Container'), config);
   };
   const playingWatchW = async () => {
