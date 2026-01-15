@@ -18,8 +18,6 @@
   // 変数宣言
   const waitTime = 500;
   const regWatch = '/watch';
-  const ncvid = 'div#watchVideoContainer.watch-Video_Container > video';
-  const ncbtn = 'div.watch-OpeningPlayerInfo_Container > button#jsWatchThisPage.watch-OpeningPlayerInfo_PlayButton';
   // 可変数
   let ncMutation;
   // ==========================================================
@@ -118,7 +116,9 @@
     }
   };
 
-  const playingWatch = async () => {
+  const playingWatchM = async () => {
+    const ncvid = 'div#watchVideoContainer.watch-Video_Container > video';
+    const ncbtn = 'div.watch-OpeningPlayerInfo_Container > button#jsWatchThisPage.watch-OpeningPlayerInfo_PlayButton';
     await waitQuerySelector('div.watch-Player_Container');
     // サイト設定 自動再生オンにすること
     await new Promise(resolve => setTimeout(resolve, waitTime * 4));
@@ -126,7 +126,7 @@
     await waitQuerySelector(ncbtn);
     document.querySelector(ncbtn).click();
 
-    const obs = new MutationObserver(async () => {
+    ncMutation = new MutationObserver(async () => {
       if (document.querySelector('div.watch-Player_Container').classList.contains('is-playing')) { // 再生開始
         if (document.querySelector('div.watch-PlayerUpperControllerDock_CommentToggle') !== null) {
           if (!document.querySelector('div.watch-PlayerUpperControllerDock_CommentToggle').classList.contains('off')) {
@@ -147,7 +147,44 @@
         }
       }
     });
-    obs.observe(document.querySelector('div.watch-Player_Container'), { 'attributes': true, 'childList': false, 'subtree': false });
+    const config = { 'attributes': false, 'childList': false, 'subtree': false };
+    ncMutation.observe(document.querySelector('div.watch-Player_Container'), config);
+  };
+  const playingWatchW = async () => {
+    const player = await waitQuerySelector('div[class^="grid-area_"][class*="player"] div.PlayerPresenter video');
+
+    // 広場、広告エリア 削除
+    const ncHiroba = document.querySelector('button[data-element-name="hiroba_navigation"]');
+    if (!isNuN(ncHiroba)) {
+      ncHiroba.closest('div.d_flex.flex-d_column').remove();
+    }
+    for (const img of document.querySelectorAll('div[class^="grid-area_"][class*="sidebar"] > div > div:not(:has([data-scope="tabs"]))[class*="pos_relative"] > div:has(div[id^="img_"])')) {
+      img.remove();
+    }
+    for (const img of document.querySelectorAll('div[class^="grid-area_"][class*="sidebar"] > div > div[data-scope="tabs"][data-part="root"] > div[data-scope="tabs"][data-part="content"] > div > div[id^="img_"]')) {
+      img.remove();
+    }
+    ncMutation = new MutationObserver(async () => {
+      const ncHiroba = document.querySelector('button[data-element-name="hiroba_navigation"]');
+      if (!isNuN(ncHiroba)) {
+        ncHiroba.closest('div.d_flex.flex-d_column').remove();
+      }
+      for (const img of document.querySelectorAll('div[class^="grid-area_"][class*="sidebar"] > div > div:not(:has([data-scope="tabs"]))[class*="pos_relative"] > div:has(div[id^="img_"])')) {
+        img.remove();
+      }
+      for (const img of document.querySelectorAll('div[class^="grid-area_"][class*="sidebar"] > div > div[data-scope="tabs"][data-part="root"] > div[data-scope="tabs"][data-part="content"] > div > div[id^="img_"]')) {
+        img.remove();
+      }
+    });
+    const config = { 'attributes': false, 'childList': true, 'subtree': true };
+    ncMutation.observe(document.querySelector('div[class^="grid-area_"][class*="sidebar"]'), config);
+
+    player.addEventListener('ended', async (event) => {
+      console.log('ended');
+      // const bottomPrev = await waitQuerySelectorCount(5, 'div[class^="grid-area_"][class*="bottom"] div.gap_base > a[data-anchor-page="watch"][data-anchor-area="series"][data-anchor-detail="prev"]');
+      const bottomNext = await waitQuerySelectorCount(5, 'div[class^="grid-area_"][class*="bottom"] div.gap_base > a[data-anchor-page="watch"][data-anchor-area="series"][data-anchor-detail="next"]');
+      location.href = bottomNext.href;
+    });
   };
   const changeUrl = async () => {
     let href;
@@ -169,43 +206,10 @@
 
         if ('www.nicovideo.jp' == location.hostname) {
           console.log('pc > ');
-          const player = await waitQuerySelector('div[class^="grid-area_"][class*="player"] div.PlayerPresenter video');
-
-          // 広場、広告エリア 削除
-          const ncHiroba = document.querySelector('button[data-element-name="hiroba_navigation"]');
-          if (!isNuN(ncHiroba)) {
-            ncHiroba.closest('div.d_flex.flex-d_column').remove();
-          }
-          for (const img of document.querySelectorAll('div[class^="grid-area_"][class*="sidebar"] > div > div:not(:has([data-scope="tabs"]))[class*="pos_relative"] > div:has(div[id^="img_"])')) {
-            img.remove();
-          }
-          for (const img of document.querySelectorAll('div[class^="grid-area_"][class*="sidebar"] > div > div[data-scope="tabs"][data-part="root"] > div[data-scope="tabs"][data-part="content"] > div > div[id^="img_"]')) {
-            img.remove();
-          }
-          ncMutation = new MutationObserver(async () => {
-            const ncHiroba = document.querySelector('button[data-element-name="hiroba_navigation"]');
-            if (!isNuN(ncHiroba)) {
-              ncHiroba.closest('div.d_flex.flex-d_column').remove();
-            }
-            for (const img of document.querySelectorAll('div[class^="grid-area_"][class*="sidebar"] > div > div:not(:has([data-scope="tabs"]))[class*="pos_relative"] > div:has(div[id^="img_"])')) {
-              img.remove();
-            }
-            for (const img of document.querySelectorAll('div[class^="grid-area_"][class*="sidebar"] > div > div[data-scope="tabs"][data-part="root"] > div[data-scope="tabs"][data-part="content"] > div > div[id^="img_"]')) {
-              img.remove();
-            }
-          });
-          const config = { 'attributes': false, 'childList': true, 'subtree': true };
-          ncMutation.observe(document.querySelector('div[class^="grid-area_"][class*="sidebar"]'), config);
-
-          player.addEventListener('ended', async (event) => {
-            console.log('ended');
-            const bottomPrev = await waitQuerySelectorCount(5, 'div[class^="grid-area_"][class*="bottom"] div.gap_base > a[data-anchor-page="watch"][data-anchor-area="series"][data-anchor-detail="prev"]');
-            const bottomNext = await waitQuerySelectorCount(5, 'div[class^="grid-area_"][class*="bottom"] div.gap_base > a[data-anchor-page="watch"][data-anchor-area="series"][data-anchor-detail="next"]');
-            location.href = bottomNext.href;
-          });
+          playingWatchW();
         } else {
           console.log('sp > ');
-          playingWatch();
+          playingWatchM();
         }
       }
     });
