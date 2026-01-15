@@ -153,25 +153,25 @@
   const playingWatchW = async () => {
     const player = await waitQuerySelector('div[class^="grid-area_"][class*="player"] div.PlayerPresenter video');
 
-    // 広場、広告エリア 削除
-    const ncHiroba = document.querySelector('button[data-element-name="hiroba_navigation"]');
-    if (!isNuN(ncHiroba)) {
-      ncHiroba.closest('div.d_flex.flex-d_column').remove();
-    }
-    for (const img of document.querySelectorAll('div[class^="grid-area_"][class*="sidebar"] > div > div:not(:has([data-scope="tabs"]))[class*="pos_relative"] > div:has(div[id^="img_"])')) {
-      img.remove();
-    }
+    // 広場、チャット、シリーズ、広告エリア 削除
+    const hiroba = document.querySelector('div.d_flex.flex-d_column:has(> * > button[data-element-name="hiroba_navigation"])');
+    const ncChat = document.querySelector('div[class^="grid-area_"][class*="sidebar"] > div > div[class*="pos_relative"]:not(:has([data-scope="tabs"])):has(> section)');
+    const series = document.querySelector('div[class^="grid-area_"][class*="sidebar"] > div > section');
+    if (!isNuN(hiroba)) { hiroba.remove(); }
+    if (!isNuN(ncChat)) { ncChat.remove(); }
+    if (!isNuN(series)) { series.remove(); }
+
     for (const img of document.querySelectorAll('div[class^="grid-area_"][class*="sidebar"] > div > div[data-scope="tabs"][data-part="root"] > div[data-scope="tabs"][data-part="content"] > div > div[id^="img_"]')) {
       img.remove();
     }
     ncMutation = new MutationObserver(async () => {
-      const ncHiroba = document.querySelector('button[data-element-name="hiroba_navigation"]');
-      if (!isNuN(ncHiroba)) {
-        ncHiroba.closest('div.d_flex.flex-d_column').remove();
-      }
-      for (const img of document.querySelectorAll('div[class^="grid-area_"][class*="sidebar"] > div > div:not(:has([data-scope="tabs"]))[class*="pos_relative"] > div:has(div[id^="img_"])')) {
-        img.remove();
-      }
+      const hiroba = document.querySelector('div.d_flex.flex-d_column:has(> * > button[data-element-name="hiroba_navigation"])');
+      const ncChat = document.querySelector('div[class^="grid-area_"][class*="sidebar"] > div > div[class*="pos_relative"]:not(:has([data-scope="tabs"])):has(> section)');
+      const series = document.querySelector('div[class^="grid-area_"][class*="sidebar"] > div > section');
+      if (!isNuN(hiroba)) { hiroba.remove(); }
+      if (!isNuN(ncChat)) { ncChat.remove(); }
+      if (!isNuN(series)) { series.remove(); }
+
       for (const img of document.querySelectorAll('div[class^="grid-area_"][class*="sidebar"] > div > div[data-scope="tabs"][data-part="root"] > div[data-scope="tabs"][data-part="content"] > div > div[id^="img_"]')) {
         img.remove();
       }
