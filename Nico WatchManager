@@ -141,9 +141,9 @@
       } else if (document.querySelector('div.watch-Player_Container').classList.contains('screen-close')) { // 次のシリーズがあれば遷移
         if (document.querySelector('div.watch-VideoDescription-Body_Series') !== null) {
           let series = document.querySelector('div.watch-VideoDescription-Body_Series');
-          if (series.querySelector('a.watch-VideoDescription-Body_SeriesNext') !== null) {
-            series.querySelector('a.watch-VideoDescription-Body_SeriesNext').click();
-          }
+          if (isNuN(series.querySelector('a.watch-VideoDescription-Body_SeriesNext'))) { return false; }
+          if (!series.querySelector('a.watch-VideoDescription-Body_SeriesNext').hasAttribute('href')) { return false; }
+          location.href = series.querySelector('a.watch-VideoDescription-Body_SeriesNext').href;
         }
       }
     });
