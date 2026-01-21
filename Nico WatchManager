@@ -179,7 +179,7 @@
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
     ncMutation.observe(document.querySelector('div[class^="grid-area_"][class*="sidebar"]'), config);
 
-    player.addEventListener('ended', async (event) => {
+    player.addEventListener('ended', async () => {
       console.log('ended');
       // const bottomPrev = await waitQuerySelectorCount(5, 'div[class^="grid-area_"][class*="bottom"] div.gap_base > a[data-anchor-page="watch"][data-anchor-area="series"][data-anchor-detail="prev"]');
       const bottomNext = await waitQuerySelectorCount(5, 'div[class^="grid-area_"][class*="bottom"] div.gap_base > a[data-anchor-page="watch"][data-anchor-area="series"][data-anchor-detail="next"]');
