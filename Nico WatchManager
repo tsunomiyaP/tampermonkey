@@ -117,14 +117,12 @@
   };
 
   const playingWatchM = async () => {
-    const ncvid = 'div#watchVideoContainer.watch-Video_Container > video';
-    const ncbtn = 'div.watch-OpeningPlayerInfo_Container > button#jsWatchThisPage.watch-OpeningPlayerInfo_PlayButton';
+    // ブラウザ設定 > サイト設定 自動再生オンにすること 必須
     await waitQuerySelector('div.watch-Player_Container');
-    // サイト設定 自動再生オンにすること
-    await new Promise(resolve => setTimeout(resolve, waitTime * 4));
-    await waitQuerySelector(ncvid);
-    await waitQuerySelector(ncbtn);
-    document.querySelector(ncbtn).click();
+    const ncvid = await waitQuerySelector('div#watchVideoContainer.watch-Video_Container > video');
+    const ncbtn = await waitQuerySelector('div.watch-OpeningPlayerInfo_Container > button#jsWatchThisPage.watch-OpeningPlayerInfo_PlayButton');
+    await new Promise(resolve => setTimeout(resolve, waitTime * 10));
+    ncbtn.click();
 
     ncMutation = new MutationObserver(async () => {
       if (document.querySelector('div.watch-Player_Container').classList.contains('is-playing')) { // 再生開始
@@ -151,6 +149,7 @@
     ncMutation.observe(document.querySelector('div.watch-Player_Container'), config);
   };
   const playingWatchW = async () => {
+    await new Promise(resolve => setTimeout(resolve, waitTime * 10));
     const player = await waitQuerySelector('div[class^="grid-area_"][class*="player"] div.PlayerPresenter video');
 
     // 広場、チャット、シリーズ、広告エリア 削除
