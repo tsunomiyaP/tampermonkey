@@ -141,7 +141,9 @@
           let series = document.querySelector('div.watch-VideoDescription-Body_Series');
           if (isNuN(series.querySelector('a.watch-VideoDescription-Body_SeriesNext'))) { return false; }
           if (!series.querySelector('a.watch-VideoDescription-Body_SeriesNext').hasAttribute('href')) { return false; }
-          location.href = series.querySelector('a.watch-VideoDescription-Body_SeriesNext').href;
+          if (!isNuN(ncMutation)) { ncMutation.disconnect(); }
+          const nextSeries = await waitQuerySelectorCount(5, 'div.watch-VideoDescription-Body_Series a.watch-VideoDescription-Body_SeriesNext');
+          return location.href = nextSeries.href;
         }
       }
     });
