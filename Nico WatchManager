@@ -119,7 +119,7 @@
   const playingWatchM = async () => {
     // ブラウザ設定 > サイト設定 自動再生オンにすること 必須
     await waitQuerySelector('div.watch-Player_Container');
-    const ncvid = await waitQuerySelector('div#watchVideoContainer.watch-Video_Container > video');
+    // const ncvid = await waitQuerySelector('div#watchVideoContainer.watch-Video_Container > video');
     const ncbtn = await waitQuerySelector('div.watch-OpeningPlayerInfo_Container > button#jsWatchThisPage.watch-OpeningPlayerInfo_PlayButton');
     await new Promise(resolve => setTimeout(resolve, waitTime * 10));
     ncbtn.click();
