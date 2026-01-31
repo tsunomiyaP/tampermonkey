@@ -253,14 +253,13 @@
     // 設定ポップアップ初期非表示
     elemMov.textContent += 'div.ytp-popup.ytp-settings-menu { display: none !important; } ';
     elemMov.textContent += 'div#full-screen-content-id, ytm-app > bottom-sheet-container[role="dialog"] { display: none !important; } ';
+    await new Promise(resolve => setTimeout(resolve, waitTime * 4));
     const setting = await waitQuerySelector(settingBtn);
     setting.click();
 
     const drcMenuItem = await waitQuerySelectorCount(2, drcBtn);
     if (isNuN(drcMenuItem)) {
       document.querySelector(closeArea).click();
-      // style 無効化
-      elemMov.textContent = '';
       console.log('DRC Audio is already disabled');
     } else {
       if (drcMenuItem.getAttribute('aria-checked') === 'true') {
@@ -270,9 +269,10 @@
         console.log('DRC Audio is already disabled');
       }
       document.querySelector(closeArea).click();
-      // style 無効化
-      elemMov.textContent = '';
     }
+    await new Promise(resolve => setTimeout(resolve, waitTime * 4));
+    // style 無効化
+    elemMov.textContent = '';
   };
   const removeMovieInformation = async (item) => {
     const mode = {'pc': {}, 'mobile': {}};
@@ -499,3 +499,4 @@
   // URLが変更されたとき
   changeUrl();
 })();
+
