@@ -1,0 +1,61 @@
+// ==UserScript==
+// @name         Bilibili No Login Pop
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  watch bilibili video smothly without login
+// @author       you
+// @match        https://www.bilibili.com/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=bilibili.com
+// @grant        none
+// @license      GNU GPLv3
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    const videoPath = 'video/';
+    const videoElem = 'div#bilibili-player div[aria-label="哔哩哔哩播放器"] video';
+    const maskElem = '.bili-mini-mask';
+    // ======================================================================================
+    // eslint-disable-next-line no-unused-vars
+    const isNuN = (selector) => {
+      if (selector === null || selector === undefined || selector === '') { return true; } else { return false; }
+    };
+    // eslint-disable-next-line no-unused-vars
+    const waitQuerySelector = async (selector, node = document) => {
+      let obj = null;
+      while (!obj) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        obj = node.querySelector(selector);
+      }
+      return obj;
+    };
+
+    const wait = async () => {
+      const path = new RegExp(videoPath, 'gis');
+      // console.log(path, location.pathname);
+      if (path.test(location.pathname)) {
+        const videoTag = await waitQuerySelector(videoElem);
+        videoTag.play();
+        console.log('playing');
+        const observer = new MutationObserver(async () => {
+          videoTag.addEventListener('pause', async () => {
+            await waitQuerySelector(maskElem);
+            const elementsToRemove = document.querySelectorAll(maskElem);
+            if (elementsToRemove.length > 0) {
+              for (const element of elementsToRemove) {
+                element.remove();
+              }
+              videoTag.play();
+            }
+          });
+        });
+        // Mutation Observer
+        const targetNode = document.body;
+        const config = { 'attributes': false, 'childList': true, 'subtree': true };
+        observer.observe(targetNode, config);
+      }
+    };
+
+    wait();
+})();
