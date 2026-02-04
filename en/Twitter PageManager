@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Twitter PageManager
 // @namespace    http://tampermonkey.net/
-// @version      4.5
+// @version      5.0
 // @description  try to take over the world!
 // @author       You
 // @match        https://x.com/*
@@ -16,115 +16,12 @@
 
   // ==========================================================
   // 変数宣言
-  const tweet_main = 'main[role="main"]';
-  const tweet_items_column = 'div[data-testid="cellInnerDiv"]';
-  const regStatus = 'status';
+  const twMain = 'main[role="main"]';
+  const twColumns = 'div[data-testid="cellInnerDiv"]';
+  const remColumn = ':not(.removeItem)';
   const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
   // 可変数
-  let twMutation;
-  // ==========================================================
-  // 静的style適用エリア
-  const elemStyle = document.createElement('style');
-  elemStyle.id = 'xStylusManager';
-  document.head.insertAdjacentElement('beforeend', elemStyle);
-
-  // 動的style適用エリア
-  const elemDom = document.createElement('style');
-  elemDom.id = 'xStylusManagerDom';
-  document.head.insertAdjacentElement('beforeend', elemDom);
-  const elemTweet = document.createElement('style');
-  elemTweet.id = 'xStylusManagerTweet';
-  document.head.insertAdjacentElement('beforeend', elemTweet);
-
-  elemStyle.textContent += '.remove_item { display: none !important; } ';
-  // chromenium navbar custome
-  elemStyle.textContent += 'main[role="main"] * { backdrop-filter: none !important; } main[role="main"] div:is([class="css-175oi2r r-1e5uvyk r-6026j"], [class="css-175oi2r r-1e5uvyk r-ii8lfi"], [class="css-175oi2r r-1e5uvyk r-5zmot"]):has(:not(div[data-testid="toolBar"]) > nav[role="navigation"] > div > div > div[role="tablist"]) { color: rgba(255, 255, 255, 1) !important; background-color: rgba(0, 0, 0, 1) !important; backdrop-filter: none !important; } ';
-  // img, gif, movie, web card
-  elemStyle.textContent += tweet_items_column + ' :is(div[data-testid="tweetPhoto"]:has(> [alt="画像"]), div[data-testid="tweetPhoto"]:not(:has(> [alt="画像"])) div[data-testid="previewInterstitial"], div[data-testid="previewInterstitial"], div[data-testid="card.wrapper"] > div) { visibility: hidden !important; } ' + tweet_items_column + ':hover :is(div[data-testid="tweetPhoto"]:has(> [alt="画像"]), div[data-testid="tweetPhoto"]:not(:has(> [alt="画像"])) div[data-testid="previewInterstitial"], div[data-testid="previewInterstitial"], div[data-testid="card.wrapper"] > div) { visibility: visible !important; } ';
-  // ツイート 枠 radius
-  elemStyle.textContent += tweet_items_column + ' .r-1867qdf { border-radius: 0px !important; } ';
-  // 検索バー
-  elemStyle.textContent += 'form[aria-label="検索"i] > div > div.r-sdzlij { border-bottom-left-radius: 0px !important; border-bottom-right-radius: 0px !important; border-top-left-radius: 0px !important; border-top-right-radius: 0px !important; } ';
-  // 画面非表示
-  elemStyle.textContent += 'div[role="progressbar"] { display: none !important; } ';
-
-  // おすすめユーザー
-  elemStyle.textContent += 'div:is([aria-label="タイムライン: ホームタイムライン"i],[aria-label$="さんのポスト"i],[aria-label="タイムライン: 話題を検索"i],[aria-label="タイムライン: タイムラインを検索"i]) > div > div[data-testid="cellInnerDiv"i]:has(:is(div[class="css-175oi2r r-1adg3ll r-1ny4l3l"i])):not(:has(:is(article[data-testid="tweet"i], div[data-testid="trend"i], li[role="listitem"]))) { display: none !important; } ';
-  // 広告 : プロモーション
-  elemStyle.textContent += 'div:is([aria-label="タイムライン: ホームタイムライン"i],[aria-label$="さんのポスト"i],[aria-label="タイムライン: 話題を検索"i],[aria-label="タイムライン: タイムラインを検索"i]) > div > div[data-testid="cellInnerDiv"i]:has(div[class="css-175oi2r r-a1ub67"i]) { display: none !important; } ';
-  // x side bar moments
-  // Grok
-  elemStyle.textContent += 'nav[role="navigation"i] > a[href$="/i/grok"i] { display: none !important; } ';
-  elemStyle.textContent += 'div[role="dialog"i] div:has(> a[href$="/i/grok"i]) { display: none !important; } ';
-  // コミュニティ
-  elemStyle.textContent += 'nav[role="navigation"i] > a[href$="/communities"i] { display: none !important; } ';
-  elemStyle.textContent += 'div[role="dialog"i] div:has(> a[href$="/communities"i]) { display: none !important; } ';
-  // プレミアム サインアップ
-  elemStyle.textContent += 'nav[role="navigation"i] > a[href$="/i/premium_sign_up"i] { display: none !important; } ';
-  elemStyle.textContent += 'div[role="dialog"i] div:has(> a[href$="/i/premium_sign_up"i]) { display: none !important; } ';
-  // 認証済み組織
-  elemStyle.textContent += 'nav[role="navigation"i] > a[href$="/i/verified-orgs-signup"i] { display: none !important; } ';
-  elemStyle.textContent += 'div[role="dialog"i] div:has(> a[href$="/i/verified-orgs-signup"i]) { display: none !important; } ';
-  // 求人
-  elemStyle.textContent += 'nav[role="navigation"i] > a[href$="/jobs"i] { display: none !important; } ';
-  elemStyle.textContent += 'div[role="dialog"i] div:has(> a[href$="/jobs"i]) { display: none !important; } ';
-  // creator studio
-  elemStyle.textContent += 'nav[role="navigation"i] > a[href$="/i/jf/creators/studio"i] { display: none !important; } ';
-  elemStyle.textContent += 'div[role="dialog"i] div:has(> a[href$="/i/jf/creators/studio"i]) { display: none !important; } ';
-  // チャット
-  elemStyle.textContent += 'nav[role="navigation"i] > a[href$="/i/chat"i] { display: none !important; } ';
-  elemStyle.textContent += 'div[role="dialog"i] div:has(> a[href$="/i/chat"i]) { display: none !important; } ';
-  // 収益化
-  elemStyle.textContent += 'nav[role="navigation"i] > a[href$="/i/monetization"i] { display: none !important; } ';
-  elemStyle.textContent += 'div[role="dialog"i] div:has(> a[href$="/i/monetization"i]) { display: none !important; } ';
-  // つながる
-  elemStyle.textContent += 'nav[role="navigation"i] > a[href$="/i/connect_people"i] { display: none !important; } ';
-  elemStyle.textContent += 'div[role="dialog"i] div:has(> a[href$="/i/connect_people"i]) { display: none !important; } ';
-  // menu
-  // プレミアム サインアップ
-  elemStyle.textContent += 'div[role="menu"i] div[data-testid="Dropdown"i] a[href$="/i/premium_sign_up"i] { display: none !important; } ';
-  elemStyle.textContent += 'div[role="dialog"i] div:has(> a[href$="/i/premium_sign_up"i]) { display: none !important; } ';
-  // ビジネス
-  elemStyle.textContent += 'div[role="menu"i] div[data-testid="Dropdown"i] a[href$="/i/verified-orgs-signup"i] { display: none !important; } ';
-  elemStyle.textContent += 'div[role="dialog"i] div:has(> a[href$="/i/verified-orgs-signup"i]) { display: none !important; } ';
-  // creator studio
-  elemStyle.textContent += 'div[role="menu"i] div[data-testid="Dropdown"i] a[href$="/i/jf/creators/studio"i] { display: none !important; } ';
-  elemStyle.textContent += 'div[role="dialog"i] div:has(> a[href$="/i/jf/creators/studio"i]) { display: none !important; } ';
-  // 広告
-  elemStyle.textContent += 'div[role="menu"i] div[data-testid="Dropdown"i] a[href*="ads.x.com/"i] { display: none !important; } ';
-  elemStyle.textContent += 'div[role="dialog"i] div:has(> a[href*="ads.x.com/"i]) { display: none !important; } ';
-  // header
-  // プレミアム サインアップ
-  elemStyle.textContent += 'div[data-testid="TopNavBar"i] div:has(> div > a[href$="/i/premium_sign_up"i]) { display: none !important; } ';
-
-  // サイドバー
-  elemStyle.textContent += '[aria-label="トレンド"i] > div > div:not(:has(form[aria-label="検索"i])) { display: none !important; } ';
-  // トレンド
-  elemStyle.textContent += '[aria-label="タイムライン: 話題を検索"i] > div > div:nth-of-type(n+1):nth-of-type(-n+3) { display: none !important; } ';
-  elemStyle.textContent += '[aria-label="タイムライン: 話題を検索"i] [data-testid="cellInnerDiv"i]:is(:has([data-testid="trend"i] > div.css-175oi2r.r-16y2uox.r-1t982j2.r-1b3ntt7.r-bnwqim),:has([data-testid="UserAvatar-Container-unknown"i]),:has([data-testid="tweet"i])) { display: none !important; } ';
-  // トレンド ニュース
-  elemStyle.textContent += 'a[href="/explore/tabs/news"i] { display: none !important; } ';
-  // トレンド スポーツ
-  elemStyle.textContent += 'a[href="/explore/tabs/sports"i] { display: none !important; } ';
-  // トレンド エンターテイメント
-  elemStyle.textContent += 'a[href="/explore/tabs/entertainment"i] { display: none !important; } ';
-  // Grok メッセージ
-  elemStyle.textContent += '[data-testid="GrokDrawer"i] { display: none !important; } ';
-  // DM
-  elemStyle.textContent += '[data-testid="DMDrawer"i] { display: none !important; } ';
-  // 返信 兄弟要素 後：前
-  // div[data-testid="Tweet-User-Avatar"i] + div[class="css-175oi2r r-1bnu78o r-f8sm7e r-m5arl1 r-16y2uox r-14gqq1x"i]
-  // article[data-testid="tweet"i] > div > div > div[class="css-175oi2r"i]:has(+ div:has([data-testid="Tweet-User-Avatar"i]))
-  // div[aria-label="タイムライン: 会話"i] div[data-testid="cellInnerDiv"i] > div[class="css-175oi2r r-j5o65s r-qklmqi r-1adg3ll r-1ny4l3l"i]:not(:has(article[data-testid="tweet"i]))
-  elemStyle.textContent += 'div[aria-label="タイムライン: 会話"i] article[data-testid="tweet"i] > div > div > div[class="css-175oi2r r-18u37iz"i] > div > div[class="css-175oi2r r-1bimlpy r-f8sm7e r-m5arl1 r-16y2uox r-14gqq1x"i] {visibility: hidden !important; } ';
-  elemStyle.textContent += 'div[aria-label="タイムライン: 会話"i] article[data-testid="tweet"i] > div > div > div[class="css-175oi2r"i] > div[class="css-175oi2r r-18u37iz"i] { visibility: hidden !important; } ';
-  // 引用
-  // div[data-testid="cellInnerDiv"i]:has([data-testid="tweet"i] > div > div > div > div > div[aria-labelledby][id])
-  // div[aria-label="タイムライン: 会話"i] > div > div[data-testid="cellInnerDiv"i]:nth-of-type(n+2):has([data-testid="tweet"i] > div > div > div > div > div[aria-labelledby][id])
-  // ツイート 内 Grok
-  elemStyle.textContent += 'div[data-testid="cellInnerDiv"i] button[aria-label^="Grok"i] { display: none !important; } ';
-  // リツイート
-  elemStyle.textContent += 'div[data-testid="cellInnerDiv"i]:has(span[data-testid="socialContext"i]) { display: none !important; } ';
+  let timeCount;
   // ==========================================================
 
   // eslint-disable-next-line no-unused-vars
@@ -214,78 +111,63 @@
     }
   };
 
-  const removeElements = () => {
-    const status = new RegExp(regStatus, 'gis');
-    if (status.test(location.pathname)) { return false; }
+  const polling = (cnt) => {
+    timeCount = setTimeout(async () => {
+      let len = removeElements(cnt);
+      polling(len);
+    }, 500);
+  };
+  const removeElements = (cnt) => {
+    let tweets = document.querySelectorAll(twColumns + remColumn);
+    if (tweets.length <= cnt) { return cnt; }
+    // console.log(tweets.length);
 
-    for (const item of document.querySelectorAll(tweet_items_column + ':not(.andT)')) {
-      if (item.classList.contains('remove_item')) { continue; }
-      item.classList.add('andT');
-
-      const mode = {'pc': {}, 'mobile': {}};
-      // pc
-      mode.pc.twTextA = isNuN(item.querySelector('div[data-testid="tweetText"]')) ? '' : item.querySelector('div[data-testid="tweetText"]').textContent;
-      mode.pc.userNam = isNuN(item.querySelector('div[data-testid="User-Name"] span')) ? '' : item.querySelector('div[data-testid="User-Name"] span').textContent;
-      // mobile
-      mode.mobile.twTextA = isNuN(item.querySelector('div[data-testid="tweetText"]')) ? '' : item.querySelector('div[data-testid="tweetText"]').textContent;
-      mode.mobile.userNam = isNuN(item.querySelector('div[data-testid="User-Name"] span')) ? '' : item.querySelector('div[data-testid="User-Name"] span').textContent;
-
-      const device = 'x.com' !== location.hostname ? mode.mobile : mode.pc;
-      const strData = device;
-
-      const xItem = {};
-      xItem.twTextA = strData.twTextA;
-      xItem.userNam = strData.userNam;
-
+    tweets.forEach((tweet, index) => {
       const words = isNuN(abc) ? '' : abc.hideword;
-
       if (isNuN(words)) { return false; }
-      const txt = xItem.userNam + xItem.twTextA;
+      // 非表示対象文字列
       for (const word of words) {
-        const regw = new RegExp(word, 'gis');
-        if (regw.test(txt)) {
-          item.classList.add('remove_item');
-          xItem.word = word;
-          console.log('> hide all words : ', xItem);
-          break;
+        const regWord = new RegExp(word, 'gis');
+        if (regWord.test(tweet.textContent)) {
+          console.log([word, tweet.textContent]);
+          tweet.style.setProperty('display', 'none', 'important');
+          tweet.classList.add('removeItem');
         }
       }
-    }
+    });
+    tweets = document.querySelectorAll(twColumns + remColumn);
+    return tweets.length;
   };
   const initial = async () => {
-    await waitQuerySelector(tweet_main);
-    await waitQuerySelector(tweet_items_column);
+    await waitQuerySelector(twColumns);
 
-    removeElements();
-
-    const config_tweet = { 'attributes': false, 'childList': true, 'subtree': true };
-    twMutation = new MutationObserver(async () => {
-      removeElements();
-    });
-    twMutation.observe(document, config_tweet);
+    // console.log('refresh tweets list');
+    await polling(0);
   };
-  const changeUrl = async () => {
-    let href;
+  const twPath = async () => {
+    let path, label;
+    // Mutation Observer
+    const targetNode = await waitQuerySelector(twMain);
+    // const config = { 'attributes': true, 'childList': false, 'subtree': false };
+    const config = { 'attributes': false, 'childList': true, 'subtree': true };
+    const observer = new MutationObserver(async () => {
+      const tab = await waitQuerySelector('nav[aria-live="polite"][role="navigation"] div[role="presentation"] *[role="tab"][aria-selected="true"]');
+      const tabLabel = tab.textContent;
+      if (path !== location.pathname || label !== tabLabel) {
+        path = location.pathname;
+        label = tabLabel;
 
-    const url_config = { 'attributes': false, 'childList': true, 'subtree': true };
-    const url_obs = new MutationObserver(async () => {
-      const href_path = location.pathname;
-      // const href_path = location.pathname + '/' + location.search;
-      if (href != href_path) {
-        // console.log('Before:', href);
-        // console.log('After:', location.href);
-        href = href_path;
+        observer.disconnect();
+        clearTimeout(timeCount);
 
-        if (!isNuN(twMutation)) { twMutation.disconnect(); }
-
-        // style 初期化
-        elemDom.textContent = '';
+        // 10秒待機
+        // await new Promise(resolve => setTimeout(resolve, 10000));
         await initial();
+        observer.observe(targetNode, config);
       }
     });
-    url_obs.observe(document, url_config);
+    observer.observe(targetNode, config);
   };
 
-  // URLが変更されたとき
-  changeUrl();
+  twPath();
 })();
