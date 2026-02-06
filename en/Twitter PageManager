@@ -30,6 +30,11 @@
   appendStyle += twColumns + '.removeItem { display: none !important; } ';
   appendStyle += twColumns + ':has(' + remReTweet + ') { display: none !important; } ';
   appendStyle += twColumns + ':has(div[class="css-175oi2r r-2pydbh"i] > div[class="css-175oi2r r-1awozwy r-18u37iz r-1ey881g r-1wtj0ep"i] > ' + remAd + ') { display: none !important; } ';
+  // トレンドタブ：話題を検索
+  appendStyle += 'div[aria-label="ホームタイムライン"i] > div:has(div[role="presentation"i] > a[href$="/for_you"i][aria-selected="true"i]) ~ div:has(div[aria-label="タイムライン: 話題を検索"i]) { display: none !important; } ';
+  appendStyle += 'div[aria-label="ホームタイムライン"i] > div div[role="presentation"i] > a[href$="/news"i] { display: none !important; } ';
+  appendStyle += 'div[aria-label="ホームタイムライン"i] > div div[role="presentation"i] > a[href$="/sports"i] { display: none !important; } ';
+  appendStyle += 'div[aria-label="ホームタイムライン"i] > div div[role="presentation"i] > a[href$="/entertainment"i] { display: none !important; } ';
   document.head.insertAdjacentHTML('afterbegin', '<style id="stylusElem">' + appendStyle + '</style>');
   // ==========================================================
 
