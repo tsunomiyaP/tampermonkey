@@ -6,6 +6,7 @@
 // @author       You
 // @match        https://x.com/*
 // @grant        none
+// @license      GNU GPLv3
 // @icon         https://www.google.com/s2/favicons?domain=x.com
 // @run-at       document-body
 // @noframes
@@ -122,7 +123,7 @@
     if (tweets.length <= cnt) { return cnt; }
     // console.log(tweets.length);
 
-    tweets.forEach((tweet, index) => {
+    for (const tweet of tweets) {
       const words = isNuN(abc) ? '' : abc.hideword;
       if (isNuN(words)) { return false; }
       // 非表示対象文字列
@@ -134,7 +135,7 @@
           tweet.classList.add('removeItem');
         }
       }
-    });
+    }
     tweets = document.querySelectorAll(twColumns + remColumn);
     return tweets.length;
   };
