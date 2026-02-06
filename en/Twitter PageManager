@@ -6,7 +6,6 @@
 // @author       You
 // @match        https://x.com/*
 // @grant        none
-// @license      GNU GPLv3
 // @icon         https://www.google.com/s2/favicons?domain=x.com
 // @run-at       document-body
 // @noframes
@@ -17,12 +16,21 @@
 
   // ==========================================================
   // 変数宣言
-  const twMain = 'main[role="main"]';
-  const twColumns = 'div[data-testid="cellInnerDiv"]';
-  const remColumn = ':not(.removeItem)';
+  const twMain = 'main[role="main"i]';
+  const twColumns = 'div[data-testid="cellInnerDiv"i]';
+  const remNColumn = ':not(.removeItem)';
+  const remAd = 'div[class="css-146c3p1 r-bcqeeo r-1ttztb7 r-qvutc0 r-1tl8opc r-1b43r93 r-14yzgew r-16dba41"i]';
+  const remReTweet = 'span[data-testid="socialContext"i]';
   const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
   // 可変数
   let timeCount;
+  // ==========================================================
+  // stylus: beforebegin, afterbegin, beforeend, afterend
+  let appendStyle = '';
+  appendStyle += twColumns + '.removeItem { display: none !important; } ';
+  appendStyle += twColumns + ':has(' + remReTweet + ') { display: none !important; } ';
+  appendStyle += twColumns + ':has(div[class="css-175oi2r r-2pydbh"i] > div[class="css-175oi2r r-1awozwy r-18u37iz r-1ey881g r-1wtj0ep"i] > ' + remAd + ') { display: none !important; } ';
+  document.head.insertAdjacentHTML('afterbegin', '<style id="stylusElem">' + appendStyle + '</style>');
   // ==========================================================
 
   // eslint-disable-next-line no-unused-vars
@@ -119,7 +127,7 @@
     }, 500);
   };
   const removeElements = (cnt) => {
-    let tweets = document.querySelectorAll(twColumns + remColumn);
+    let tweets = document.querySelectorAll(twColumns + remNColumn);
     if (tweets.length <= cnt) { return cnt; }
     // console.log(tweets.length);
 
@@ -131,12 +139,12 @@
         const regWord = new RegExp(word, 'gis');
         if (regWord.test(tweet.textContent)) {
           console.log([word, tweet.textContent]);
-          tweet.style.setProperty('display', 'none', 'important');
+          // tweet.style.setProperty('display', 'none', 'important');
           tweet.classList.add('removeItem');
         }
       }
     }
-    tweets = document.querySelectorAll(twColumns + remColumn);
+    tweets = document.querySelectorAll(twColumns + remNColumn);
     return tweets.length;
   };
   const initial = async () => {
@@ -152,7 +160,7 @@
     // const config = { 'attributes': true, 'childList': false, 'subtree': false };
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
     const observer = new MutationObserver(async () => {
-      const tab = await waitQuerySelector('nav[aria-live="polite"][role="navigation"] div[role="presentation"] *[role="tab"][aria-selected="true"]');
+      const tab = await waitQuerySelector('nav[aria-live="polite"i][role="navigation"i] div[role="presentation"i] *[role="tab"i][aria-selected="true"i]');
       const tabLabel = tab.textContent;
       if (path !== location.pathname || label !== tabLabel) {
         path = location.pathname;
