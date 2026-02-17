@@ -1,0 +1,263 @@
+// ==UserScript==
+// @name         Talents Nijisanji Filter
+// @namespace    http://tampermonkey.net/
+// @version      2.0
+// @description  try to take over the world!
+// @author       You
+// @match        www.nijisanji.jp/*
+// @grant        none
+// @license      GNU GPLv3
+// @icon         https://www.google.com/s2/favicons?domain=nijisanji.jp
+// @run-at       document-body
+// @noframes
+// ==/UserScript==
+
+(function() {
+  'use strict';
+
+  // ==========================================================
+  // 変数宣言
+  const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
+  // 可変数
+  const nijisanjis = {
+    hideword: [
+      // jp
+      '渋谷(\\s)*ハジメ|sibuya_hajime|ShibuyaHajime',
+      'ギルザレンⅢ世|gilzaren_iii|GilzarenIII',
+      '剣持(\\s)*刀也|rei_Toya_rei|KenmochiToya',
+      '伏見(\\s)*ガク|gaku_fushimi|FushimiGaku',
+      '叶|kanae_2434|Kanae',
+      '卯月(\\s)*コウ|udukikohh|UzukiKou',
+      '花畑(\\s)*チャイカ|zulmihp1nlmot5y|HanabatakeChaika',
+      '社(\\s)*築|846kizuq|YashiroKizuku',
+      '春崎(\\s)*エアル|harusakiair2434|HarusakiAir',
+      '葛葉|vamp_kuzu|Kuzuha',
+      '神田(\\s)*笑一|kanda_shoichi|KandaShoichi',
+      '舞元(\\s)*啓介|maimoto_k|MaimotoKeisuke',
+      'ジョー(\\s)*[・]*力一|joerikiichi|JoeRikiichi',
+      'ベルモンド(\\s)*[・]*バンデラス|belmond_b_2434|BelmondBanderas',
+      '夢追(\\s)*翔|kakeru_yumeoi|YumeoiKakeru',
+      '三枝(\\s)*明那|333akina|SaegusaAkina',
+      'エクス(\\s)*[・]*アルビオ|ex_albio|ExAlbio',
+      '加賀美(\\s)*ハヤト|H_KAGAMI2434|KagamiHayato',
+      'シェリン(\\s)*[・]*バーガンディ|ShellinBurgundy|ShellinBurgundy',
+      '不破(\\s)*湊|Fuwa_Minato|FuwaMinato',
+      'ましろ[爻]*|mashiro2434|MashiroMeme',
+      'イブラヒム|honmono_ibrahim|Ibrahim',
+      '甲斐田(\\s)*晴|Kaida_Haru|KaidaHaru',
+      '弦月(\\s)*藤士郎|1O46V|GenzukiTojiro',
+      '長尾(\\s)*景|kei_nagao2434|NagaoKei',
+      'オリバー(\\s)*[・]*エバンス|oliverD_23|OliverEvans',
+      'レオス(\\s)*[・]*ヴィンセント|Leos_Vincent|LeosVincent',
+      'ローレン(\\s)*[・]*イロアス|Lauren_iroas|LaurenIroas',
+      '四季凪(\\s)*アキラ|Shikinagi_2434|ShikinagiAkira',
+      'セラフ(\\s)*[・]*ダズルガーデン|SerAph_DazZ|SeraphDazzlegarden',
+      '風楽(\\s)*奏斗|KNTFR2434|FuraKanato',
+      '渡会(\\s)*雲雀|watarai_hibari|WataraiHibari',
+      '赤城(\\s)*ウェン|akagi_wen|AkagiWen',
+      '宇佐美(\\s)*リト|usamirito_power|UsamiRito',
+      '佐伯(\\s)*イッテツ|Saiki_Supadari|SaikiIttetsu',
+      '緋八(\\s)*マナ|Hibachi_Mana|HibachiMana',
+      '伊波(\\s)*ライ|rai_173|InamiRai',
+      '小柳(\\s)*ロウ|Rou_2434|KoyanagiRou',
+      '星導(\\s)*ショウ|Show_SylveSTAR|HoshirubeSho',
+      '叢雲(\\s)*カゲツ|Kagetsu_2434|MurakumoKagetsu',
+      'ミラン(\\s)*[・]*ケストレル|Milan_KestrelMilanKestrel',
+      '魁星|Kaisei_2434|Kaisei_nijisanji',
+      '北見(\\s)*遊征|Kitami_Coolguy|KitamiYusei',
+      '榊(\\s)*ネス|Ness_Sakaki|SakakiNess',
+      '酒寄(\\s)*颯馬|sakayori_soma|SakayoriSoma',
+      '渚(\\s)*トラウト|Tr0uT_2434|NagisaTrout',
+      '五木(\\s)*左京|Itsuki_Sakyo|ItsukiSakyo',
+      '一橋(\\s)*綾人|Aya10_1tsubashi|HitotsubashiAyato',
+      '篠宮(\\s)*ゆの|Yuno_Shino38|ShinomiyaYuno',
+      '城瀬(\\s)*いすみ|Shiro_Isumyan|ShiroseIsumi',
+      '皇(\\s)*れお|sumeragi_0o|SumeragiReo',
+      '花籠(\\s)*つばさ|Hanakago_2434rr|HanakagoTsubasa',
+
+      // en
+      'ルカ(\\s)*[・]*カネシロ|Luca_Kaneshiro|LucaKaneshiro',
+      '闇ノ(\\s)*シュウ|Shu_Yamino|ShuYamino',
+      'ヴォックス(\\s)*[・]*アクマ|Vox_Akuma|VoxAkuma',
+      'アルバーン(\\s)*[・]*ノックス|alban_knox|AlbanKnox',
+      'サニー(\\s)*[・]*ブリスコー|sonny_brisko|SonnyBrisko',
+      '浮奇(\\s)*[・]*ヴィオレタ|uki_violeta|UkiVioleta',
+      'レン(\\s)*ゾット|RenZott0|RenZotto',
+      'ドッピオ(\\s)*ドロップサイト|D_Dropscythe|DoppioDropscythe',
+      'ヴェール(\\s)*ヴァーミリオン|Ver_Vermillion|VerVermillion',
+      'ベンタクロウ(\\s)*ブリンガー|Tyrant_Vanta|VantacrowBringer',
+      'ヴェザリウス(\\s)*バンデージ|VezaliusBandage|VezaliusBandage',
+      'ユウ(\\s)*Q(\\s)*ウィルソン|YuQWilson|YuQ\\.Wilson',
+      'クロード(\\s)*クローマーク|ClaudeClawmark|ClaudeClawmark',
+      '凉舞(\\s)*バレンウォート|RyomaBarrenwort|RyomaBarrenwort',
+      'フリオドール|Freo_2434|Freodore_nijisanji',
+      'ケイリクス(\\s)*[・]*デボネア|KaelixDebonair|KaelixDebonair',
+      'セイブル|Seible_2434|Seible_nijisanji',
+      'ジール(\\s)*[・]*ギンジョウカ|ZealGinjoka|ZealGinjoka',
+
+      // kr
+      'ガオン|Gaon2434|Gaon',
+      'ミン(\\s)*スゥーハ|SuhaMin2434|MinSuha',
+      'ハ(\\s)*ユン|HaYun2434|HaYun',
+
+      // id
+      'ライ(\\s)*ガリレイ|Rai_Galilei|RaiGalilei',
+    ]
+  };
+  // ==========================================================
+  // 初期表示
+  const listArea = 'div[class*="talents-top_talentsTop"] > div[class*="talents-top_inner"] > div[class*="talents-top_listWrapper"].liver-list';
+  const Ntalents = listArea + ' > div[class*="talents-top_liverItem"]';
+
+  // 静的style適用エリア
+  const elemStyle = document.createElement('style');
+  elemStyle.id = 'schedStylusNijisanji';
+  document.head.insertAdjacentElement('beforeend', elemStyle);
+
+  elemStyle.textContent += '.remove_item { display: none !important; } ';
+  elemStyle.textContent += listArea + ':not(.show) { display: none; } ';
+  // ==========================================================
+
+  // eslint-disable-next-line no-unused-vars
+  const isNuN = (selector) => {
+    if (selector === null || selector === undefined || selector === '') { return true; } else { return false; }
+  };
+  // eslint-disable-next-line no-unused-vars
+  const waitQuerySelector = async (selector, node = document) => {
+    let obj = null;
+    while (!obj) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+      obj = node.querySelector(selector);
+    }
+    return obj;
+  };
+  // eslint-disable-next-line no-unused-vars
+  const waitQuerySelectorCount = async (cnt, selector, node = document) => {
+    let obj = null;
+    let num = 0;
+    while (!obj) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      if (num < cnt) {
+        obj = node.querySelector(selector);
+        num++;
+        if (!obj) { return obj; }
+      } else {
+        break;
+      }
+    }
+    while (!obj) {
+      await new Promise(resolve => setTimeout(resolve, 10000));
+      obj = node.querySelector(selector);
+    }
+    return obj;
+  };
+  // eslint-disable-next-line no-unused-vars
+  const waitQuerySelectorIframe = async (selector1, selector2, node = document) => {
+    let obj = null;
+    while (!obj) {
+      // iframe.contentWindow.document === iframe.contentDocument
+      await new Promise(resolve => setTimeout(resolve, 500));
+      obj = node.querySelector(selector1).contentDocument.querySelector(selector2);
+    }
+    return obj;
+  };
+  // eslint-disable-next-line no-unused-vars
+  const deleteParam = (searchUrl, param) => {
+    const base = new URL(location.protocol + '//' + location.hostname);
+    const url = new URL(searchUrl, base);
+    // URLSearchParamsオブジェクトを取得
+    const params = url.searchParams;
+    params.delete(param);
+
+    return url;
+  };
+  // eslint-disable-next-line no-unused-vars
+  const searchParams = (searchUrl, param) => {
+    const base = new URL(location.protocol + '//' + location.hostname);
+    const url = new URL(searchUrl, base);
+    console.log('url section', url);
+    // URLSearchParamsオブジェクトを取得
+    const params = url.searchParams;
+
+    return params.get(param);
+  };
+  // eslint-disable-next-line no-unused-vars
+  const getParam = (name, url) => {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\\[\]]/g, '\\$&');
+    let regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+    let results = regex.exec(url);
+
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+  };
+  // eslint-disable-next-line no-unused-vars
+  const userAgent = () => {
+    const userDevice = navigator.userAgent;
+    if (userDevice.indexOf('iPhone') > 0 || userDevice.indexOf('iPod') > 0 || userDevice.indexOf('Android') > 0 && userDevice.indexOf('Mobile') > 0) {
+      return false;
+    } else if (userDevice.indexOf('iPad') > 0 || userDevice.indexOf('Android') > 0) {
+      return false;
+    } else {
+      // pc
+      return true;
+    }
+  };
+
+  const talentHide = async (doms) => {
+    const words = isNuN(abc) ? [] : abc.hideword;
+    const wordsMem = words.concat(...nijisanjis.hideword);
+    // const excludes = isNuN(abc) ? [] : abc.execludeWords;
+
+    for await (const item of doms) {
+      const talentName = item.querySelector(' p[class*="talent-item_name"]').textContent;
+      // talents 削除対象
+      const contentItem = {};
+      for await (const word of wordsMem) {
+        const regw = new RegExp(word, 'gis');
+        if (regw.test(talentName)) {
+          item.classList.add('remove_item');
+          contentItem.talent = talentName;
+          contentItem.word = word;
+          console.log('> remove word', contentItem);
+          break;
+        }
+      }
+    }
+  };
+  const initial = async () => {
+    await waitQuerySelector(listArea);
+    await waitQuerySelector(Ntalents + ' p[class*="talent-item_name"]');
+    await talentHide(document.querySelectorAll(Ntalents));
+
+    document.querySelector(listArea).classList.add('show');
+    console.log('> nijisanji user : initial...');
+
+    const wrapper_config = { 'attributes': false, 'childList': true, 'subtree': false };
+    const wrapper_obs = new MutationObserver(async () => {
+      await talentHide(document.querySelectorAll(Ntalents));
+    });
+    wrapper_obs.observe(document.querySelector(listArea), wrapper_config);
+  };
+  const changeUrl = async () => {
+    let href;
+
+    const url_config = { 'attributes': false, 'childList': true, 'subtree': true };
+    const url_obs = new MutationObserver(async () => {
+      const href_path = location.pathname;
+      // const href_path = location.pathname + '/' + location.search;
+      if (href !== href_path) {
+        // console.log('Before:', href);
+        // console.log('After:', location.href);
+        href = href_path;
+
+        await initial();
+      }
+    });
+    url_obs.observe(document, url_config);
+  };
+
+  // URLが変更されたとき
+  changeUrl();
+})();
