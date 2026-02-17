@@ -94,7 +94,7 @@
       '小柳(\\s)*ロウ|Rou_2434|KoyanagiRou',
       '星導(\\s)*ショウ|Show_SylveSTAR|HoshirubeSho',
       '叢雲(\\s)*カゲツ|Kagetsu_2434|MurakumoKagetsu',
-      'ミラン(\\s)*[・]*ケストレル|Milan_KestrelMilanKestrel',
+      'ミラン(\\s)*[・]*ケストレル|Milan_Kestrel|MilanKestrel',
       '魁星|Kaisei_2434|Kaisei_nijisanji',
       '北見(\\s)*遊征|Kitami_Coolguy|KitamiYusei',
       '榊(\\s)*ネス|Ness_Sakaki|SakakiNess',
