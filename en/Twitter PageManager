@@ -180,11 +180,12 @@
     // const config = { 'attributes': true, 'childList': false, 'subtree': false };
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
     const observer = new MutationObserver(async () => {
-      const tab = await waitQuerySelector('nav[aria-live="polite"i][role="navigation"i] div[role="presentation"i] *[role="tab"i][aria-selected="true"i]');
+      const tab = await waitQuerySelector('div[role="presentation"i] *[role="tab"i][aria-selected="true"i]');
       const tabLabel = tab.textContent;
       if (path !== location.pathname || label !== tabLabel) {
         path = location.pathname;
         label = tabLabel;
+        console.log(label, path);
 
         observer.disconnect();
         clearTimeout(timeCount);
