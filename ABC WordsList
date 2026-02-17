@@ -22,7 +22,7 @@
   const words = {
     hideword: [
 
-      // jp
+      // holostars jp
       '花咲(\\s)*みやび|miyabihanasaki|HanasakiMiyabi',
       '奏手(\\s)*イヅル|kanadeizuru|KanadeIzuru',
       'アルランディス|arurandeisu|Arurandeisu',
@@ -53,7 +53,7 @@
       'uproar|tempus|armis',
       '(?=.*(holo(live)*|ホロライブ))(?=.*(スバル|みこ).*)',
 
-      // jp
+      // nijisanji jp
       '渋谷(\\s)*ハジメ|sibuya_hajime|ShibuyaHajime',
       'ギルザレンⅢ世|gilzaren_iii|GilzarenIII',
       '剣持(\\s)*刀也|rei_Toya_rei|KenmochiToya',
@@ -146,18 +146,21 @@
       '七次元生徒会|seitokai_07',
 
       // others vtuber
-      '佃煮のりお|犬山たまき|norioo_|noriopro|noripro',
+      '佃煮のりお|犬山たまき|norioo_|noriopro',
       'かなえ先生|KanaeVCriminologist',
       '渋谷(\\s)*ハル|渋ハル|shibuyahal',
       'コーサカ|monsterzmate',
       'かみと|kamitochannel',
       '天開(\\s)*司|天開塾|tenkaitsukasa',
+      '白雪(\\s)*レイド|Shirayuki_Reid',
       '歌衣(\\s)*メイカ|メイカちゃんねる|utaimeika',
-      // others youtube
+
+      // others youtuber
       'はじめしゃちょー|hajimesyacho',
       'ヒカキン|hikakin|seikin',
       '東海オンエア|ロードシルク|tokaionair',
       'フィッシャーズ|fischers',
+      'ヒカル|kinnpatuhikaru|hikaruYouTube',
       'よしなま|yoshinama0130',
       '赤髮のとも|akagaminotomo',
       'キヨ。|kiyoisgod',
