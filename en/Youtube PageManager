@@ -274,6 +274,13 @@
     // style 無効化
     elemMov.textContent = '';
   };
+  const ytNavBtn = async () => {
+    const toggleBtn = 'button.ytp-autonav-toggle:has(> div > div.ytp-autonav-toggle-button[aria-checked="true"])';
+    const area = await waitQuerySelectorCount(4, toggleBtn);
+    if (!isNuN(area)) {
+      area.click();
+    }
+  };
   const removeMovieInformation = async (item) => {
     const mode = {'pc': {}, 'mobile': {}};
 
@@ -481,6 +488,7 @@
           // pc
           ytChatArea();
           ytStableVolume('button.ytp-settings-button', 'div.ytp-drc-menu-item[role="menuitemcheckbox"]', manager);
+          ytNavBtn();
         } else if ('m.youtube.com' === location.hostname) {
           // mobile
           ytStableVolume('button.player-settings-icon[aria-label="再生設定"]', 'stable-volume-toggle switch-button-view-model > button.ytSwitchButtonViewModelButton[role="switch"]', 'button.ytWebScrimHiddenButton[aria-label="閉じる"]');
