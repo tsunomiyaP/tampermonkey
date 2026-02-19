@@ -51,14 +51,17 @@
       // other groups
       'ホロスタ(ーズ)*|holostar(s)*|スタこれ',
       'uproar|tempus|armis',
-      '(?=.*(holo(live)*|ホロライブ))(?=.*(スバル|みこ).*)',
+      '(?=.*(holo|ホロ))(?=.*(スバル|みこ).*)',
+
+      // 敬称略
+      '(?=.*(holo|ホロ))(?=.*(みやび|イヅル|アル|りっか|天真|ロベル|オウガ|封魔|烏有|燐央).*)',
 
       // nijisanji jp
       '渋谷(\\s)*ハジメ|sibuya_hajime|ShibuyaHajime',
       'ギルザレンⅢ世|gilzaren_iii|GilzarenIII',
       '剣持(\\s)*刀也|rei_Toya_rei|KenmochiToya',
       '伏見(\\s)*ガク|gaku_fushimi|FushimiGaku',
-      '(?=.*(niji(sanji)*|にじ(さんじ)*))(?=.*(叶).*)|kanae_2434|Kanae',
+      '(?=.*(niji|にじ))(?=.*(叶).*)|kanae_2434|Kanae',
       '卯月(\\s)*コウ|udukikohh|UzukiKou',
       '花畑(\\s)*チャイカ|zulmihp1nlmot5y|HanabatakeChaika',
       '社(\\s)*築|846kizuq|YashiroKizuku',
@@ -74,7 +77,7 @@
       '加賀美(\\s)*ハヤト|H_KAGAMI2434|KagamiHayato',
       'シェリン(\\s)*[・]*バーガンディ|ShellinBurgundy|ShellinBurgundy',
       '不破(\\s)*湊|Fuwa_Minato|FuwaMinato',
-      '(?=.*(niji(sanji)*|にじ(さんじ)*))(?=.*(ましろ[爻]*).*)|mashiro2434|MashiroMeme',
+      '(?=.*(niji|にじ))(?=.*(ましろ[爻]*).*)|mashiro2434|MashiroMeme',
       'イブラヒム|honmono_ibrahim|Ibrahim',
       '甲斐田(\\s)*晴|Kaida_Haru|KaidaHaru',
       '弦月(\\s)*藤士郎|1O46V|GenzukiTojiro',
@@ -135,14 +138,19 @@
       // id
       'ライ(\\s)*ガリレイ|Rai_Galilei|RaiGalilei',
 
+      // 敬称略
+      '甲斐田|不破|加賀美|舞元|力一|剣持|シェリン',
+      // 愛称
+      '(?=.*(niji|にじ))(?=.*(社長|アッキーナ|エビオ|かなかな|ズハ|やしきず|ベルさん|ふわっち).*)',
+
       // other groups nijisanji
       '@nijisanji|nijisanji_en|nijisanji(\\s)*en',
       '#(にじ|NIJI|NJ)',
-      'oriens|dytica|3skm|メイフ|SMC',
-      'くろのわ|くろなん|chronoir',
-      'ろふまお|rof-mao|rofmao',
+      'oriens|dytica|3skm|メイフ|SMC|チューリップ組|エデン組',
+      'chronoir|くろのわ|くろなん',
+      'rof(\\s)*[-]*mao|ろふまお',
       'ヴォルタクション|voltaction',
-      'VΔLZ|VALZ|ヴァルツ|ばるつ|(@)valz',
+      'VΔLZ|ヴァルツ|ばるつ|VALZ',
       '七次元生徒会|seitokai_07',
 
       // others vtuber
