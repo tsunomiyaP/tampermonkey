@@ -21,6 +21,7 @@
   const remNColumn = ':not(.removeItem)';
   const remAd = 'div[class="css-146c3p1 r-bcqeeo r-1ttztb7 r-qvutc0 r-1tl8opc r-1b43r93 r-14yzgew r-16dba41"i]';
   const remReTweet = 'span[data-testid="socialContext"i]';
+  const moreTweet = 'button[data-testid="tweet-text-show-more-link"]';
   const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
   // 可変数
   let timeCount;
@@ -152,6 +153,10 @@
     // console.log(tweets.length);
 
     for (const tweet of tweets) {
+      if (!isNuN(tweet.querySelector(moreTweet))) {
+        tweet.querySelector(moreTweet).click();
+      }
+
       const words = isNuN(abc) ? '' : abc.hideword;
       if (isNuN(words)) { return false; }
       // 非表示対象文字列
