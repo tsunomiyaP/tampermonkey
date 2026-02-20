@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube ProgressBar
 // @namespace    http://tampermonkey.net/
-// @version      4.4
+// @version      5.0
 // @description  try to take over the world!
 // @author       You
 // @match        https://www.youtube.com/*
@@ -37,7 +37,7 @@
   elemStyle.textContent += 'div.html5-video-player { background-color: #000; } ';
   elemStyle.textContent += 'div.annotation.annotation-type-custom.iv-branding { display: none; } ';
   elemStyle.textContent += 'button.ytp-suggested-action-badge-content-forward { display: none; } ';
-  elemStyle.textContent += 'div.ytp-progress-bar-container { top: 5px !important; height: 10px !important; } ';
+  elemStyle.textContent += 'div.ytp-progress-bar-container { top: 5px !important; height: 10px !important; z-index: 9999 !important; } ';
   // 常時表示
   //elemStyle.textContent += 'ytd-watch-flexy[full-bleed-player][is-vertical-video_] div#full-bleed-container { z-index: 999; } ytd-watch-flexy[full-bleed-player][is-vertical-video_] div#columns { z-index: 998; } ytd-watch-flexy[full-bleed-player][is-vertical-video_] div#columns.ytd-watch-flexy { padding-top: 55px !important; } ytd-watch-flexy[full-bleed-player][is-vertical-video_] ytd-player#ytd-player { height: calc(100% + 55px) !important; } ytd-watch-flexy[full-bleed-player][is-vertical-video_] div#container div.html5-video-container > video { top: 0 !important; } ytd-watch-flexy[full-bleed-player][is-vertical-video_] div#movie_player.ended-mode:has(video) video { display: none !important; } ';
   //elemStyle.textContent += 'ytd-watch-flexy[full-bleed-player]:not([is-vertical-video_]) div#full-bleed-container { z-index: 999; } ytd-watch-flexy[full-bleed-player]:not([is-vertical-video_]) div#columns { z-index: 998; } ytd-watch-flexy[full-bleed-player]:not([is-vertical-video_]) div#columns.ytd-watch-flexy { padding-top: 55px !important; } ytd-watch-flexy[full-bleed-player]:not([is-vertical-video_]) ytd-player#ytd-player { height: calc(100% + 55px) !important; } ytd-watch-flexy[full-bleed-player]:not([is-vertical-video_]) div#container div.html5-video-container > video { top: 0 !important; } ytd-watch-flexy[full-bleed-player]:not([is-vertical-video_]) div#movie_player.ended-mode:has(video) video { display: none !important; } ';
@@ -151,7 +151,7 @@
   if (alsoInFullscreen) {
     bar.style.position = 'absolute';
     bar.style.top = '5px';
-    bar.style.zIndex = 0;
+    bar.style.zIndex = '9998';
     // TODO align with original progress bar? hard since it has some relative margins.
   }
 
