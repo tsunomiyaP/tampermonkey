@@ -16,7 +16,7 @@
   'use strict';
 
   const videoPath = 'video/';
-  const videoElem = 'div#bilibili-player div[aria-label="哔哩哔哩播放器"] video';
+  const videoElem = 'div#bilibili-player div.bpx-player-video-area video';
   const maskElem = '.bili-mini-mask';
   // ======================================================================================
   // eslint-disable-next-line no-unused-vars
