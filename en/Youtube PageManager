@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube PageManager
 // @namespace    http://tampermonkey.net/
-// @version      4.5
+// @version      5.0
 // @description  try to take over the world!
 // @author       You
 // @match        https://*.youtube.com/*
@@ -244,7 +244,7 @@
     const watcher = new RegExp(regWatch, 'gis');
     if (!watcher.test(location.pathname)) { return false; }
     console.log('> chat area create...');
-    const chat = await waitQuerySelectorCount(5, 'div#chat-container');
+    const chat = await waitQuerySelectorCount(4, 'div#chat-container');
     if (!isNuN(chat)) { chat.remove(); }
   };
   const ytStableVolume = async (settingBtn, drcBtn, closeArea) => {
@@ -257,7 +257,7 @@
     const setting = await waitQuerySelector(settingBtn);
     setting.click();
 
-    const drcMenuItem = await waitQuerySelectorCount(2, drcBtn);
+    const drcMenuItem = await waitQuerySelectorCount(4, drcBtn);
     if (isNuN(drcMenuItem)) {
       document.querySelector(closeArea).click();
       console.log('DRC Audio is already disabled');
@@ -486,12 +486,12 @@
 
         if ('www.youtube.com' === location.hostname) {
           // pc
-          ytChatArea();
-          ytStableVolume('button.ytp-settings-button', 'div.ytp-drc-menu-item[role="menuitemcheckbox"]', manager);
-          ytNavBtn();
+          await ytChatArea();
+          await ytStableVolume('button.ytp-settings-button', 'div.ytp-drc-menu-item[role="menuitemcheckbox"]', manager);
+          await ytNavBtn();
         } else if ('m.youtube.com' === location.hostname) {
           // mobile
-          ytStableVolume('button.player-settings-icon[aria-label="再生設定"]', 'stable-volume-toggle switch-button-view-model > button.ytSwitchButtonViewModelButton[role="switch"]', 'button.ytWebScrimHiddenButton[aria-label="閉じる"]');
+          await ytStableVolume('button.player-settings-icon[aria-label="再生設定"]', 'stable-volume-toggle switch-button-view-model > button.ytSwitchButtonViewModelButton[role="switch"]', 'button.ytWebScrimHiddenButton[aria-label="閉じる"]');
         }
 
         const waitNum = 'www.youtube.com' === location.hostname ? waitNums[0] : waitNums[1];
