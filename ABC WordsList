@@ -144,7 +144,7 @@
       '(?=.*(niji|にじ))(?=.*(社長|アッキーナ|エビオ|かなかな|ズハ|やしきず|ベルさん|ふわっち).*)',
 
       // other groups nijisanji
-      '@nijisanji|nijisanji_en|nijisanji(\\s)*en',
+      'nijisanji|nijisanji_en|nijisanji(\\s)*en',
       '#(にじ|NIJI|NJ)',
       'oriens|dytica|3skm|メイフ|SMC|チューリップ組|エデン組',
       'chronoir|くろのわ|くろなん',
