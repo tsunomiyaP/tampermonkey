@@ -297,7 +297,7 @@
       mode.mobile.ytTitle = isNuN(item.querySelector('div.details div.media-item-info div.media-item-metadata .media-item-headline span[role="text"]')) ? '' : item.querySelector('div.details div.media-item-info div.media-item-metadata .media-item-headline span[role="text"]').textContent;
       mode.mobile.userNam = '';
       mode.mobile.userNam += isNuN(item.querySelector('div.details div.media-channel > * > a[href]')) ? '' : item.querySelector('div.details div.media-channel > * > a[href]').href;
-      mode.mobile.userNam += isNuN(item.querySelector('div.details div.media-item-info span')) ? '' : item.querySelector('div.details div.media-item-info span').textContent;
+      mode.mobile.userNam += isNuN(item.querySelector('div.details div.media-item-info span.YtmBadgeAndBylineRendererItemByline > span')) ? '' : item.querySelector('div.details div.media-item-info span.YtmBadgeAndBylineRendererItemByline > span').textContent;
 
       const strData = device;
       youtubeItem.ytTitle = strData.ytTitle;
