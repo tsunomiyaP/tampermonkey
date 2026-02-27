@@ -294,7 +294,7 @@
       // pc 動画
       mode.pc.ytTitle = isNuN(item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container span')) ? '' : item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container span').textContent;
       mode.pc.userNam = isNuN(item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span')) ? '' : item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span').textContent;
-      if (isNuN(item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span'))) {
+      if (!isNuN(item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span'))) {
         YtChannel = item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span').textContent;
       }
 
