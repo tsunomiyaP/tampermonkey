@@ -293,11 +293,18 @@
       // pc 動画
       mode.pc.ytTitle = isNuN(item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container span')) ? '' : item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container span').textContent;
       mode.pc.userNam = isNuN(item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span')) ? '' : item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span').textContent;
+      if (isNuN(item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span'))) {
+        YtChannel = item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span').textContent;
+      }
+
       // mobile
       mode.mobile.ytTitle = isNuN(item.querySelector('div.details div.media-item-info div.media-item-metadata .media-item-headline span[role="text"]')) ? '' : item.querySelector('div.details div.media-item-info div.media-item-metadata .media-item-headline span[role="text"]').textContent;
       mode.mobile.userNam = '';
       mode.mobile.userNam += isNuN(item.querySelector('div.details div.media-channel > * > a[href]')) ? '' : item.querySelector('div.details div.media-channel > * > a[href]').href;
       mode.mobile.userNam += isNuN(item.querySelector('div.details div.media-item-info span.YtmBadgeAndBylineRendererItemByline > span')) ? '' : item.querySelector('div.details div.media-item-info span.YtmBadgeAndBylineRendererItemByline > span').textContent;
+      if (!isNuN(item.querySelector('div.details div.media-item-info span.YtmBadgeAndBylineRendererItemByline > span'))) {
+        YtChannel = item.querySelector('div.details div.media-item-info span.YtmBadgeAndBylineRendererItemByline > span').textContent;
+      }
 
       const strData = device;
       youtubeItem.ytTitle = strData.ytTitle;
@@ -313,8 +320,8 @@
         user = channel.textContent;
       }
 
-      console.log(user, youtubeItem.userNam);
-      if (user !== youtubeItem.userNam) { item.classList.add('remove_item'); }
+      console.log(user, YtChannel);
+      if (user !== YtChannel) { item.classList.add('remove_item'); }
     } else {
       // pc 動画
       mode.pc.ytTitle = isNuN(item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container span')) ? '' : item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container span').textContent;
