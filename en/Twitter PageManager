@@ -34,6 +34,7 @@
   // tweet hide
   appendStylus += twColumns + '.removeItem { display: none !important; } ';
   appendStylus += twColumns + ':has(' + remReTweet + ') { display: none !important; } ';
+  appendStylus += twColumns + ' button[aria-label*="Grok"i] { display: none !important; } ';
   appendStylus += twColumns + ':has(div[class="css-175oi2r r-2pydbh"i] > div[class="css-175oi2r r-1awozwy r-18u37iz r-1ey881g r-1wtj0ep"i] > ' + remAd + ') { display: none !important; } ';
   // ext area stylus
   appendStylus += 'div[aria-label="トレンド"i] > div > div:not(:has(form[aria-label="検索"i])) { display: none !important; } ';
