@@ -148,9 +148,8 @@
   const polling = async () => {
     timeCount = setTimeout(async () => {
       removeElements();
-      await new Promise(resolve => setTimeout(resolve, 1000));
       await polling();
-    }, 500);
+    }, 2000);
   };
   const removeElements = () => {
     let tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
