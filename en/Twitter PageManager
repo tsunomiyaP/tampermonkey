@@ -145,10 +145,11 @@
     }
   };
 
-  const polling = () => {
+  const polling = async () => {
     timeCount = setTimeout(async () => {
       removeElements();
-      polling();
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      await polling();
     }, 500);
   };
   const removeElements = () => {
