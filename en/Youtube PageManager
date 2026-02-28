@@ -498,9 +498,9 @@
 
         if ('www.youtube.com' === location.hostname) {
           // pc
-          await ytChatArea();
           await ytStableVolume('button.ytp-settings-button', 'div.ytp-drc-menu-item[role="menuitemcheckbox"]', manager);
           await ytNavBtn();
+          await ytChatArea();
         } else if ('m.youtube.com' === location.hostname) {
           // mobile
           await ytStableVolume('button.player-settings-icon[aria-label="再生設定"]', 'stable-volume-toggle switch-button-view-model > button.ytSwitchButtonViewModelButton[role="switch"]', 'button.ytWebScrimHiddenButton[aria-label="閉じる"]');
