@@ -18,7 +18,8 @@
   // 変数宣言
   const twMain = 'main[role="main"i]';
   const twColumns = 'div[data-testid="cellInnerDiv"i]';
-  const remNColumn = ':not(.removeItem)';
+  const quoAColumn = 'removeItem';
+  const quoBColumn = 'quoteItem';
   const remAd = 'div[class="css-146c3p1 r-bcqeeo r-1ttztb7 r-qvutc0 r-1tl8opc r-1b43r93 r-14yzgew r-16dba41"i]';
   const remReTweet = 'span[data-testid="socialContext"i]';
   const moreTweet = 'button[data-testid="tweet-text-show-more-link"]';
@@ -29,10 +30,11 @@
   // stylus: beforebegin, afterbegin, beforeend, afterend
   let appendStylus = '';
   // area stylus
+  appendStylus += twColumns + ' *:not(:is(div[data-testid="Tweet-User-Avatar"i] *, div[data-testid="tweetPhoto"i]:has(div[data-testid="videoPlayer"i]) *, div[data-testid="tweetPhoto"i] :is(img, div:has(> button[data-testid="playButton"i]) *))), [data-testid="sidebarColumn"i] *, header[role="banner"i] *, nav[role="navigation"i] * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background-color: rgba(0, 0, 0, 0.9) !important; /* または背景色を調整 */　} ';
   appendStylus += twColumns + ' .r-1867qdf { border-radius: 0px !important; }';
   appendStylus += 'form[aria-label="検索"i] > div > div.r-sdzlij { border-bottom-left-radius: 0px !important; border-bottom-right-radius: 0px !important; border-top-left-radius: 0px !important; border-top-right-radius: 0px !important; }';
   // tweet hide
-  appendStylus += twColumns + '.removeItem { display: none !important; } ';
+  appendStylus += twColumns + '.' + quoAColumn + ' { display: none !important; } ';
   appendStylus += twColumns + ':has(' + remReTweet + ') { display: none !important; } ';
   appendStylus += twColumns + ' button[aria-label*="Grok"i] { display: none !important; } ';
   appendStylus += twColumns + ':has(div[class="css-175oi2r r-2pydbh"i] > div[class="css-175oi2r r-1awozwy r-18u37iz r-1ey881g r-1wtj0ep"i] > ' + remAd + ') { display: none !important; } ';
@@ -149,7 +151,7 @@
     }, 500);
   };
   const removeElements = () => {
-    let tweets = document.querySelectorAll(twColumns + remNColumn);
+    let tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
     if (0 === tweets.length) { return false; }
     // console.log(tweets.length);
 
@@ -157,6 +159,7 @@
       if (!isNuN(tweet.querySelector(moreTweet))) {
         tweet.querySelector(moreTweet).click();
       }
+      tweet.classList.add(quoBColumn);
 
       const words = isNuN(abc) ? '' : abc.hideword;
       if (isNuN(words)) { return false; }
@@ -166,7 +169,7 @@
         if (regWord.test(tweet.textContent)) {
           console.log([word, tweet.textContent]);
           // tweet.style.setProperty('display', 'none', 'important');
-          tweet.classList.add('removeItem');
+          tweet.classList.add(quoAColumn);
         }
       }
     }
