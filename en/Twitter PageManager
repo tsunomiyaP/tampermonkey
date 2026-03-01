@@ -30,7 +30,8 @@
   // stylus: beforebegin, afterbegin, beforeend, afterend
   let appendStylus = '';
   // area stylus
-  appendStylus += twColumns + ' *:not(:is(div[data-testid="Tweet-User-Avatar"i] *, div[data-testid="tweetPhoto"i]:has(div[data-testid="videoPlayer"i]) *, :is(div[data-testid="tweetPhoto"i], div[data-testid="previewInterstitial"i], div[data-testid="card.wrapper"i]) :is(img, div:has(> button[data-testid="playButton"i]) *, div[data-testid^="card"i] *))), [data-testid="sidebarColumn"i] *, header[role="banner"i] *, nav[role="navigation"i] * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background-color: rgba(255, 255, 255, 0.9) !important; /* または背景色を調整 */ color: rgba(0, 0, 0, 1) !important; } ';
+  appendStylus += twColumns + ' *:not(:is(div[data-testid="Tweet-User-Avatar"i] *, div[data-testid="tweetPhoto"i]:has(div[data-testid="videoPlayer"i]) *)), [data-testid="sidebarColumn"i] *, header[role="banner"i] *, nav[role="navigation"i] * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background-color: rgba(255, 255, 255, 0.9) !important; /* または背景色を調整 */ color: rgba(0, 0, 0, 1) !important; } ';
+  appendStylus += twColumns + ' *:is(div[data-testid="tweetPhoto"i] button, div[aria-label="プレイ"i]) { display: none !important; } ';
   appendStylus += twColumns + ' .r-1867qdf { border-radius: 0px !important; }';
   appendStylus += 'form[aria-label="検索"i] > div > div.r-sdzlij { border-bottom-left-radius: 0px !important; border-bottom-right-radius: 0px !important; border-top-left-radius: 0px !important; border-top-right-radius: 0px !important; }';
   // tweet hide
