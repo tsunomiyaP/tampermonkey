@@ -22,7 +22,7 @@
   const quoBColumn = 'quoteItem';
   const remAd = 'div[class="css-146c3p1 r-bcqeeo r-1ttztb7 r-qvutc0 r-1tl8opc r-1b43r93 r-14yzgew r-16dba41"i]';
   const remReTweet = 'span[data-testid="socialContext"i]';
-  const moreTweet = 'button[data-testid="tweet-text-show-more-link"]';
+  const moreTweet = 'button[data-testid="tweet-text-show-more-link"i]';
   const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
   // 可変数
   let timeCount;
@@ -30,7 +30,7 @@
   // stylus: beforebegin, afterbegin, beforeend, afterend
   let appendStylus = '';
   // area stylus
-  appendStylus += twColumns + ' *:not(:is(div[data-testid="Tweet-User-Avatar"i] *, div[data-testid="tweetPhoto"i]:has(div[data-testid="videoPlayer"i]) *, :is(div[data-testid="tweetPhoto"i], div[data-testid="previewInterstitial"i]) :is(img, div:has(> button[data-testid="playButton"i]) *))), [data-testid="sidebarColumn"i] *, header[role="banner"i] *, nav[role="navigation"i] * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background-color: rgba(255, 255, 255, 0.9) !important; /* または背景色を調整 */ color: rgba(0, 0, 0, 1) !important; } ';
+  appendStylus += twColumns + ' *:not(:is(div[data-testid="Tweet-User-Avatar"i] *, div[data-testid="tweetPhoto"i]:has(div[data-testid="videoPlayer"i]) *, :is(div[data-testid="tweetPhoto"i], div[data-testid="previewInterstitial"i], div[data-testid="card.wrapper"i]) :is(img, div:has(> button[data-testid="playButton"i]) *, div[data-testid^="card"i] *))), [data-testid="sidebarColumn"i] *, header[role="banner"i] *, nav[role="navigation"i] * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background-color: rgba(255, 255, 255, 0.9) !important; /* または背景色を調整 */ color: rgba(0, 0, 0, 1) !important; } ';
   appendStylus += twColumns + ' .r-1867qdf { border-radius: 0px !important; }';
   appendStylus += 'form[aria-label="検索"i] > div > div.r-sdzlij { border-bottom-left-radius: 0px !important; border-bottom-right-radius: 0px !important; border-top-left-radius: 0px !important; border-top-right-radius: 0px !important; }';
   // tweet hide
@@ -146,8 +146,7 @@
   };
 
   const polling = async () => {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    const tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
+    let tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
     if (0 === tweets.length) { return polling(); }
 
     timeCount = setTimeout(async () => {
