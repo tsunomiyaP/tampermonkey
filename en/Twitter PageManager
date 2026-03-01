@@ -146,14 +146,14 @@
   };
 
   const polling = async () => {
+    let tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
+    if (0 === tweets.length) { return polling(); }
+
     timeCount = setTimeout(async () => {
-      removeElements();
-      await polling();
+      await removeElements(tweets);
     }, 2000);
   };
-  const removeElements = () => {
-    let tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
-    if (0 === tweets.length) { return false; }
+  const removeElements = async (tweets) => {
     // console.log(tweets.length);
 
     for (const tweet of tweets) {
@@ -162,8 +162,7 @@
       }
       tweet.classList.add(quoBColumn);
 
-      const words = isNuN(abc) ? '' : abc.hideword;
-      if (isNuN(words)) { return false; }
+      const words = isNuN(abc) ? [] : abc.hideword;
       // 非表示対象文字列
       for (const word of words) {
         const regWord = new RegExp(word, 'gis');
@@ -174,11 +173,12 @@
         }
       }
     }
+    polling();
   };
   const initial = async () => {
     // console.log('refresh tweets list');
     await waitQuerySelector(twColumns);
-    await polling();
+    polling();
   };
   const twPath = async () => {
     let path, label;
