@@ -146,7 +146,8 @@
   };
 
   const polling = async () => {
-    let tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    const tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
     if (0 === tweets.length) { return polling(); }
 
     timeCount = setTimeout(async () => {
