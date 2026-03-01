@@ -30,7 +30,7 @@
   // stylus: beforebegin, afterbegin, beforeend, afterend
   let appendStylus = '';
   // area stylus
-  appendStylus += twColumns + ' *:not(:is(div[data-testid="Tweet-User-Avatar"i] *, div[data-testid="tweetPhoto"i]:has(div[data-testid="videoPlayer"i]) *, :is(div[data-testid="tweetPhoto"i], div[data-testid="previewInterstitial"i]) :is(img, div:has(> button[data-testid="playButton"i]) *))), [data-testid="sidebarColumn"i] *, header[role="banner"i] *, nav[role="navigation"i] * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background-color: rgba(255, 255, 255, 0.9) !important; /* または背景色を調整 */　} ';
+  appendStylus += twColumns + ' *:not(:is(div[data-testid="Tweet-User-Avatar"i] *, div[data-testid="tweetPhoto"i]:has(div[data-testid="videoPlayer"i]) *, :is(div[data-testid="tweetPhoto"i], div[data-testid="previewInterstitial"i]) :is(img, div:has(> button[data-testid="playButton"i]) *))), [data-testid="sidebarColumn"i] *, header[role="banner"i] *, nav[role="navigation"i] * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background-color: rgba(255, 255, 255, 0.9) !important; /* または背景色を調整 */ color: rgba(0, 0, 0, 1) !important; } ';
   appendStylus += twColumns + ' .r-1867qdf { border-radius: 0px !important; }';
   appendStylus += 'form[aria-label="検索"i] > div > div.r-sdzlij { border-bottom-left-radius: 0px !important; border-bottom-right-radius: 0px !important; border-top-left-radius: 0px !important; border-top-right-radius: 0px !important; }';
   // tweet hide
@@ -146,14 +146,14 @@
   };
 
   const polling = async () => {
-    let tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
-    if (0 === tweets.length) { return polling(); }
-
     timeCount = setTimeout(async () => {
-      await removeElements(tweets);
+      removeElements();
+      await polling();
     }, 2000);
   };
-  const removeElements = async (tweets) => {
+  const removeElements = () => {
+    let tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
+    if (0 === tweets.length) { return false; }
     // console.log(tweets.length);
 
     for (const tweet of tweets) {
@@ -162,7 +162,8 @@
       }
       tweet.classList.add(quoBColumn);
 
-      const words = isNuN(abc) ? [] : abc.hideword;
+      const words = isNuN(abc) ? '' : abc.hideword;
+      if (isNuN(words)) { return false; }
       // 非表示対象文字列
       for (const word of words) {
         const regWord = new RegExp(word, 'gis');
@@ -173,12 +174,11 @@
         }
       }
     }
-    polling();
   };
   const initial = async () => {
     // console.log('refresh tweets list');
     await waitQuerySelector(twColumns);
-    polling();
+    await polling();
   };
   const twPath = async () => {
     let path, label;
