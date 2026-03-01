@@ -160,7 +160,6 @@
       'コーサカ|monsterzmate',
       'かみと|kamitochannel',
       '天開(\\s)*司|天開塾|tenkaitsukasa',
-      '白雪(\\s)*レイド|Shirayuki_Reid',
       '歌衣(\\s)*メイカ|メイカちゃんねる|utaimeika',
 
       // others youtuber
@@ -171,14 +170,18 @@
       'ヒカル|kinnpatuhikaru|hikaruYouTube',
       'よしなま|yoshinama0130',
       '赤髮のとも|akagaminotomo',
-      'キヨ。|kiyoisgod',
-      'ガッチマン|gatchman666',
+      'キヨ。|kiyoisgod|レトルト|retokani|牛沢|uszw|ガッチマン|(gatchman666|gatchmanV666)',
+      'ナポリの男たち|napolimens',
       '岡田斗司夫|toshiookada0701',
       '山田玲司|yamadareiji',
       'コレコレ|korekorech',
       'もこう|mokoustream',
+      'ドズル社|dozle',
       'みけねこ|潤羽るしあ|(95rn16|mikenekoko)',
       'バキ童|bakibakidt',
+      'うるか|CR_uruca|crazyraccoon',
+      'なつめさんち|natsume_sanchi',
+      'ぽんぽこ|ぽこピー|ピーナッツくん|pokopea',
 
       // others streamer
       'twitch.tv/yuyuta0702|ゆゆうた|(yuyuta0702|yuyutadesu)',
@@ -196,6 +199,13 @@
       'twitch.tv/acqua_0316|acqua|(acqua_0316|acqua316)',
       'twitch.tv/shirayuki_reid|白雪(\\s)*レイド|shirayuki_reid',
       'twitch.tv/5_mario|五月病(\\s)*マリオ|(5_mario|5mario)',
+
+      // 芸人
+      '狩野英孝|eikogo3822',
+      'ララチューン|lalatuune',
+      'オモコロ|omocorochannel',
+      '花江夏樹|hanae0626',
+      '木村良平|Ryouhey_Drunk',
 
       // other groups ...
       'ぶいすぽ|vspo',
