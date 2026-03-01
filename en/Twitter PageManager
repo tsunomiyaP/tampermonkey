@@ -173,8 +173,6 @@
       if (!isNuN(tweet.querySelector(moreTweet))) {
         tweet.querySelector(moreTweet).click();
       }
-      tweet.classList.add(quoBColumn);
-      await new Promise(resolve => setTimeout(resolve, 1000));
 
       const words = isNuN(abc) ? [] : abc.hideword;
       // 非表示対象文字列
@@ -186,6 +184,8 @@
           tweet.classList.add(quoAColumn);
         }
       }
+      tweet.classList.add(quoBColumn);
+      await new Promise(resolve => setTimeout(resolve, 1000));
     }
     polling();
   };
