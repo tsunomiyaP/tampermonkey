@@ -37,6 +37,7 @@
   appendStylus += '[class*="shadow"], [style*="box-shadow"] { box-shadow: none !important; }';
   appendStylus += '[class*="gradient"], [class*="bg-gradient"], [style*="linear-gradient("] { background-image: none !important; }';
   appendStylus += 'video { transform: none !important; will-change: auto !important; background-color: black !important; }';
+  appendStylus += 'img[src*="twimg.com/emoji"i] { display: none !important; } ';
 
   appendStylus += twColumns + ' .r-1867qdf { border-radius: 0px !important; }';
   appendStylus += 'form[aria-label="検索"i] > div > div.r-sdzlij { border-bottom-left-radius: 0px !important; border-bottom-right-radius: 0px !important; border-top-left-radius: 0px !important; border-top-right-radius: 0px !important; }';
