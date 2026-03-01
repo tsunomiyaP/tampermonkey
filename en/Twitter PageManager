@@ -164,7 +164,7 @@
     timerCount = setTimeout(async () => {
       clearTimeout(timerCount);
       await removeElements(tweets);
-    }, 2000);
+    }, 500);
   };
   const removeElements = async (tweets) => {
     // console.log(tweets.length);
