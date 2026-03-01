@@ -25,6 +25,7 @@
   const moreTweet = 'button[data-testid="tweet-text-show-more-link"i]';
   const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
   // 可変数
+  let timerCount;
   // ==========================================================
   // stylus: beforebegin, afterbegin, beforeend, afterend
   let appendStylus = '';
@@ -148,11 +149,13 @@
   const polling = async () => {
     const tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
     if (0 === tweets.length) {
+      clearTimeout(timerCount);
       await new Promise(resolve => setTimeout(resolve, 5000));
       return polling();
     }
 
-    setTimeout(async () => {
+    timerCount = setTimeout(async () => {
+      clearTimeout(timerCount);
       await removeElements(tweets);
     }, 2000);
   };
@@ -198,6 +201,7 @@
         console.log(label, path);
 
         observer.disconnect();
+        clearTimeout(timerCount);
 
         // 10秒待機
         // await new Promise(resolve => setTimeout(resolve, 10000));
