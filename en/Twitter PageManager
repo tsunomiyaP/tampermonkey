@@ -32,7 +32,7 @@
   // area stylus
   appendStylus += twColumns + ' *:not(:is(div[data-testid="Tweet-User-Avatar"i] *, div[data-testid="tweetPhoto"i]:has(div[data-testid="videoPlayer"i]) *)), [data-testid="sidebarColumn"i] *, header[role="banner"i] *, nav[role="navigation"i] * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background-color: rgba(255, 255, 255, 0.9) !important; /* または背景色を調整 */ color: rgba(0, 0, 0, 1) !important; } ';
   appendStylus += twColumns + ' *:is(div[data-testid="tweetPhoto"i] button, div[data-testid="previewInterstitial"i] button, div[data-testid="card.wrapper"i] div[aria-label="プレイ"i]) { display: none !important; } ';
-  /* gradient stylus */
+  /* gradient stylus :意味あるかは不明 */
   appendStylus += '[style*="backdrop-filter"], [style*="filter: blur"], *[style*="blur("] { filter: none !important; }';
   appendStylus += '[class*="shadow"], [style*="box-shadow"] { box-shadow: none !important; }';
   appendStylus += '[class*="gradient"], [class*="bg-gradient"], [style*="linear-gradient("] { background-image: none !important; }';
@@ -169,11 +169,12 @@
   const removeElements = async (tweets) => {
     // console.log(tweets.length);
 
-    for (const tweet of tweets) {
+    for async (const tweet of tweets) {
       if (!isNuN(tweet.querySelector(moreTweet))) {
         tweet.querySelector(moreTweet).click();
       }
       tweet.classList.add(quoBColumn);
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       const words = isNuN(abc) ? [] : abc.hideword;
       // 非表示対象文字列
