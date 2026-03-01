@@ -36,6 +36,7 @@
   appendStylus += 'form[aria-label="検索"i] > div > div.r-sdzlij { border-bottom-left-radius: 0px !important; border-bottom-right-radius: 0px !important; border-top-left-radius: 0px !important; border-top-right-radius: 0px !important; }';
   // tweet hide
   appendStylus += twColumns + '.' + quoAColumn + ' { display: none !important; } ';
+  appendStylus += twColumns + ':not(.' + quoBColumn + ') { visibility: hidden !important; } ';
   appendStylus += twColumns + ':has(' + remReTweet + ') { display: none !important; } ';
   appendStylus += twColumns + ' button[aria-label*="Grok"i] { display: none !important; } ';
   appendStylus += twColumns + ':has(div[class="css-175oi2r r-2pydbh"i] > div[class="css-175oi2r r-1awozwy r-18u37iz r-1ey881g r-1wtj0ep"i] > ' + remAd + ') { display: none !important; } ';
