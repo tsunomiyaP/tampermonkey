@@ -169,7 +169,7 @@
   const removeElements = async (tweets) => {
     // console.log(tweets.length);
 
-    for async (const tweet of tweets) {
+    for await (const tweet of tweets) {
       if (!isNuN(tweet.querySelector(moreTweet))) {
         tweet.querySelector(moreTweet).click();
       }
