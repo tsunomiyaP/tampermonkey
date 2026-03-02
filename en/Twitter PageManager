@@ -155,13 +155,13 @@
   };
 
   const polling = async () => {
+    const tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
+
     timerCount = setTimeout(async () => {
-      const tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
+      clearTimeout(timerCount);
       if (0 === tweets.length) {
-        clearTimeout(timerCount);
         return polling();
       } else {
-        clearTimeout(timerCount);
         await removeElements(tweets);
       }
     }, 1000);
