@@ -155,17 +155,16 @@
   };
 
   const polling = async () => {
-    const tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
-    if (0 === tweets.length) {
-      clearTimeout(timerCount);
-      await new Promise(resolve => setTimeout(resolve, 5000));
-      return polling();
-    }
-
     timerCount = setTimeout(async () => {
-      clearTimeout(timerCount);
-      await removeElements(tweets);
-    }, 500);
+      const tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
+      if (0 === tweets.length) {
+        clearTimeout(timerCount);
+        return polling();
+      } else {
+        clearTimeout(timerCount);
+        await removeElements(tweets);
+      }
+    }, 1000);
   };
   const removeElements = async (tweets) => {
     // console.log(tweets.length);
