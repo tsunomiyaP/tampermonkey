@@ -110,11 +110,10 @@
   const Ntalents = listArea + ' > div[class*="talents-top_liverItem"]';
 
   // 静的style適用エリア
-  const elemStyle = document.createElement('style');
-  elemStyle.id = 'schedStylusNijisanji';
-
-  elemStyle.textContent += '.remove_item { display: none !important; } ';
-  elemStyle.textContent += listArea + ':not(.show) { display: none; } ';
+  const stylusElem = document.createElement('style');
+  stylusElem.id = 'stylusElem';
+  stylusElem.textContent += '.remove_item { display: none !important; } ';
+  stylusElem.textContent += listArea + ':not(.show) { display: none; } ';
   // ==========================================================
 
   // eslint-disable-next-line no-unused-vars
@@ -251,7 +250,7 @@
         // console.log('After:', location.href);
         href = href_path;
 
-        document.body.insertAdjacentElement('beforeend', elemStyle);
+        document.body.insertAdjacentElement('beforeend', stylusElem);
 
         await initial();
       }
