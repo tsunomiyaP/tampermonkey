@@ -1,4 +1,3 @@
-
 // ==UserScript==
 // @name         Youtube LoopPlayer
 // @namespace    http://tampermonkey.net/
@@ -28,7 +27,6 @@
   // 静的style適用エリア
   const elemStyle = document.createElement('style');
   elemStyle.id = 'ytStylusLoop';
-  document.head.insertAdjacentElement('beforeend', elemStyle);
   // pc
   elemStyle.textContent += 'ytd-app:has(ytd-watch-flexy[full-bleed-player]) ~ [id^="loop_off"] { position: fixed; bottom: 80px; right: 20px; z-index: 9999; display: inline-block; background-color: #fff; border: solid 2px #0000ff; color: #000000; border-radius: 10px; padding: 10px 30px; text-decoration: none; font-size: 1em; transition: all .3s ease 0s; } ';
   elemStyle.textContent += 'ytd-app:has(ytd-watch-flexy[full-bleed-player]) ~ [id^="loop_on"] { position: fixed; bottom: 80px; right: 20px; z-index: 9999; display: inline-block; background-color: #fff; border: solid 2px #ff0000; color: #000000; border-radius: 10px; padding: 10px 30px; text-decoration: none; font-size: 1em; transition: all .3s ease 0s; } ';
@@ -161,7 +159,7 @@
     const stats = ytPlayer.getVideoStats() || {};
     console.log('> youtube Live status : ' + stats.live);
     if (stats.live === 'live' || stats.live === 'dvr' || stats.live === 'lp') {
-      // 
+      //
       document.querySelector('[id^="loop_off"]').style.display = 'none';
       document.querySelector('[id^="loop_on"]').style.display = 'none';
     } else {
@@ -191,6 +189,8 @@
         // console.log('Before:', href);
         // console.log('After:', location.href);
         href = location.pathname;
+
+        document.body.insertAdjacentElement('beforeend', elemStyle);
 
         const watch = new RegExp(regWatch, 'gis');
         if (watch.test(location.pathname)) {
