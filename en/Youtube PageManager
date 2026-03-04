@@ -26,7 +26,7 @@
   const itemsArray = [
     { device: 'www.youtube.com', path: '(^/$|^/index)', area: 'div#primary > ytd-rich-grid-renderer > div#contents', stylus: 'transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'www.youtube.com', path: '^/feed/subscriptions', area: '[page-subtype="subscriptions"i] div#primary > ytd-rich-grid-renderer > div#contents', stylus: 'transform: ' + scale + ' !important; pointer-events: none !important;' },
-    { device: 'www.youtube.com', path: '^/watch|^/live', area: 'ytd-watch-flexy div#related :is(div#items:has(:not(ytd-item-section-renderer)), div#items > ytd-item-section-renderer > div#contents)', stylus: 'transform: ' + scale + ' !important; pointer-events: none !important;' },
+    { device: 'www.youtube.com', path: '^/watch|^/live', area: 'ytd-watch-flexy div#related div#items > ytd-item-section-renderer > div#contents', stylus: 'transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'www.youtube.com', path: '^/@.+/(videos|streams)|^/channel/.+/(videos|streams)|^/c/.+/(videos|streams)|^/user/.+/(videos|streams)|^/u/.+/(videos|streams)', area: '[page-subtype="channels"i] div#primary > ytd-rich-grid-renderer > div#contents', stylus: 'transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'www.youtube.com', path: '^/results', area: 'ytd-two-column-search-results-renderer > div#primary > ytd-section-list-renderer > div#contents', stylus: 'transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'm.youtube.com', path: '(^/$|^/index)', area: 'div.tab-content[tab-identifier="FEwhat_to_watch"i] div.rich-grid-renderer-contents', stylus: 'display: block; transform: ' + scale + ' !important; pointer-events: none !important;' },
@@ -38,7 +38,7 @@
   const regWatch = '^/watch|^/live';
   const regSearch = '^/results';
   const regChannel = '^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+';
-  const excChannel = '@tsunomiyaP|UCSsBxdA7yg523PegCT7O7Mg';
+  const excChannel = '';
   const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
   // 可変数
   let userName = window.sessionStorage.getItem('channel') || '';
@@ -47,7 +47,7 @@
   // 静的style適用エリア
   // stylus: beforebegin, afterbegin, beforeend, afterend
   let appendStylus = '';
-  appendStylus += ' .remove_item { display: none !important; } ';
+  appendStylus += '.remove_item { display: none !important; } ';
   // ヘッダー
   appendStylus += ':is(yt-tab-shape[tab-title="ホーム"i][role="tab"i], yt-tab-shape[tab-title="ショート"i][role="tab"i], div.tabGroupShapeSlider) { display: none !important; } ';
   // pc
@@ -79,20 +79,6 @@
   // ext
   appendStylus += 'ytm-pivot-bar-item-renderer:has(div.pivot-bar-item-tab.pivot-shorts) { display: none !important; } ';
   appendStylus += 'header.mobile-topbar-header div.mobile-topbar-header-sign-in-button { display: none !important; } ';
-
-  // preview : 無効化
-  appendStylus += `
-    ytd-video-preview { display: none !important; }
-    .ytd-thumbnail-overlay-loading-preview-renderer { display: none !important; }
-    .ytp-inline-preview-ui { display: none !important; }
-    .ytp-inline-preview-scrip { display: none !important; }
-    #preview { display: none !important; }
-    ytd-thumbnail[now-playing] ytd-thumbnail-overlay-time-status-renderer.ytd-thumbnail { display: flex !important; }
-    ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-time-status-renderer.ytd-thumbnail { display: flex !important; }
-  `;
-
-  if (!isChatMode) { appendStylus += 'div#chat-container { display: none !important; } '; }
-
   // 初期表示
   for (const yt of itemsArray) {
     // 非表示
@@ -104,8 +90,19 @@
     // [Mix & playlist] [他(headline)]動画 削除
     appendStylus += yt.area + ' .target:has(a[href*="&list="i], #rich-shelf-header-container, .rich-shelf-header, chips-shelf-with-video-shelf-renderer, ytd-brand-video-singleton-renderer) { display: none; } ';
   }
+
+  // preview : 無効化
+  appendStylus += 'ytd-video-preview { display: none !important; } ';
+  appendStylus += '.ytd-thumbnail-overlay-loading-preview-renderer { display: none !important; } ';
+  appendStylus += '.ytp-inline-preview-ui { display: none !important; } ';
+  appendStylus += '.ytp-inline-preview-scrip { display: none !important; } ';
+  appendStylus += '#preview { display: none !important; } ';
+  appendStylus += 'ytd-thumbnail[now-playing] ytd-thumbnail-overlay-time-status-renderer.ytd-thumbnail { display: flex !important; } ';
+  appendStylus += 'ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-time-status-renderer.ytd-thumbnail { display: flex !important; } ';
+  if (!isChatMode) { appendStylus += 'div#chat-container { display: none !important; } '; }
+
   const stylusElem = document.createElement('style');
-  stylusElem.id = 'stylusElem';
+  stylusElem.id = 'stylusElemPage';
   stylusElem.textContent = appendStylus;
   const stylusElemSettings = document.createElement('style');
   stylusElemSettings.id = 'stylusElemSettings';
@@ -242,7 +239,7 @@
     appendStylusSettings += 'div.ytp-popup.ytp-settings-menu { display: none !important; } ';
     appendStylusSettings += 'div#full-screen-content-id, ytm-app > bottom-sheet-container[role="dialog"] { display: none !important; } ';
     stylusElemSettings.textContent = appendStylusSettings;
-    document.body.insertAdjacentElement('afterbegin', stylusElemSettings);
+    if (stylusNone(stylusElemSettings.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemSettings); }
 
     await new Promise(resolve => setTimeout(resolve, waitTime * 4));
     const setting = await waitQuerySelector(settingBtn);
@@ -434,7 +431,7 @@
         // console.log('After:', location.href);
         href = href_path;
 
-        document.body.insertAdjacentElement('afterbegin', stylusElem);
+        if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
 
         if (!isNuN(ytMutation)) { ytMutation.disconnect(); }
 
@@ -455,7 +452,7 @@
           appendStylusElemModal += yt.area + ' { display: none; } ';
         }
         stylusElemModal.textContent = appendStylusElemModal;
-        document.body.insertAdjacentElement('afterbegin', stylusElemModal);
+        if (stylusNone(stylusElemModal.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemModal); }
 
         // channel videos or stream
         const channel = new RegExp(regChannel, 'gis');
@@ -508,7 +505,12 @@
     });
     url_obs.observe(document.querySelector(manager), url_config);
   };
-
+  const stylusNone = (stylus) => {
+    if (isNuN(document.querySelector('style#' + stylus))) {
+      return true;
+    }
+    return false;
+  };
   // URLが変更されたとき
   changeUrl();
 })();
