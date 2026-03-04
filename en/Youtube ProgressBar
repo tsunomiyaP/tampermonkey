@@ -53,7 +53,7 @@
     // appendStylus += 'div#related.ytd-watch-flexy { display: none !important; } ';
   }
   const stylusElem = document.createElement('style');
-  stylusElem.id = 'stylusElem';
+  stylusElem.id = 'stylusElemProgress';
   stylusElem.textContent = appendStylus;
   // ==========================================================
 
@@ -255,7 +255,7 @@
         href = location.pathname + location.search;
         if (!isNuN(moYt)) { moYt.disconnect(); }
 
-        document.body.insertAdjacentElement('afterbegin', stylusElem);
+        if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
 
         const watcher = new RegExp(regWatch, 'gis');
         if (watcher) {
@@ -266,7 +266,12 @@
     });
     url_obs.observe(document, url_config);
   };
-
+  const stylusNone = (stylus) => {
+    if (isNuN(document.querySelector('style#' + stylus))) {
+      return true;
+    }
+    return false;
+  };
   // URLが変更されたとき
   changeUrl();
 })();
