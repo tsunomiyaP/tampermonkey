@@ -1,0 +1,368 @@
+// ==UserScript==
+// @name         Talents Hololive Schedule Filter
+// @namespace    http://tampermonkey.net/
+// @version      2.0
+// @description  try to take over the world!
+// @author       You
+// @match        hololive.hololivepro.com/schedule
+// @grant        none
+// @license      GNU GPLv3
+// @icon         https://www.google.com/s2/favicons?domain=hololivepro.com
+// @run-at       document-body
+// @noframes
+// ==/UserScript==
+
+(function() {
+  'use strict';
+
+  // ==========================================================
+  // 変数宣言
+  const yesterday = 'ul#yesterday > li';
+  const today = 'ul#today > li';
+  const tomorrow = 'ul#tomorrow > li';
+  // 記述方法 > {'userName': 'AZKi', 'figureName': 'AZKi'},
+  const users = [
+    {'userName': 'AZKi', 'figureName': 'AZKi'},
+    {'userName': '白上フブキ', 'figureName': '白上フブキ'},
+    {'userName': '猫又おかゆ', 'figureName': '猫又おかゆ'},
+    {'userName': '戌神ころね', 'figureName': '戌神ころね'},
+    {'userName': '兎田ぺこら', 'figureName': '兎田ぺこら'},
+    {'userName': '宝鐘マリン', 'figureName': '宝鐘マリン'},
+    {'userName': '天音かなた', 'figureName': '天音かなた'},
+    {'userName': '尾丸ポルカ', 'figureName': '尾丸ポルカ'},
+    {'userName': '博衣こより', 'figureName': '博衣こより'},
+    {'userName': '風真いろは', 'figureName': '風真いろは'},
+    {'userName': 'IRyS', 'figureName': 'IRyS'},
+    {'userName': 'Ouro Kronii', 'figureName': 'Kronii'},
+    {'userName': '轟はじめ', 'figureName': '轟はじめ'},
+    {'userName': '儒烏風亭らでん', 'figureName': '儒烏風亭らでん'},
+    {'userName': '輪堂千速', 'figureName': '輪堂千速'},
+    {'userName': '水宮枢', 'figureName': '水宮枢'},
+  ];
+  // youtube apiKey
+  // https://console.cloud.google.com/projectselector2/apis/credentials?authuser=0&supportedpurview=project&pli=1&inv=1&invt=Abq3mw
+  const youtube_apikey = [
+    'AIzaSyCgidXjLFE0rpjeH8b355bAxvGr9yJyuoo', /** pc */
+    'AIzaSyAGoEMBjZt_kMXVXs3P6II4IHYUqSA28es' /** mobile */
+  ];
+  const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
+  // 可変数
+  // ==========================================================
+  // 静的style適用エリア
+  const stylusElem = document.createElement('style');
+  stylusElem.id = 'schedStylusHololive';
+  stylusElem.textContent += '.remove_item { display: none !important; }';
+  stylusElem.textContent += yesterday + ':not(.show), ' + today + ':not(.show), ' + tomorrow + ':not(.show) { display: none; } ';
+
+  // Node Area
+  const stylusBox = document.createElement('div');
+  stylusBox.id = 'area';
+  stylusBox.style.cssText = 'position: fixed !important; z-index: 9999 !important; width: 200px; height: 200px; min-height: 200px; max-height: 200px; top: 10px; left: 10px; background: #111111ad; color: white; text-align: left; display: none; overflow-y: auto;';
+
+  const stylusLoad = document.createElement('div');
+  stylusLoad.id = 'load';
+  stylusLoad.textContent = 'Loading... 少女祈祷中...';
+  stylusLoad.style.cssText = 'position: fixed !important; z-index: 9999 !important; width: 200px; height: 50px; min-height: 50px; max-height: 50px; inset: 0; margin: auto; background: #111111ad; color: white; text-align: center; line-height: 50px; display: block;';
+
+  let index = 0;
+  for (const user of users) {
+    const elemUser = document.createElement('div');
+    elemUser.id = 'box_' + index;
+    elemUser.style.cssText = '';
+    document.body.querySelector('div#area').insertAdjacentElement('beforeend', elemUser);
+
+    const elemTxt = document.createElement('label');
+    elemTxt.id = 'user_' + index;
+    elemTxt.for = 'check_' + index;
+    elemTxt.style.cssText = 'display: inline-block; width: 180px;';
+    document.body.querySelector('div#area > div#box_' + index).insertAdjacentElement('beforeend', elemTxt);
+
+    const elemCheck = document.createElement('input');
+    elemCheck.type = 'checkbox';
+    elemCheck.id = 'check_' + index;
+    elemCheck.name = 'check_' + index;
+    elemCheck.style.cssText = 'margin: 0 10px;';
+    document.body.querySelector('div#area > div#box_' + index + ' > label#user_' + index).insertAdjacentElement('beforeend', elemCheck);
+
+    const elemHide = document.createElement('span');
+    elemHide.id = 'userHide_' + index;
+    elemHide.textContent = user.figureName;
+    elemHide.style.cssText = 'display: none;';
+    document.body.querySelector('div#area > div#box_' + index + ' > label#user_' + index).insertAdjacentElement('beforeend', elemHide);
+
+    // text Node 追加
+    document.body.querySelector('div#area > div#box_' + index + ' > label#user_' + index).append(user.userName);
+    index++;
+  }
+  // ==========================================================
+
+  // eslint-disable-next-line no-unused-vars
+  const isNuN = (selector) => {
+    if (selector === null || selector === undefined || selector === '') { return true; } else { return false; }
+  };
+  // eslint-disable-next-line no-unused-vars
+  const waitQuerySelector = async (selector, node = document) => {
+    let obj = null;
+    while (!obj) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+      obj = node.querySelector(selector);
+    }
+    return obj;
+  };
+  // eslint-disable-next-line no-unused-vars
+  const waitQuerySelectorCount = async (cnt, selector, node = document) => {
+    let obj = null;
+    let num = 0;
+    while (!obj) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      if (num < cnt) {
+        obj = node.querySelector(selector);
+        num++;
+        if (!obj) { return obj; }
+      } else {
+        break;
+      }
+    }
+    while (!obj) {
+      await new Promise(resolve => setTimeout(resolve, 10000));
+      obj = node.querySelector(selector);
+    }
+    return obj;
+  };
+  // eslint-disable-next-line no-unused-vars
+  const waitQuerySelectorIframe = async (selector1, selector2, node = document) => {
+    let obj = null;
+    while (!obj) {
+      // iframe.contentWindow.document === iframe.contentDocument
+      await new Promise(resolve => setTimeout(resolve, 500));
+      obj = node.querySelector(selector1).contentDocument.querySelector(selector2);
+    }
+    return obj;
+  };
+  // eslint-disable-next-line no-unused-vars
+  const deleteParam = (searchUrl, param) => {
+    const base = new URL(location.protocol + '//' + location.hostname);
+    const url = new URL(searchUrl, base);
+    // URLSearchParamsオブジェクトを取得
+    const params = url.searchParams;
+    params.delete(param);
+
+    return url;
+  };
+  // eslint-disable-next-line no-unused-vars
+  const searchParams = (searchUrl, param) => {
+    const base = new URL(location.protocol + '//' + location.hostname);
+    const url = new URL(searchUrl, base);
+    console.log('url section', url);
+    // URLSearchParamsオブジェクトを取得
+    const params = url.searchParams;
+
+    return params.get(param);
+  };
+  // eslint-disable-next-line no-unused-vars
+  const getParam = (name, url) => {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\\[\]]/g, '\\$&');
+    let regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+    let results = regex.exec(url);
+
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+  };
+  // eslint-disable-next-line no-unused-vars
+  const userAgent = () => {
+    const userDevice = navigator.userAgent;
+    if (userDevice.indexOf('iPhone') > 0 || userDevice.indexOf('iPod') > 0 || userDevice.indexOf('Android') > 0 && userDevice.indexOf('Mobile') > 0) {
+      return false;
+    } else if (userDevice.indexOf('iPad') > 0 || userDevice.indexOf('Android') > 0) {
+      return false;
+    } else {
+      // pc
+      return true;
+    }
+  };
+
+  const movieVerfication = async (movie) => {
+    const content_words = {
+      'channel': movie.getAttribute('ytChannel'),
+      'title': movie.getAttribute('ytTitle'),
+      'description': movie.getAttribute('ytDescription')
+    };
+
+    const words = isNuN(abc) ? [] : abc.hideword;
+    // const excludes = isNuN(abc) ? [] : abc.execludeWords;
+
+    // youtube 削除対象
+    const youtubeItem = {};
+    for await (const word of words) {
+      const regw = new RegExp(word, 'gis');
+      if (regw.test(content_words.channel)) {
+        movie.classList.add('remove_item');
+        youtubeItem.channel = content_words.channel;
+        youtubeItem.word = word;
+        console.log('> youtube API remove word', youtubeItem);
+        break;
+      }
+      if (regw.test(content_words.title)) {
+        movie.classList.add('remove_item');
+        youtubeItem.title = content_words.title;
+        youtubeItem.word = word;
+        console.log('> youtube API remove word', youtubeItem);
+        break;
+      }
+      if (regw.test(content_words.description)) {
+        movie.classList.add('remove_item');
+        youtubeItem.description = content_words.description;
+        youtubeItem.word = word;
+        console.log('> youtube API remove word', youtubeItem);
+        break;
+      }
+    }
+  };
+  const movieInformation = async (movie, videoID) => {
+    if (isNuN(youtube_apikey)) { return false; }
+    try {
+      const option = { method: 'GET' };
+      const key = youtube_apikey[0];
+      const response = await fetch('https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' + videoID + '&key=' + key, option);
+      const respJson = await response.json();
+      const video_title = respJson.items[0].snippet.title || '';
+      const video_channel_title = respJson.items[0].snippet.channelTitle || '';
+      const video_description = respJson.items[0].snippet.description || '';
+
+      movie.setAttribute('ytChannel', video_channel_title);
+      movie.setAttribute('ytTitle', video_title);
+      movie.setAttribute('ytDescription', video_description);
+    } catch {
+      console.log('> youtube API movie get error catch next mobile');
+      try {
+        const option = { method: 'GET' };
+        const key = youtube_apikey[1];
+        const response = await fetch('https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' + videoID + '&key=' + key, option);
+        const respJson = await response.json();
+        const video_title = respJson.items[0].snippet.title || '';
+        const video_channel_title = respJson.items[0].snippet.channelTitle || '';
+        const video_description = respJson.items[0].snippet.description || '';
+
+        movie.setAttribute('ytChannel', video_channel_title);
+        movie.setAttribute('ytTitle', video_title);
+        movie.setAttribute('ytDescription', video_description);
+      } catch {
+        console.log('> youtube API movie get error catch fix...');
+      }
+    }
+  };
+  const contentsIconRemover = async () => {
+    let array = [];
+    array = array.concat(Array.from(document.querySelectorAll(today)));
+    array = array.concat(Array.from(document.querySelectorAll(tomorrow)));
+    array = array.concat(Array.from(document.querySelectorAll(yesterday)));
+
+    // Node => Array 変換
+    const iterable = document.querySelectorAll('div#area label[id*="user_"] > span[id*="userHide_"]');
+    if (iterable.length === 0) {
+      console.log('> hololive movie user : NaN selector');
+      document.querySelector('div#area').style.display = 'none';
+
+      for await (const data of array) {
+        data.classList.remove('show');
+
+        const watch = data.querySelector('a[href*="/watch"]');
+        const videoID = getParam('v', watch.href);
+        if (videoID === null) { break; }
+
+        await movieInformation(data, videoID);
+        await movieVerfication(data);
+        if (data.classList.contains('remove_item')) { continue; }
+        data.classList.add('show');
+      }
+    } else {
+      for await (const data of array) {
+        data.classList.remove('show');
+
+        for await (const dom of iterable) {
+          const txt = dom.textContent;
+          const names = data.querySelectorAll('a[href*="/watch"] > div.right > div.txt_box > p.name');
+
+          for await (const name of names) {
+            const nameTxt = name.textContent;
+            if (txt === nameTxt) {
+              const watch = data.querySelector('a[href*="/watch"]');
+              const videoID = getParam('v', watch.href);
+              if (videoID === null) { break; }
+
+              await movieInformation(data, videoID);
+              await movieVerfication(data);
+            }
+          }
+        }
+      }
+    }
+  };
+  const contentsIconShow = async (iterable) => {
+    let array = [];
+    array = array.concat(Array.from(document.querySelectorAll(today)));
+    array = array.concat(Array.from(document.querySelectorAll(tomorrow)));
+    array = array.concat(Array.from(document.querySelectorAll(yesterday)));
+    for await (const data of array) {
+      data.classList.remove('show');
+
+      // Node => Array 変換
+      for await (const dom of iterable) {
+        const txt = dom.closest('label').querySelector('span').textContent;
+        const names = data.querySelectorAll('a[href*="/watch"] > div.right > div.txt_box > p.name');
+
+        for await (const name of names) {
+          const nameTxt = name.textContent;
+          if (txt === nameTxt) {
+            if (data.classList.contains('remove_item')) { continue; }
+            data.classList.add('show');
+          }
+        }
+      }
+    }
+  };
+  const initial = async () => {
+    await waitQuerySelectorCount(2, today);
+    await waitQuerySelectorCount(2, tomorrow);
+    await waitQuerySelectorCount(2, yesterday);
+    await waitQuerySelector('div#area');
+    await waitQuerySelector('div#load');
+
+    console.log('> hololive movie user : initial...');
+    await contentsIconRemover();
+    document.querySelector('div#load').style.display = 'none';
+    document.querySelector('div#area').style.display = 'block';
+
+    document.querySelectorAll('div#area input[type="checkbox"]').forEach((check) => {
+      check.addEventListener('click', (e) => {
+        contentsIconShow(e.target.closest('div#area').querySelectorAll('input[type="checkbox"]:checked'));
+      });
+    });
+  };
+  const changeUrl = async () => {
+    let href;
+
+    const url_config = { 'attributes': false, 'childList': true, 'subtree': true };
+    const url_obs = new MutationObserver(async () => {
+      const href_path = location.pathname;
+      // const href_path = location.pathname + '/' + location.search;
+      if (href !== href_path) {
+        // console.log('Before:', href);
+        // console.log('After:', location.href);
+        href = href_path;
+
+        document.body.insertAdjacentElement('beforeend', stylusElem);
+        document.body.insertAdjacentElement('beforeend', stylusBox);
+        document.body.insertAdjacentElement('beforeend', stylusLoad);
+
+        await initial();
+      }
+    });
+    url_obs.observe(document, url_config);
+  };
+
+  // URLが変更されたとき
+  changeUrl();
+})();
