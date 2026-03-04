@@ -65,7 +65,7 @@
   // navigation
   appendStylus += 'nav[role="navigation"i] > a[href$="/i/grok"i], div[role="dialog"i] div:has(> a[href$="/i/grok"i]), nav[role="navigation"i] > a[href$="/communities"i], div[role="dialog"i] div:has(> a[href$="/communities"i]), nav[role="navigation"i] > a[href$="/i/premium_sign_up"i], div[role="dialog"i] div:has(> a[href$="/i/premium_sign_up"i]), nav[role="navigation"i] > a[href$="/i/verified-orgs-signup"i], div[role="dialog"i] div:has(> a[href$="/i/verified-orgs-signup"i]), nav[role="navigation"i] > a[href$="/jobs"i], div[role="dialog"i] div:has(> a[href$="/jobs"i]), nav[role="navigation"i] > a[href$="/i/jf/creators/studio"i], div[role="dialog"i] div:has(> a[href$="/i/jf/creators/studio"i]), nav[role="navigation"i] > a[href$="/i/chat"i], div[role="dialog"i] div:has(> a[href$="/i/chat"i]), nav[role="navigation"i] > a[href$="/i/monetization"i], div[role="dialog"i] div:has(> a[href$="/i/monetization"i]), nav[role="navigation"i] > a[href$="/i/connect_people"i], div[role="dialog"i] div:has(> a[href$="/i/connect_people"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href$="/i/premium_sign_up"i], div[role="dialog"i] div:has(> a[href$="/i/premium_sign_up"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href$="/i/verified-orgs-signup"i], div[role="dialog"i] div:has(> a[href$="/i/verified-orgs-signup"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href$="/i/jf/creators/studio"i], div[role="dialog"i] div:has(> a[href$="/i/jf/creators/studio"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href*="ads.x.com/"i], div[role="dialog"i] div:has(> a[href*="ads.x.com/"i]) { display: none !important; }';
   const stylusElem = document.createElement('style');
-  stylusElem.id = 'stylusElem';
+  stylusElem.id = 'stylusElemPage';
   stylusElem.textContent = appendStylus;
   // ==========================================================
 
@@ -198,8 +198,8 @@
   };
   const twPath = async () => {
     // document.body.insertAdjacentHTML('afterbegin', '<style id="stylusElem">' + appendStylus + '</style>');
-    document.body.insertAdjacentElement('afterbegin', stylusElem);
-  
+    if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
+
     let path, label;
     // Mutation Observer
     const targetNode = await waitQuerySelector(twMain);
@@ -224,6 +224,11 @@
     });
     observer.observe(targetNode, config);
   };
-
+  const stylusNone = (stylus) => {
+    if (isNuN(document.querySelector('style#' + stylus))) {
+      return true;
+    }
+    return false;
+  };
   twPath();
 })();
