@@ -197,7 +197,7 @@
         // console.log('After:', location.href);
         href = location.pathname + location.search;
 
-        document.body.insertAdjacentElement('afterbegin', stylusElem);
+        if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
 
         if (!isNuN(ncMutation)) { ncMutation.disconnect(); }
 
@@ -233,7 +233,12 @@
       document.querySelector('a.common-header-oidyxs').style.display = 'none';
     }
   };
-
+  const stylusNone = (stylus) => {
+    if (isNuN(document.querySelector('style#' + stylus))) {
+      return true;
+    }
+    return false;
+  };
   // URLが変更されたとき
   changeUrl();
 })();
