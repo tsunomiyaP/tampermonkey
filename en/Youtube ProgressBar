@@ -31,7 +31,6 @@
   // 静的style適用エリア
   const elemStyle = document.createElement('style');
   elemStyle.id = 'ytStylusProgress';
-  document.head.insertAdjacentElement('beforeend', elemStyle);
 
   elemStyle.textContent += 'div.ytp-gradient-bottom { background-image: none !important; } ';
   elemStyle.textContent += 'div.html5-video-player { background-color: #000; } ';
@@ -254,6 +253,8 @@
         // console.log('After:', location.href);
         href = location.pathname + location.search;
         if (!isNuN(moYt)) { moYt.disconnect(); }
+
+        document.body.insertAdjacentElement('beforeend', elemStyle);
 
         const watcher = new RegExp(regWatch, 'gis');
         if (watcher) {
