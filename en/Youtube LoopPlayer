@@ -40,7 +40,7 @@
   appendStylus += 'ytm-app[id="app"] ~ [id^="loop_on"] { position: fixed; bottom: 0px; right: 20px; z-index: 9999; display: inline-block; background-color: #fff; border: solid 2px #ff0000; color: #000000; border-radius: 10px; padding: 10px 30px; text-decoration: none; font-size: 1em; transition: all .3s ease 0s; } ';
   appendStylus += 'ytm-app[id="app"] ~ [id^="loop_"]:hover { color: #000000; background-color: #fff; transform: scale(1.2); } ';
   const stylusElem = document.createElement('style');
-  stylusElem.id = 'stylusElem';
+  stylusElem.id = 'stylusElemLoop';
   stylusElem.textContent = appendStylus;
   // ==========================================================
 
@@ -193,7 +193,7 @@
         // console.log('After:', location.href);
         href = location.pathname;
 
-        document.body.insertAdjacentElement('afterbegin', stylusElem);
+        if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
 
         const watch = new RegExp(regWatch, 'gis');
         if (watch.test(location.pathname)) {
@@ -206,7 +206,12 @@
     });
     url_obs.observe(document, url_config);
   };
-
+  const stylusNone = (stylus) => {
+    if (isNuN(document.querySelector('style#' + stylus))) {
+      return true;
+    }
+    return false;
+  };
   // URLが変更されたとき
   changeUrl();
 })();
