@@ -47,17 +47,14 @@
   // 静的style適用エリア
   const elemStyle = document.createElement('style');
   elemStyle.id = 'ytStylusManager';
-  document.head.insertAdjacentElement('beforeend', elemStyle);
 
   // 可変style適用エリア
   const elemDom = document.createElement('style');
   elemDom.id = 'ytStylusManagerDom';
-  document.head.insertAdjacentElement('beforeend', elemDom);
 
   // 可変style適用エリア
   const elemMov = document.createElement('style');
   elemMov.id = 'ytStylusManagerMovie';
-  document.head.insertAdjacentElement('beforeend', elemMov);
 
   elemStyle.textContent += ' .remove_item { display: none !important; } ';
 
@@ -443,6 +440,9 @@
         href = href_path;
 
         if (!isNuN(ytMutation)) { ytMutation.disconnect(); }
+        document.body.insertAdjacentElement('beforeend', elemStyle);
+        document.body.insertAdjacentElement('beforeend', elemDom);
+        document.body.insertAdjacentElement('beforeend', elemMov);
 
         const path = new RegExp('(^/$|^/index)|(^/feed/subscriptions)|(^/watch|^/live)|(^/results)|(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)', 'gis');
         const reg = path.test(location.pathname);
@@ -498,9 +498,9 @@
 
         if ('www.youtube.com' === location.hostname) {
           // pc
+          await ytChatArea();
           await ytStableVolume('button.ytp-settings-button', 'div.ytp-drc-menu-item[role="menuitemcheckbox"]', manager);
           await ytNavBtn();
-          await ytChatArea();
         } else if ('m.youtube.com' === location.hostname) {
           // mobile
           await ytStableVolume('button.player-settings-icon[aria-label="再生設定"]', 'stable-volume-toggle switch-button-view-model > button.ytSwitchButtonViewModelButton[role="switch"]', 'button.ytWebScrimHiddenButton[aria-label="閉じる"]');
