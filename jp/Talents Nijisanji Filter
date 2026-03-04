@@ -62,7 +62,7 @@
       '小柳(\\s)*ロウ|Rou_2434|KoyanagiRou',
       '星導(\\s)*ショウ|Show_SylveSTAR|HoshirubeSho',
       '叢雲(\\s)*カゲツ|Kagetsu_2434|MurakumoKagetsu',
-      'ミラン(\\s)*[・]*ケストレル|Milan_Kestrel|MilanKestrel',
+      'ミラン(\\s)*[・]*ケストレル|Milan_KestrelMilanKestrel',
       '魁星|Kaisei_2434|Kaisei_nijisanji',
       '北見(\\s)*遊征|Kitami_Coolguy|KitamiYusei',
       '榊(\\s)*ネス|Ness_Sakaki|SakakiNess',
@@ -112,7 +112,6 @@
   // 静的style適用エリア
   const elemStyle = document.createElement('style');
   elemStyle.id = 'schedStylusNijisanji';
-  document.head.insertAdjacentElement('beforeend', elemStyle);
 
   elemStyle.textContent += '.remove_item { display: none !important; } ';
   elemStyle.textContent += listArea + ':not(.show) { display: none; } ';
@@ -251,6 +250,8 @@
         // console.log('Before:', href);
         // console.log('After:', location.href);
         href = href_path;
+
+        document.body.insertAdjacentElement('beforeend', elemStyle);
 
         await initial();
       }
