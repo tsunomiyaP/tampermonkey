@@ -25,20 +25,23 @@
   let isLoop = false;
   // ==========================================================
   // 静的style適用エリア
-  const elemStyle = document.createElement('style');
-  elemStyle.id = 'ytStylusLoop';
+  // stylus: beforebegin, afterbegin, beforeend, afterend
+  let appendStylus = '';
   // pc
-  elemStyle.textContent += 'ytd-app:has(ytd-watch-flexy[full-bleed-player]) ~ [id^="loop_off"] { position: fixed; bottom: 80px; right: 20px; z-index: 9999; display: inline-block; background-color: #fff; border: solid 2px #0000ff; color: #000000; border-radius: 10px; padding: 10px 30px; text-decoration: none; font-size: 1em; transition: all .3s ease 0s; } ';
-  elemStyle.textContent += 'ytd-app:has(ytd-watch-flexy[full-bleed-player]) ~ [id^="loop_on"] { position: fixed; bottom: 80px; right: 20px; z-index: 9999; display: inline-block; background-color: #fff; border: solid 2px #ff0000; color: #000000; border-radius: 10px; padding: 10px 30px; text-decoration: none; font-size: 1em; transition: all .3s ease 0s; } ';
-  elemStyle.textContent += 'ytd-app:has(ytd-watch-flexy[full-bleed-player]) = [id^="loop_"]:hover { color: #000000; background-color: #fff; transform: scale(1.2); } ';
+  appendStylus += 'ytd-app:has(ytd-watch-flexy[full-bleed-player]) ~ [id^="loop_off"] { position: fixed; bottom: 80px; right: 20px; z-index: 9999; display: inline-block; background-color: #fff; border: solid 2px #0000ff; color: #000000; border-radius: 10px; padding: 10px 30px; text-decoration: none; font-size: 1em; transition: all .3s ease 0s; } ';
+  appendStylus += 'ytd-app:has(ytd-watch-flexy[full-bleed-player]) ~ [id^="loop_on"] { position: fixed; bottom: 80px; right: 20px; z-index: 9999; display: inline-block; background-color: #fff; border: solid 2px #ff0000; color: #000000; border-radius: 10px; padding: 10px 30px; text-decoration: none; font-size: 1em; transition: all .3s ease 0s; } ';
+  appendStylus += 'ytd-app:has(ytd-watch-flexy[full-bleed-player]) = [id^="loop_"]:hover { color: #000000; background-color: #fff; transform: scale(1.2); } ';
   // not full
-  elemStyle.textContent += 'ytd-app:not(:has(ytd-watch-flexy[full-bleed-player])) ~ [id^="loop_off"] { position: fixed; bottom: 10px; right: 20px; z-index: 9999; display: inline-block; background-color: #fff; border: solid 2px #0000ff; color: #000000; border-radius: 10px; padding: 10px 30px; text-decoration: none; font-size: 1em; transition: all .3s ease 0s; } ';
-  elemStyle.textContent += 'ytd-app:not(:has(ytd-watch-flexy[full-bleed-player])) ~ [id^="loop_on"] { position: fixed; bottom: 10px; right: 20px; z-index: 9999; display: inline-block; background-color: #fff; border: solid 2px #ff0000; color: #000000; border-radius: 10px; padding: 10px 30px; text-decoration: none; font-size: 1em; transition: all .3s ease 0s; } ';
-  elemStyle.textContent += 'ytd-app:not(:has(ytd-watch-flexy[full-bleed-player])) ~ [id^="loop_"]:hover { color: #000000; background-color: #fff; transform: scale(1.2); } ';
+  appendStylus += 'ytd-app:not(:has(ytd-watch-flexy[full-bleed-player])) ~ [id^="loop_off"] { position: fixed; bottom: 10px; right: 20px; z-index: 9999; display: inline-block; background-color: #fff; border: solid 2px #0000ff; color: #000000; border-radius: 10px; padding: 10px 30px; text-decoration: none; font-size: 1em; transition: all .3s ease 0s; } ';
+  appendStylus += 'ytd-app:not(:has(ytd-watch-flexy[full-bleed-player])) ~ [id^="loop_on"] { position: fixed; bottom: 10px; right: 20px; z-index: 9999; display: inline-block; background-color: #fff; border: solid 2px #ff0000; color: #000000; border-radius: 10px; padding: 10px 30px; text-decoration: none; font-size: 1em; transition: all .3s ease 0s; } ';
+  appendStylus += 'ytd-app:not(:has(ytd-watch-flexy[full-bleed-player])) ~ [id^="loop_"]:hover { color: #000000; background-color: #fff; transform: scale(1.2); } ';
   // mobile
-  elemStyle.textContent += 'ytm-app[id="app"] ~ [id^="loop_off"] { position: fixed; bottom: 0px; right: 20px; z-index: 9999; display: inline-block; background-color: #fff; border: solid 2px #0000ff; color: #000000; border-radius: 10px; padding: 10px 30px; text-decoration: none; font-size: 1em; transition: all .3s ease 0s; } ';
-  elemStyle.textContent += 'ytm-app[id="app"] ~ [id^="loop_on"] { position: fixed; bottom: 0px; right: 20px; z-index: 9999; display: inline-block; background-color: #fff; border: solid 2px #ff0000; color: #000000; border-radius: 10px; padding: 10px 30px; text-decoration: none; font-size: 1em; transition: all .3s ease 0s; } ';
-  elemStyle.textContent += 'ytm-app[id="app"] ~ [id^="loop_"]:hover { color: #000000; background-color: #fff; transform: scale(1.2); } ';
+  appendStylus += 'ytm-app[id="app"] ~ [id^="loop_off"] { position: fixed; bottom: 0px; right: 20px; z-index: 9999; display: inline-block; background-color: #fff; border: solid 2px #0000ff; color: #000000; border-radius: 10px; padding: 10px 30px; text-decoration: none; font-size: 1em; transition: all .3s ease 0s; } ';
+  appendStylus += 'ytm-app[id="app"] ~ [id^="loop_on"] { position: fixed; bottom: 0px; right: 20px; z-index: 9999; display: inline-block; background-color: #fff; border: solid 2px #ff0000; color: #000000; border-radius: 10px; padding: 10px 30px; text-decoration: none; font-size: 1em; transition: all .3s ease 0s; } ';
+  appendStylus += 'ytm-app[id="app"] ~ [id^="loop_"]:hover { color: #000000; background-color: #fff; transform: scale(1.2); } ';
+  const stylusElem = document.createElement('style');
+  stylusElem.id = 'stylusElem';
+  stylusElem.textContent = appendStylus;
   // ==========================================================
 
   // eslint-disable-next-line no-unused-vars
@@ -190,7 +193,7 @@
         // console.log('After:', location.href);
         href = location.pathname;
 
-        document.body.insertAdjacentElement('beforeend', elemStyle);
+        document.body.insertAdjacentElement('afterbegin', stylusElem);
 
         const watch = new RegExp(regWatch, 'gis');
         if (watch.test(location.pathname)) {
