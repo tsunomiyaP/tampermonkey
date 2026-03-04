@@ -22,10 +22,12 @@
   let ncMutation;
   // ==========================================================
   // 静的style適用エリア
-  const elemStyle = document.createElement('style');
-  elemStyle.id = 'nicoStylusManager';
-
-  elemStyle.textContent += 'a[href*="/premium"] { display: none !important; } ';
+  // stylus: beforebegin, afterbegin, beforeend, afterend
+  let appendStylus = '';
+  appendStylus += 'a[href*="/premium"] { display: none !important; } ';
+  const stylusElem = document.createElement('style');
+  stylusElem.id = 'stylusElem';
+  stylusElem.textContent = appendStylus;
   // ==========================================================
 
   // eslint-disable-next-line no-unused-vars
@@ -118,7 +120,7 @@
   const playingWatchM = async () => {
     // ブラウザ設定 > サイト設定 自動再生オンにすること 必須
     await waitQuerySelector('div.watch-Player_Container');
-    const ncvid = await waitQuerySelector('div#watchVideoContainer.watch-Video_Container > video');
+    // const ncvid = await waitQuerySelector('div#watchVideoContainer.watch-Video_Container > video');
     const ncbtn = await waitQuerySelector('div.watch-OpeningPlayerInfo_Container > button#jsWatchThisPage.watch-OpeningPlayerInfo_PlayButton');
     await new Promise(resolve => setTimeout(resolve, waitTime * 10));
     ncbtn.click();
@@ -195,9 +197,9 @@
         // console.log('After:', location.href);
         href = location.pathname + location.search;
 
-        if (!isNuN(ncMutation)) { ncMutation.disconnect(); }
+        document.body.insertAdjacentElement('afterbegin', stylusElem);
 
-        document.body.insertAdjacentElement('beforeend', elemStyle);
+        if (!isNuN(ncMutation)) { ncMutation.disconnect(); }
 
         dialogHide();
         const watch = new RegExp(regWatch, 'gis');
