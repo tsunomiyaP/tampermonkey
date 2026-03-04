@@ -38,10 +38,8 @@
   const regWatch = '^/watch|^/live';
   const regSearch = '^/results';
   const regChannel = '^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+';
-  const excChannel = '';
   const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
   // 可変数
-  let userName = window.sessionStorage.getItem('channel') || '';
   let ytMutation;
   // ==========================================================
   // 静的style適用エリア
@@ -197,31 +195,11 @@
     }
   };
 
-  const channelManager = async (userName) => {
+  const isChannelManager = async () => {
+    const excChannel = '';
     // youtube Area Manager
     // console.log(pathChannelEtc.length);
-    const flag = isNuN(excChannel) ? false : new RegExp(excChannel, 'gis').test(location.pathname);
-    if (flag) { return false; }
-    window.sessionStorage.setItem('channel', userName);
-    const pathChannelEtc = location.pathname.split(/@|\/channel\/|\/c\/|\/user\/|\/u\//)[1].split('/');
-
-    if (1 === pathChannelEtc.length) {
-      if (!isNuN(document.querySelector('div[role="tablist"i] > yt-tab-shape[tab-title="ホーム"i]'))) { document.querySelector('div[role="tablist"i] > yt-tab-shape[tab-title="ホーム"i]').ariaSelected = false; }
-      const waitNum = 'www.youtube.com' === location.hostname ? waitNums[0] : waitNums[1];
-      await new Promise(resolve => setTimeout(resolve, waitTime * waitNum));
-      // await waitQuerySelector('div[role="tablist"i] > yt-tab-shape[role="tab"i][tab-title="検索"i]');
-      await waitQuerySelector('div[role="tablist"i] > :is(yt-tab-shape[role="tab"i][tab-title="ライブ"i], yt-tab-shape[role="tab"i][tab-title="動画"i], yt-tab-shape[role="tab"i][tab-title="検索"i])');
-
-      if (!isNuN(document.querySelector('div[role="tablist"i] > yt-tab-shape[role="tab"i][tab-title="ライブ"i]'))) {
-        // document.querySelector('div[role="tablist"i] > yt-tab-shape[role="tab"i][tab-title="ライブ"i]').click();
-        location.replace(location.pathname + '/streams');
-      } else if (!isNuN(document.querySelector('div[role="tablist"i] > yt-tab-shape[role="tab"i][tab-title="動画"i]'))) {
-        // document.querySelector('div[role="tablist"i] > yt-tab-shape[role="tab"i][tab-title="動画"i]').click();
-        location.replace(location.pathname + '/videos');
-      } else {
-        location.replace(location.pathname.replace(/\/streams|\/videos/, '/'));
-      }
-    }
+    return isNuN(excChannel) ? false : new RegExp(excChannel, 'gis').test(location.pathname);
   };
   const ytChatArea = async () => {
     if ('www.youtube.com' !== location.hostname) { return false; }
@@ -272,11 +250,12 @@
   const removeMovieInformation = async (item) => {
     const mode = {'pc': {}, 'mobile': {}};
 
-    const watcher = new RegExp(regWatch, 'gis');
+    const isWatch = new RegExp(regWatch, 'gis');
+    const isChannel = new RegExp(regChannel, 'gis');
     const device = 'www.youtube.com' === location.hostname ? mode.pc : mode.mobile;
     const youtubeItem = {};
 
-    if (watcher.test(location.pathname)) {
+    if (isWatch.test(location.pathname)) {
       let YtChannel = '';
       await waitQuerySelector('div#owner ytd-video-owner-renderer ytd-channel-name#channel-name #text-container > yt-formatted-string#text[title], ytm-slim-owner-renderer h3.slim-owner-channel-name span');
       // pc 動画
@@ -300,6 +279,7 @@
       youtubeItem.userNam = strData.userNam;
 
       let user = '';
+      // 閲覧チャンネルのみ表示
       if ('www.youtube.com' === location.hostname) {
         const channel = document.querySelector('div#owner ytd-video-owner-renderer ytd-channel-name#channel-name #text-container > yt-formatted-string#text[title]');
         user = channel.title;
@@ -311,6 +291,19 @@
 
       console.log(user, YtChannel);
       if (user !== YtChannel) { item.classList.add('remove_item'); }
+    } else if (isChannel.test(location.pathname)) {
+      // pc 動画
+      mode.pc.ytTitle = isNuN(item.querySelector('div#dismissible div#details div#meta > h3')) ? '' : item.querySelector('div#dismissible div#details div#meta > h3').textContent;
+      mode.pc.userNam = isNuN(item.querySelector('div#dismissible div#details div#meta > h3')) ? '' : item.querySelector('div#dismissible div#details div#meta > h3').textContent;
+      // mobile
+      mode.mobile.ytTitle = isNuN(item.querySelector('div.details div.media-item-metadata a[href^="/watch?v="] span[role="text"], ytm-compact-video-renderer div.YtmCompactMediaItemMetadata .YtmCompactMediaItemHeadline > span[role="text"]')) ? '' : item.querySelector('div.details div.media-item-metadata a[href^="/watch?v="] span[role="text"], ytm-compact-video-renderer div.YtmCompactMediaItemMetadata .YtmCompactMediaItemHeadline > span[role="text"]').textContent;
+      mode.mobile.userNam = '';
+      mode.mobile.userNam += isNuN(item.querySelector('div.details div.media-channel > * > a[href]')) ? '' : item.querySelector('div.details div.media-channel > * > a[href]').href;
+      mode.mobile.userNam += isNuN(item.querySelector('div.details div.media-item-info span.YtmBadgeAndBylineRendererItemByline > span')) ? '' : item.querySelector('div.details div.media-item-info span.YtmBadgeAndBylineRendererItemByline > span').textContent;
+
+      const strData = device;
+      youtubeItem.ytTitle = strData.ytTitle;
+      youtubeItem.userNam = strData.userNam;
     } else {
       // pc 動画
       mode.pc.ytTitle = isNuN(item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container span')) ? '' : item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container span').textContent;
@@ -454,16 +447,23 @@
         stylusElemModal.textContent = appendStylusElemModal;
         if (stylusNone(stylusElemModal.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemModal); }
 
-        // channel videos or stream
         const channel = new RegExp(regChannel, 'gis');
         if (channel.test(location.pathname)) {
-          const pathChannel = location.pathname.split(/@|\/channel\/|\/c\/|\/user\/|\/u\//)[1].split('/')[0];
-          if (userName !== pathChannel) { userName = pathChannel; await channelManager(userName); }
-          console.log('> youtube channel name...', userName);
-        } else {
-          // チャンネルではなくなったら、ユーザー開放
-          userName = '';
+          if (!isChannelManager()) {
+            await waitQuerySelector('yt-tab-shape[role="tab"]');
+            isNuN(document.querySelector('yt-tab-shape[role="tab"][aria-selected="true"][tab-title="ホーム"]')) ? console.log('not home channel...') : document.querySelector('ytd-section-list-renderer[page-subtype="channels"]').remove();
+          }
         }
+        // channel videos or stream
+        // const channel = new RegExp(regChannel, 'gis');
+        // if (channel.test(location.pathname)) {
+        //   const pathChannel = location.pathname.split(/@|\/channel\/|\/c\/|\/user\/|\/u\//)[1].split('/')[0];
+        //   if (userName !== pathChannel) { userName = pathChannel; await channelManager(userName); }
+        //   console.log('> youtube channel name...', userName);
+        // } else {
+        //   // チャンネルではなくなったら、ユーザー開放
+        //   userName = '';
+        // }
 
         // 動画URLから「t=」パラメータを排除
         const pathTime = new RegExp('&t=.+', 'gis');
@@ -503,7 +503,7 @@
         stylusElemModal.textContent = '';
       }
     });
-    url_obs.observe(document.querySelector(manager), url_config);
+    url_obs.observe(document, url_config);
   };
   const stylusNone = (stylus) => {
     if (isNuN(document.querySelector('style#' + stylus))) {
