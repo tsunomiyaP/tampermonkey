@@ -198,8 +198,8 @@
   const isChannelManager = async () => {
     const excChannel = '';
     // youtube Area Manager
-    // console.log(pathChannelEtc.length);
-    return isNuN(excChannel) ? false : new RegExp(excChannel, 'gis').test(location.pathname);
+    // console.log(isNuN(excChannel), new RegExp(excChannel, 'gis').test(location.pathname));
+    return isNuN(excChannel) ? false : new RegExp(excChannel, 'gis').test(location.pathname) ? true : false;
   };
   const ytChatArea = async () => {
     if ('www.youtube.com' !== location.hostname) { return false; }
@@ -449,7 +449,7 @@
 
         const channel = new RegExp(regChannel, 'gis');
         if (channel.test(location.pathname)) {
-          if (!isChannelManager()) {
+          if (isChannelManager()) {
             await waitQuerySelector('yt-tab-shape[role="tab"]');
             isNuN(document.querySelector('yt-tab-shape[role="tab"][aria-selected="true"][tab-title="ホーム"]')) ? console.log('not home channel...') : document.querySelector('ytd-section-list-renderer[page-subtype="channels"]').remove();
           }
