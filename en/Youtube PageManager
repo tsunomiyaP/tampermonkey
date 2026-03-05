@@ -244,9 +244,6 @@
   };
   const removeMovieInformation = async (item) => {
     const mode = {'pc': {}, 'mobile': {}};
-    const watcher = new RegExp(regWatch, 'gis');
-    if (!watcher.test(location.pathname)) { return false; }
-
     const isWatch = new RegExp(regWatch, 'gis');
     const isChannel = new RegExp(regChannel, 'gis');
     const device = 'www.youtube.com' === location.hostname ? mode.pc : mode.mobile;
