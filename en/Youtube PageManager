@@ -257,7 +257,7 @@
       mode.pc.userNam = isNuN(item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span')) ? '' : item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span').textContent;
       // mobile
       mode.mobile.ytTitle = isNuN(item.querySelector('div.details div.media-item-info div.media-item-metadata h3.media-item-headline')) ? '' : item.querySelector('div.details div.media-item-info div.media-item-metadata h3.media-item-headline').textContent;
-      mode.mobile.userNam = isNuN(item.querySelector('div.details div.media-item-info div.media-item-metadata ytm-badge-and-byline-renderer')) ? '' : item.querySelector('div.details div.media-item-info div.media-item-metadata ytm-badge-and-byline-renderer').textContent;
+      mode.mobile.userNam = isNuN(item.querySelector('div.details div.media-item-info div.media-item-metadata ytm-badge-and-byline-renderer span.yt-core-attributed-string')) ? '' : item.querySelector('div.details div.media-item-info div.media-item-metadata ytm-badge-and-byline-renderer span.yt-core-attributed-string').textContent;
 
       if ('www.youtube.com' === location.hostname) {
         YtChannel = mode.pc.userNam;
@@ -417,7 +417,7 @@
         let appendStylusElemModal = '';
         const isWatch = new RegExp(regWatch, 'gis');
         if (!isWatch.test(location.pathname)) {
-          appendStylusElemModal += 'ytd-browse.ytd-page-manager, div.page-container { visibility: hidden !important; } '; 
+          appendStylusElemModal += 'ytd-browse.ytd-page-manager, div.page-container { visibility: hidden !important; } ';
           // channel pc
           appendStylusElemModal += '.ytd-browse[page-subtype="channels"] > :is(#primary, #secondary) { visibility: hidden !important; } ';
           // channel mobile
@@ -489,6 +489,10 @@
           }
         }
 
+        await new Promise(resolve => setTimeout(resolve, 500));
+        // style 無効化
+        stylusElemModal.textContent = '';
+
         if ('www.youtube.com' === location.hostname) {
           // pc
           await ytChatArea();
@@ -498,10 +502,6 @@
           // mobile
           await ytStableVolume('button.player-settings-icon[aria-label="再生設定"]', 'stable-volume-toggle switch-button-view-model > button.ytSwitchButtonViewModelButton[role="switch"]', 'button.ytWebScrimHiddenButton[aria-label="閉じる"]');
         }
-
-        await new Promise(resolve => setTimeout(resolve, 500));
-        // style 無効化
-        stylusElemModal.textContent = '';
       }
     });
     url_obs.observe(document, url_config);
