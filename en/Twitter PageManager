@@ -45,3 +45,190 @@
   appendStylus += twColumns + '.' + quoAColumn + ' { display: none !important; } ';
   appendStylus += twColumns + ':not(.' + quoBColumn + ') { visibility: hidden !important; } ';
   appendStylus += twColumns + ':has(' + remReTweet + ') { display: none !important; } ';
+  appendStylus += twColumns + ' button[aria-label*="Grok"i] { display: none !important; } ';
+  appendStylus += twColumns + ':has(div[class="css-175oi2r r-2pydbh"i] > div[class="css-175oi2r r-1awozwy r-18u37iz r-1ey881g r-1wtj0ep"i] > ' + remAd + ') { display: none !important; } ';
+  // ext area stylus
+  appendStylus += 'div[aria-label="トレンド"i] > div > div:not(:has(form[aria-label="検索"i])) { display: none !important; } ';
+  appendStylus += 'nav[role="navigation"i] > a[href$="/i/grok"i], div[role="dialog"i] div:has(> a[href$="/i/grok"i]), nav[role="navigation"i] > a[href$="/communities"i], div[role="dialog"i] div:has(> a[href$="/communities"i]), nav[role="navigation"i] > a[href$="/i/premium_sign_up"i], div[role="dialog"i] div:has(> a[href$="/i/premium_sign_up"i]), nav[role="navigation"i] > a[href$="/i/verified-orgs-signup"i], div[role="dialog"i] div:has(> a[href$="/i/verified-orgs-signup"i]), nav[role="navigation"i] > a[href$="/jobs"i], div[role="dialog"i] div:has(> a[href$="/jobs"i]), nav[role="navigation"i] > a[href$="/i/jf/creators/studio"i], div[role="dialog"i] div:has(> a[href$="/i/jf/creators/studio"i]), nav[role="navigation"i] > a[href$="/i/chat"i], div[role="dialog"i] div:has(> a[href$="/i/chat"i]), nav[role="navigation"i] > a[href$="/i/monetization"i], div[role="dialog"i] div:has(> a[href$="/i/monetization"i]), nav[role="navigation"i] > a[href$="/i/connect_people"i], div[role="dialog"i] div:has(> a[href$="/i/connect_people"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href$="/i/premium_sign_up"i], div[role="dialog"i] div:has(> a[href$="/i/premium_sign_up"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href$="/i/verified-orgs-signup"i], div[role="dialog"i] div:has(> a[href$="/i/verified-orgs-signup"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href$="/i/jf/creators/studio"i], div[role="dialog"i] div:has(> a[href$="/i/jf/creators/studio"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href*="ads.x.com/"i], div[role="dialog"i] div:has(> a[href*="ads.x.com/"i]) { display: none !important; }';
+  appendStylus += 'header[role="banner"i] div:has(> div > button[aria-label="アカウントメニュー"i]) { display: none !important; } ';
+  // おすすめ
+  appendStylus += 'div:is([aria-label^="タイムライン: "i]:not(:is([aria-label*="通知"i], [aria-label*="フォロー"i], [aria-label*="フォロワー"i], [aria-label*="ミュート"i], [aria-label*="ブロック"i], [aria-label*="リスト"i])), [aria-label$="さんのポスト"i]) > div > div[data-testid="cellInnerDiv"i]:not(:has(:is(article[data-testid="tweet"i], div[data-testid="trend"i], li[role="listitem"]))) { display : none !important; } ';
+  // ツイート内 [もっと見つける]
+  appendStylus += 'div[aria-label="タイムライン: 会話"i] > div > :is(div[data-testid="cellInnerDiv"i]:has(> div[class="css-175oi2r r-1adg3ll r-1ny4l3l"i] h2[role="heading"i]), div[data-testid="cellInnerDiv"i]:has(> div[class="css-175oi2r r-1adg3ll r-1ny4l3l"i] h2[role="heading"i]) ~ div[data-testid="cellInnerDiv"i]) { display : none !important; } ';
+  // トレンドタブ：話題を検索 pc
+  appendStylus += 'div[aria-label="ホームタイムライン"i] > div:has(div[role="presentation"i] > a[href$="/for_you"i][aria-selected="true"i]) ~ div:has(div[aria-label="タイムライン: 話題を検索"i]) { display: none !important; } ';
+  // トレンドタブ：話題を検索 mobile
+  appendStylus += 'div#react-root > div > div > div#layers:has(div[role="presentation"i] > a[href$="/for_you"i][aria-selected="true"i]) ~ div[dir="ltr"i]:has(div[aria-label="タイムライン: 話題を検索"i]) { display: none !important; } ';
+  appendStylus += 'div[aria-label="ホームタイムライン"i] > div div[role="presentation"i] > a[href$="/news"i] { display: none !important; } ';
+  appendStylus += 'div[aria-label="ホームタイムライン"i] > div div[role="presentation"i] > a[href$="/sports"i] { display: none !important; } ';
+  appendStylus += 'div[aria-label="ホームタイムライン"i] > div div[role="presentation"i] > a[href$="/entertainment"i] { display: none !important; } ';
+  // navigation
+  appendStylus += 'nav[role="navigation"i] > a[href$="/i/grok"i], div[role="dialog"i] div:has(> a[href$="/i/grok"i]), nav[role="navigation"i] > a[href$="/communities"i], div[role="dialog"i] div:has(> a[href$="/communities"i]), nav[role="navigation"i] > a[href$="/i/premium_sign_up"i], div[role="dialog"i] div:has(> a[href$="/i/premium_sign_up"i]), nav[role="navigation"i] > a[href$="/i/verified-orgs-signup"i], div[role="dialog"i] div:has(> a[href$="/i/verified-orgs-signup"i]), nav[role="navigation"i] > a[href$="/jobs"i], div[role="dialog"i] div:has(> a[href$="/jobs"i]), nav[role="navigation"i] > a[href$="/i/jf/creators/studio"i], div[role="dialog"i] div:has(> a[href$="/i/jf/creators/studio"i]), nav[role="navigation"i] > a[href$="/i/chat"i], div[role="dialog"i] div:has(> a[href$="/i/chat"i]), nav[role="navigation"i] > a[href$="/i/monetization"i], div[role="dialog"i] div:has(> a[href$="/i/monetization"i]), nav[role="navigation"i] > a[href$="/i/connect_people"i], div[role="dialog"i] div:has(> a[href$="/i/connect_people"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href$="/i/premium_sign_up"i], div[role="dialog"i] div:has(> a[href$="/i/premium_sign_up"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href$="/i/verified-orgs-signup"i], div[role="dialog"i] div:has(> a[href$="/i/verified-orgs-signup"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href$="/i/jf/creators/studio"i], div[role="dialog"i] div:has(> a[href$="/i/jf/creators/studio"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href*="ads.x.com/"i], div[role="dialog"i] div:has(> a[href*="ads.x.com/"i]) { display: none !important; }';
+  const stylusElem = document.createElement('style');
+  stylusElem.id = 'stylusElemPage';
+  stylusElem.textContent = appendStylus;
+  // ==========================================================
+
+  // eslint-disable-next-line no-unused-vars
+  const isNuN = (selector) => {
+    if (selector === null || selector === undefined || selector === '') { return true; } else { return false; }
+  };
+  // eslint-disable-next-line no-unused-vars
+  const waitQuerySelector = async (selector, node = document) => {
+    let obj = null;
+    while (!obj) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+      obj = node.querySelector(selector);
+    }
+    return obj;
+  };
+  // eslint-disable-next-line no-unused-vars
+  const waitQuerySelectorCount = async (cnt, selector, node = document) => {
+    let obj = null;
+    let num = 0;
+    while (!obj) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      if (num < cnt) {
+        obj = node.querySelector(selector);
+        num++;
+        if (!obj) { return obj; }
+      } else {
+        break;
+      }
+    }
+    while (!obj) {
+      await new Promise(resolve => setTimeout(resolve, 10000));
+      obj = node.querySelector(selector);
+    }
+    return obj;
+  };
+  // eslint-disable-next-line no-unused-vars
+  const waitQuerySelectorIframe = async (selector1, selector2, node = document) => {
+    let obj = null;
+    while (!obj) {
+      // iframe.contentWindow.document === iframe.contentDocument
+      await new Promise(resolve => setTimeout(resolve, 500));
+      obj = node.querySelector(selector1).contentDocument.querySelector(selector2);
+    }
+    return obj;
+  };
+  // eslint-disable-next-line no-unused-vars
+  const deleteParam = (searchUrl, param) => {
+    const base = new URL(location.protocol + '//' + location.hostname);
+    const url = new URL(searchUrl, base);
+    // URLSearchParamsオブジェクトを取得
+    const params = url.searchParams;
+    params.delete(param);
+
+    return url;
+  };
+  // eslint-disable-next-line no-unused-vars
+  const searchParams = (searchUrl, param) => {
+    const base = new URL(location.protocol + '//' + location.hostname);
+    const url = new URL(searchUrl, base);
+    console.log('url section', url);
+    // URLSearchParamsオブジェクトを取得
+    const params = url.searchParams;
+
+    return params.get(param);
+  };
+  // eslint-disable-next-line no-unused-vars
+  const getParam = (name, url) => {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\\[\]]/g, '\\$&');
+    let regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+    let results = regex.exec(url);
+
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+  };
+  // eslint-disable-next-line no-unused-vars
+  const userAgent = () => {
+    const userDevice = navigator.userAgent;
+    if (userDevice.indexOf('iPhone') > 0 || userDevice.indexOf('iPod') > 0 || userDevice.indexOf('Android') > 0 && userDevice.indexOf('Mobile') > 0) {
+      return false;
+    } else if (userDevice.indexOf('iPad') > 0 || userDevice.indexOf('Android') > 0) {
+      return false;
+    } else {
+      // pc
+      return true;
+    }
+  };
+
+  const polling = async () => {
+    const tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
+
+    timerCount = setTimeout(async () => {
+      clearTimeout(timerCount);
+      if (0 === tweets.length) {
+        return polling();
+      } else {
+        await removeElements(tweets);
+      }
+    }, 1000);
+  };
+  const removeElements = async (tweets) => {
+    // console.log(tweets.length);
+
+    for await (const tweet of tweets) {
+      if (!isNuN(tweet.querySelector(moreTweet))) {
+        tweet.querySelector(moreTweet).click();
+      }
+
+      const words = isNuN(abc) ? [] : abc.hideword;
+      // 非表示対象文字列
+      for (const word of words) {
+        const regWord = new RegExp(word, 'gis');
+        if (regWord.test(tweet.textContent)) {
+          console.log([word, tweet.textContent]);
+          // tweet.style.setProperty('display', 'none', 'important');
+          tweet.classList.add(quoAColumn);
+        }
+      }
+      tweet.classList.add(quoBColumn);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+    polling();
+  };
+  const initial = async () => {
+    // console.log('refresh tweets list');
+    await waitQuerySelector(twColumns);
+    polling();
+  };
+  const twPath = async () => {
+    // document.body.insertAdjacentHTML('afterbegin', '<style id="stylusElem">' + appendStylus + '</style>');
+    if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
+
+    let path, label;
+    // Mutation Observer
+    const targetNode = await waitQuerySelector(twMain);
+    // const config = { 'attributes': true, 'childList': false, 'subtree': false };
+    const config = { 'attributes': false, 'childList': true, 'subtree': true };
+    const observer = new MutationObserver(async () => {
+      const tab = await waitQuerySelectorCount(4, 'div[role="presentation"i] *[role="tab"i][aria-selected="true"i]');
+      const tabLabel = isNuN(tab) ? '' : tab.textContent;
+      if (path !== location.pathname || label !== tabLabel) {
+        path = location.pathname;
+        label = tabLabel;
+        console.log(label, path);
+
+        observer.disconnect();
+        clearTimeout(timerCount);
+
+        // 10秒待機
+        // await new Promise(resolve => setTimeout(resolve, 10000));
+        await initial();
+        observer.observe(targetNode, config);
+      }
+    });
+    observer.observe(targetNode, config);
+  };
+  const stylusNone = (stylus) => {
+    if (isNuN(document.querySelector('style#' + stylus))) {
+      return true;
+    }
+    return false;
+  };
+  twPath();
+})();
