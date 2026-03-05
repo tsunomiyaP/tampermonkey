@@ -445,6 +445,12 @@
                 } else if ('m.youtube.com' === location.hostname) {
                   document.querySelector('ytm-browse > .modern-tabs > div > div.tab-content[tab-title="ホーム"]').style.visibility = 'hidden';
                 }
+              } else {
+                if ('www.youtube.com' === location.hostname) {
+                  consolo.log('Own Channel...');
+                } else if ('m.youtube.com' === location.hostname) {
+                  document.querySelector('ytm-browse > .modern-tabs > div > div.tab-content[tab-title="ホーム"]').style.visibility = 'visible';
+                }
               }
             }
           }, 1000);
@@ -491,7 +497,7 @@
           await ytStableVolume('button.player-settings-icon[aria-label="再生設定"]', 'stable-volume-toggle switch-button-view-model > button.ytSwitchButtonViewModelButton[role="switch"]', 'button.ytWebScrimHiddenButton[aria-label="閉じる"]');
         }
 
-        await new Promise(resolve => setTimeout(resolve, 5000));
+        await new Promise(resolve => setTimeout(resolve, 2000));
         // style 無効化
         stylusElemModal.textContent = '';
       }
