@@ -58,7 +58,7 @@
 
       // nijisanji jp
       '渋谷(\\s)*ハジメ|sibuya_hajime|ShibuyaHajime',
-      'ギルザレンⅢ世|gilzaren_iii|GilzarenIII',
+      'ギルザレン(Ⅲ世)*|gilzaren_iii|GilzarenIII',
       '剣持(\\s)*刀也|rei_Toya_rei|KenmochiToya',
       '伏見(\\s)*ガク|gaku_fushimi|FushimiGaku',
       '(?=.*(niji|にじ))(?=.*(叶).*)|kanae_2434|Kanae',
@@ -184,6 +184,7 @@
       'うるか|CR_uruca|crazyraccoon',
       'クイズノック|quizknock',
       'なつめさんち|natsume_sanchi',
+      'REAL(\\s)*AKIBA(\\s)*BOYZ|RAB|realakibaboyz',
       'ぽんぽこ|ぽこピー|ピーナッツくん|pokopea',
 
       // others streamer
