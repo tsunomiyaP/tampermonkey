@@ -103,8 +103,8 @@
   stylusElem.textContent = appendStylus;
   const stylusElemSettings = document.createElement('style');
   stylusElemSettings.id = 'stylusElemSettings';
-  const stylusElemModal = document.createElement('style');
-  stylusElemModal.id = 'stylusElemModal';
+  const stylusElemCh = document.createElement('style');
+  stylusElemCh.id = 'stylusElemCh';
   // ==========================================================
 
   // eslint-disable-next-line no-unused-vars
@@ -411,22 +411,20 @@
         href = href_path;
 
         if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
-        if (stylusNone(stylusElemModal.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemModal); }
 
-        // 動画エリア初期非表示
-        let appendStylusElemModal = '';
+        // 動画エリア初期非表示 : player 以外
         const isWatch = new RegExp(regWatch, 'gis');
         if (!isWatch.test(location.pathname)) {
-          appendStylusElemModal += 'ytd-browse.ytd-page-manager, div.page-container { visibility: hidden !important; } ';
-          // channel pc
-          appendStylusElemModal += 'ytd-app { visibility: hidden !important; } ';
-          // channel mobile
-          appendStylusElemModal += 'ytm-app#app { visibility: hidden !important; } ';
+          if ('www.youtube.com' === location.hostname) {
+            // pc
+            const section = await waitQuerySelector('ytd-app');
+            section.style.setProperty('display', 'none', 'important');
+          } else if ('m.youtube.com' === location.hostname) {
+            // mobile
+            const section = await waitQuerySelector('ytm-app#app');
+            section.style.setProperty('display', 'none', 'important');
+          }
         }
-        // for (const yt of itemsArray) {
-        //   appendStylusElemModal += yt.area + ' { visibility: hidden !important; } ';
-        // }
-        stylusElemModal.textContent = appendStylusElemModal;
 
         if (!isNuN(ytMutation)) { ytMutation.disconnect(); }
 
@@ -436,14 +434,16 @@
         // youtube Channel Area Manager
         const isChannel = new RegExp(regChannel, 'gis');
         if (isChannel.test(location.pathname)) {
+          let appendStylusChannel = '';
+
           const hsChannel = new RegExp('(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)(/videos|/streams|/playlists|/releases|/posts|/search)', 'gis');
           if (hsChannel.test(location.pathname)) {
             if ('www.youtube.com' === location.hostname) {
-              const section = await waitQuerySelector('.ytd-browse[page-subtype="channels"] > :is(#primary, #secondary)');
-              section.style.visibility = 'visible';
+              const section = await waitQuerySelector('.ytd-browse[page-subtype="channels"i] > :is(#primary, #secondary)');
+              appendStylusChannel = '';
             } else if ('m.youtube.com' === location.hostname) {
-              const section = await waitQuerySelector('ytm-browse > .modern-tabs > div > div.tab-content[tab-title="ホーム"]');
-              section.style.visibility = 'visible';
+              const section = await waitQuerySelector('ytm-browse > .modern-tabs > div > div.tab-content[tab-title="ホーム"i]');
+              appendStylusChannel = '';
             }
           } else {
             const excChannel = 'tsunomiyaP|UCSsBxdA7yg523PegCT7O7Mg';
@@ -451,24 +451,26 @@
             if (!isOwn.test(location.pathname)) {
               if ('www.youtube.com' === location.hostname) {
                 const section = await waitQuerySelector('.ytd-browse[page-subtype="channels"] > :is(#primary, #secondary)');
-                section.style.visibility = 'hidden';
+                appendStylusChannel = '.ytd-browse[page-subtype="channels"i] > :is(#primary, #secondary) { display: none !important; } ';
                 section.querySelector('ytd-section-list-renderer[page-subtype="channels"]').remove();
               } else if ('m.youtube.com' === location.hostname) {
                 const section = await waitQuerySelector('ytm-browse > .modern-tabs > div > div.tab-content[tab-title="ホーム"]');
-                section.style.visibility = 'hidden';
+                appendStylusChannel = 'ytm-browse > .modern-tabs > div > div.tab-content[tab-title="ホーム"i] { display: none !important; } ';
               }
             } else {
               console.log('own');
               if ('www.youtube.com' === location.hostname) {
-                const section = await waitQuerySelector('.ytd-browse[page-subtype="channels"] > :is(#primary, #secondary)');
-                section.style.visibility = 'visible';
+                const section = await waitQuerySelector('.ytd-browse[page-subtype="channels"i] > :is(#primary, #secondary)');
+                appendStylusChannel = '';
               } else if ('m.youtube.com' === location.hostname) {
-                const section = await waitQuerySelector('ytm-browse > .modern-tabs > div > div.tab-content[tab-title="ホーム"]');
-                section.style.visibility = 'visible';
+                const section = await waitQuerySelector('ytm-browse > .modern-tabs > div > div.tab-content[tab-title="ホーム"i]');
+                appendStylusChannel = '';
               }
             }
           }
-          await new Promise(resolve => setTimeout(resolve, 2000));
+          // await new Promise(resolve => setTimeout(resolve, 2000));
+          stylusElemCh.textContent = appendStylusChannel;
+          if (stylusNone(stylusElemCh.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemCh); }
         }
 
         // 動画URLから「t=」パラメータを排除
@@ -490,8 +492,15 @@
         }
 
         await new Promise(resolve => setTimeout(resolve, 500));
-        // style 無効化
-        stylusElemModal.textContent = '';
+        if ('www.youtube.com' === location.hostname) {
+          // pc
+          const section = await waitQuerySelector('ytd-app');
+          section.style.setProperty('display', '');
+        } else if ('m.youtube.com' === location.hostname) {
+          // mobile
+          const section = await waitQuerySelector('ytm-app#app');
+          section.style.setProperty('display', '');
+        }
 
         if ('www.youtube.com' === location.hostname) {
           // pc
