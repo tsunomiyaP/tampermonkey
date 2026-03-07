@@ -418,11 +418,11 @@
           if ('www.youtube.com' === location.hostname) {
             // pc
             const section = await waitQuerySelector('ytd-app');
-            section.style.setProperty('display', 'none', 'important');
+            section.style.setProperty('visibility', 'hidden', 'important');
           } else if ('m.youtube.com' === location.hostname) {
             // mobile
             const section = await waitQuerySelector('ytm-app#app');
-            section.style.setProperty('display', 'none', 'important');
+            section.style.setProperty('visibility', 'hidden', 'important');
           }
         }
 
@@ -495,11 +495,11 @@
         if ('www.youtube.com' === location.hostname) {
           // pc
           const section = await waitQuerySelector('ytd-app');
-          section.style.setProperty('display', '');
+          section.style.setProperty('visibility', 'visible');
         } else if ('m.youtube.com' === location.hostname) {
           // mobile
           const section = await waitQuerySelector('ytm-app#app');
-          section.style.setProperty('display', '');
+          section.style.setProperty('visibility', 'visible');
         }
 
         if ('www.youtube.com' === location.hostname) {
