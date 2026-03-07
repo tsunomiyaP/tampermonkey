@@ -441,7 +441,7 @@
               const section = await waitQuerySelector('.ytd-browse[page-subtype="channels"i] > :is(#primary, #secondary)');
               appendStylusChannel = '';
             } else if ('m.youtube.com' === location.hostname) {
-              const section = await waitQuerySelector('ytm-browse > .modern-tabs > div > div.tab-content[tab-title="ホーム"i]');
+              const section = await waitQuerySelector('ytm-browse > .modern-tabs > div > div.tab-content[tab-title="ホーム"i]:not([tab-identifier="FEwhat_to_watch"i])');
               appendStylusChannel = '';
             }
           } else {
@@ -453,8 +453,8 @@
                 appendStylusChannel = '.ytd-browse[page-subtype="channels"i] > :is(#primary, #secondary) { display: none !important; } ';
                 section.querySelector('ytd-section-list-renderer[page-subtype="channels"]').remove();
               } else if ('m.youtube.com' === location.hostname) {
-                const section = await waitQuerySelector('ytm-browse > .modern-tabs > div > div.tab-content[tab-title="ホーム"]');
-                appendStylusChannel = 'ytm-browse > .modern-tabs > div > div.tab-content[tab-title="ホーム"i] { display: none !important; } ';
+                const section = await waitQuerySelector('ytm-browse > .modern-tabs > div > div.tab-content[tab-title="ホーム"]:not([tab-identifier="FEwhat_to_watch"i])');
+                appendStylusChannel = 'ytm-browse > .modern-tabs > div > div.tab-content[tab-title="ホーム"i]:not([tab-identifier="FEwhat_to_watch"i]) { display: none !important; } ';
               }
             } else {
               console.log('own');
