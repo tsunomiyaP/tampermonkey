@@ -419,13 +419,13 @@
         if (!isWatch.test(location.pathname)) {
           appendStylusElemModal += 'ytd-browse.ytd-page-manager, div.page-container { visibility: hidden !important; } ';
           // channel pc
-          appendStylusElemModal += '.ytd-browse[page-subtype="channels"] > :is(#primary, #secondary) { visibility: hidden !important; } ';
+          appendStylusElemModal += 'ytd-app { visibility: hidden !important; } ';
           // channel mobile
-          appendStylusElemModal += 'ytm-browse > .modern-tabs > div > div.tab-content[tab-title="ホーム"] { visibility: hidden !important; } ';
+          appendStylusElemModal += 'ytm-app#app { visibility: hidden !important; } ';
         }
-        for (const yt of itemsArray) {
-          appendStylusElemModal += yt.area + ' { visibility: hidden !important; } ';
-        }
+        // for (const yt of itemsArray) {
+        //   appendStylusElemModal += yt.area + ' { visibility: hidden !important; } ';
+        // }
         stylusElemModal.textContent = appendStylusElemModal;
 
         if (!isNuN(ytMutation)) { ytMutation.disconnect(); }
@@ -457,9 +457,10 @@
                 const section = await waitQuerySelector('ytm-browse > .modern-tabs > div > div.tab-content[tab-title="ホーム"]');
                 section.style.visibility = 'hidden';
               }
+              await new Promise(resolve => setTimeout(resolve, 5000));
             } else {
+              console.log('own');
               if ('www.youtube.com' === location.hostname) {
-                console.log('own');
                 const section = await waitQuerySelector('.ytd-browse[page-subtype="channels"] > :is(#primary, #secondary)');
                 section.style.visibility = 'visible';
               } else if ('m.youtube.com' === location.hostname) {
@@ -468,7 +469,6 @@
               }
             }
           }
-          await new Promise(resolve => setTimeout(resolve, 5000));
         }
 
         // 動画URLから「t=」パラメータを排除
