@@ -433,7 +433,7 @@
         if (isChannel.test(location.pathname)) {
           let appendStylusChannel = '';
           appendStylusChannel += '.ytd-browse[page-subtype="channels"i] > :is(#primary, #secondary) { display: none !important; } ';
-          appendStylusChannel += 'ytm-browse > .modern-tabs > div > div.tab-content[tab-title="ホーム"i] { display: none !important; } ';
+          appendStylusChannel += 'ytm-browse > .modern-tabs > div > div.tab-content[tab-title="ホーム"i]:not([tab-identifier="FEwhat_to_watch"i]) { display: none !important; } ';
 
           const hsChannel = new RegExp('(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)(/videos|/streams|/playlists|/releases|/posts|/search)', 'gis');
           if (hsChannel.test(location.pathname)) {
@@ -507,11 +507,11 @@
         if ('www.youtube.com' === location.hostname) {
           // pc
           await ytChatArea();
-          await ytStableVolume('button.ytp-settings-button', 'div.ytp-drc-menu-item[role="menuitemcheckbox"]', manager);
+          await ytStableVolume('button.ytp-settings-button', 'div.ytp-drc-menu-item[role="menuitemcheckbox"i]', manager);
           await ytNavBtn();
         } else if ('m.youtube.com' === location.hostname) {
           // mobile
-          await ytStableVolume('button.player-settings-icon[aria-label="再生設定"]', 'stable-volume-toggle switch-button-view-model > button.ytSwitchButtonViewModelButton[role="switch"]', 'button.ytWebScrimHiddenButton[aria-label="閉じる"]');
+          await ytStableVolume('button.player-settings-icon[aria-label="再生設定"i]', 'stable-volume-toggle switch-button-view-model > button.ytSwitchButtonViewModelButton[role="switch"i]', 'button.ytWebScrimHiddenButton[aria-label="閉じる"i]');
         }
       }
     });
