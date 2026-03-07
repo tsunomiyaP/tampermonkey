@@ -457,7 +457,6 @@
                 const section = await waitQuerySelector('ytm-browse > .modern-tabs > div > div.tab-content[tab-title="ホーム"]');
                 section.style.visibility = 'hidden';
               }
-              await new Promise(resolve => setTimeout(resolve, 5000));
             } else {
               console.log('own');
               if ('www.youtube.com' === location.hostname) {
@@ -469,6 +468,7 @@
               }
             }
           }
+          await new Promise(resolve => setTimeout(resolve, 2000));
         }
 
         // 動画URLから「t=」パラメータを排除
