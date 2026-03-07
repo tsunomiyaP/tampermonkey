@@ -428,13 +428,12 @@
 
         if (!isNuN(ytMutation)) { ytMutation.disconnect(); }
 
-        // youtube Area Manager
-        await waitQuerySelector(manager);
-
         // youtube Channel Area Manager
         const isChannel = new RegExp(regChannel, 'gis');
         if (isChannel.test(location.pathname)) {
           let appendStylusChannel = '';
+          appendStylusChannel += '.ytd-browse[page-subtype="channels"i] > :is(#primary, #secondary) { display: none !important; } ';
+          appendStylusChannel += 'ytm-browse > .modern-tabs > div > div.tab-content[tab-title="ホーム"i] { display: none !important; } ';
 
           const hsChannel = new RegExp('(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)(/videos|/streams|/playlists|/releases|/posts|/search)', 'gis');
           if (hsChannel.test(location.pathname)) {
@@ -473,6 +472,9 @@
           if (stylusNone(stylusElemCh.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemCh); }
         }
 
+        // youtube Area Manager
+        await waitQuerySelector(manager);
+
         // 動画URLから「t=」パラメータを排除
         const pathTime = new RegExp('&t=.+', 'gis');
         if (pathTime.test(location.href)) {
@@ -491,7 +493,7 @@
           }
         }
 
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, 1000));
         if ('www.youtube.com' === location.hostname) {
           // pc
           const section = await waitQuerySelector('ytd-app');
