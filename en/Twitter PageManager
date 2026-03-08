@@ -16,6 +16,7 @@
 
   // ==========================================================
   // 変数宣言
+  const waitTime = 1000;
   const twMain = 'main[role="main"i]';
   const twColumns = 'div[data-testid="cellInnerDiv"i]';
   const quoAColumn = 'removeItem';
@@ -97,7 +98,7 @@
       }
     }
     while (!obj) {
-      await new Promise(resolve => setTimeout(resolve, 10000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
       obj = node.querySelector(selector);
     }
     return obj;
@@ -155,6 +156,13 @@
       return true;
     }
   };
+  // eslint-disable-next-line no-unused-vars
+  const stylusNone = (stylus) => {
+    if (isNuN(document.querySelector('style#' + stylus))) {
+      return true;
+    }
+    return false;
+  };
 
   const polling = async () => {
     const tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
@@ -187,7 +195,7 @@
         }
       }
       tweet.classList.add(quoBColumn);
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, waitTime));
     }
     polling();
   };
@@ -197,15 +205,15 @@
     polling();
   };
   const twPath = async () => {
-    // document.body.insertAdjacentHTML('afterbegin', '<style id="stylusElem">' + appendStylus + '</style>');
+
     if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
 
     let path, label;
     // Mutation Observer
     const targetNode = await waitQuerySelector(twMain);
-    // const config = { 'attributes': true, 'childList': false, 'subtree': false };
+
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
-    const observer = new MutationObserver(async () => {
+    const obsTw = new MutationObserver(async () => {
       const tab = await waitQuerySelectorCount(4, 'div[role="presentation"i] *[role="tab"i][aria-selected="true"i]');
       const tabLabel = isNuN(tab) ? '' : tab.textContent;
       if (path !== location.pathname || label !== tabLabel) {
@@ -213,22 +221,19 @@
         label = tabLabel;
         console.log(label, path);
 
-        observer.disconnect();
+        obsTw.disconnect();
         clearTimeout(timerCount);
 
-        // 10秒待機
-        // await new Promise(resolve => setTimeout(resolve, 10000));
         await initial();
-        observer.observe(targetNode, config);
+        obsTw.observe(targetNode, config);
       }
     });
-    observer.observe(targetNode, config);
+    obsTw.observe(targetNode, config);
   };
-  const stylusNone = (stylus) => {
-    if (isNuN(document.querySelector('style#' + stylus))) {
-      return true;
-    }
-    return false;
-  };
-  twPath();
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    // DOM生成されたとき
+
+    await twPath();
+  });
 })();
