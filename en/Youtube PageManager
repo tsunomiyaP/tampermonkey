@@ -23,12 +23,12 @@
   const waitTime = 500;
   const manager = 'ytd-app, ytm-app[id="app"i]';
   const itemsArray = [
-    { device: 'www.youtube.com', path: '(^/$|^/index)', area: 'div#primary > ytd-rich-grid-renderer > div#contents', stylus: 'transform: ' + scale + ' !important; pointer-events: none !important;' },
+    { device: 'www.youtube.com', path: '^/$|^/index', area: 'div#primary > ytd-rich-grid-renderer > div#contents', stylus: 'transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'www.youtube.com', path: '^/feed/subscriptions', area: '[page-subtype="subscriptions"i] div#primary > ytd-rich-grid-renderer > div#contents', stylus: 'transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'www.youtube.com', path: '^/watch|^/live', area: 'ytd-watch-flexy div#related :is(div#items, div#items:has(ytd-item-section-renderer > div#contents) ytd-item-section-renderer > div#contents)', stylus: 'transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'www.youtube.com', path: '^/@.+/(videos|streams)|^/channel/.+/(videos|streams)|^/c/.+/(videos|streams)|^/user/.+/(videos|streams)|^/u/.+/(videos|streams)', area: '[page-subtype="channels"i] div#primary > ytd-rich-grid-renderer > div#contents', stylus: 'transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'www.youtube.com', path: '^/results', area: 'ytd-two-column-search-results-renderer > div#primary > ytd-section-list-renderer > div#contents', stylus: 'transform: ' + scale + ' !important; pointer-events: none !important;' },
-    { device: 'm.youtube.com', path: '(^/$|^/index)', area: 'div.tab-content[tab-identifier="FEwhat_to_watch"i] div.rich-grid-renderer-contents', stylus: 'display: block; transform: ' + scale + ' !important; pointer-events: none !important;' },
+    { device: 'm.youtube.com', path: '^/$|^/index', area: 'div.tab-content[tab-identifier="FEwhat_to_watch"i] div.rich-grid-renderer-contents', stylus: 'display: block; transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'm.youtube.com', path: '^/feed/subscriptions', area: 'div.tab-content[tab-identifier="FEsubscriptions"i] > ytm-tab-renderer > * > lazy-list', stylus: 'display: block; transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'm.youtube.com', path: '^/watch|^/live', area: ':is([section-identifier="related-items"] > lazy-list, div.related-items-container lazy-list)', stylus: 'display: block; transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'm.youtube.com', path: '^/@.+/(videos|streams)|^/channel/.+/(videos|streams)|^/c/.+/(videos|streams)|^/user/.+/(videos|streams)|^/u/.+/(videos|streams)', area: 'ytm-tab-renderer div.rich-grid-renderer-contents', stylus: 'display: block; transform: ' + scale + ' !important; pointer-events: none !important;' },
@@ -212,7 +212,6 @@
     appendStylusSettings += 'div.ytp-popup.ytp-settings-menu { display: none !important; } ';
     appendStylusSettings += 'div#full-screen-content-id, ytm-app > bottom-sheet-container[role="dialog"] { display: none !important; } ';
     stylusElemSettings.textContent = appendStylusSettings;
-    if (stylusNone(stylusElemSettings.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemSettings); }
 
     await new Promise(resolve => setTimeout(resolve, waitTime * 4));
     const setting = await waitQuerySelectorCount(4, settingBtn);
@@ -405,16 +404,17 @@
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
     const obsUrl = new MutationObserver(async () => {
       // const href_path = location.pathname;
-      const localAfter = location.pathname + '?' + location.search;
+      localAfter = location.pathname + '?' + location.search;
       if (localBefore !== localAfter) {
         console.log('Before:', localBefore);
         console.log('After :', localAfter);
         localBefore = localAfter;
         const localPath = localAfter.split('?')[0];
 
-        const obsManager = new MutationObserver(async () => {
-
-          if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
+        if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
+        if (stylusNone(stylusElemWatch.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemWatch); }
+        if (stylusNone(stylusElemCh.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemCh); }
+        if (stylusNone(stylusElemSettings.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemSettings); }
 
         const isWatch = new RegExp(regWatch, 'gis');
         const isChannel = new RegExp(regChannel, 'gis');
@@ -426,16 +426,13 @@
             appendStylusWatch += yt.area + ' { display: none !important; } ';
           }
           stylusElemWatch.textContent = appendStylusWatch;
-          if (stylusNone(stylusElemWatch.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemWatch); }
         } else {
           if ('www.youtube.com' === location.hostname) {
             // pc
-            const section = await waitQuerySelector('ytd-app');
-            section.style.setProperty('visibility', 'hidden', 'important');
+            ytManager.style.setProperty('visibility', 'hidden', 'important');
           } else if ('m.youtube.com' === location.hostname) {
             // mobile
-            const section = await waitQuerySelector('ytm-app#app');
-            section.style.setProperty('visibility', 'hidden', 'important');
+            ytManager.style.setProperty('visibility', 'hidden', 'important');
           }
         }
 
@@ -455,39 +452,38 @@
           const hsChannel = new RegExp('(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)(/videos|/streams|/playlists|/releases|/posts|/search)', 'gis');
           if (hsChannel.test(localPath)) {
             if ('www.youtube.com' === location.hostname) {
-              const section = await waitQuerySelector(channelPc);
+              // const section = await waitQuerySelector(channelPc);
               appendStylusChannel = '';
             } else if ('m.youtube.com' === location.hostname) {
-              const section = await waitQuerySelector(channelMb);
+              // const section = await waitQuerySelector(channelMb);
               appendStylusChannel = '';
             }
           } else {
             const excChannel = 'tsunomiyaP|UCSsBxdA7yg523PegCT7O7Mg';
             const isOwn = new RegExp(excChannel, 'gis');
             if (!isOwn.test(localPath)) {
-              console.log('fav channel');
+              // console.log('fav channel');
               if ('www.youtube.com' === location.hostname) {
                 appendStylusChannel = channelPc + ' { display: none !important; } ';
                 const section = await waitQuerySelector(channelPc);
                 section.querySelector(channelPcItem).remove();
               } else if ('m.youtube.com' === location.hostname) {
                 appendStylusChannel = channelMb + ' { display: none !important; } ';
-                const section = await waitQuerySelector(channelMb);
+                // const section = await waitQuerySelector(channelMb);
               }
             } else {
-              console.log('own channel');
+              // console.log('own channel');
               if ('www.youtube.com' === location.hostname) {
-                const section = await waitQuerySelector(channelPc);
+                // const section = await waitQuerySelector(channelPc);
                 appendStylusChannel = '';
               } else if ('m.youtube.com' === location.hostname) {
-                const section = await waitQuerySelector(channelMb);
+                // const section = await waitQuerySelector(channelMb);
                 appendStylusChannel = '';
               }
             }
           }
           // await new Promise(resolve => setTimeout(resolve, 2000));
           stylusElemCh.textContent = appendStylusChannel;
-          if (stylusNone(stylusElemCh.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemCh); }
         }
 
         // 動画URLから「t=」パラメータを排除
@@ -508,8 +504,6 @@
           }
         }
 
-        console.log('flg', isChannel.test(localPath), isWatch.test(localPath));
-
         if (isWatch.test(localPath)) {
           if ('www.youtube.com' === location.hostname) {
             // pc
@@ -525,18 +519,15 @@
         await new Promise(resolve => setTimeout(resolve, 1000));
         if ('www.youtube.com' === location.hostname) {
           // pc
-          const section = await waitQuerySelector('ytd-app');
-          section.style.setProperty('visibility', 'visible');
+          ytManager.style.setProperty('visibility', 'visible');
         } else if ('m.youtube.com' === location.hostname) {
           // mobile
-          const section = await waitQuerySelector('ytm-app#app');
-          section.style.setProperty('visibility', 'visible');
+          ytManager.style.setProperty('visibility', 'visible');
         }
-        console.log('flg', isChannel.test(localPath), isWatch.test(localPath));
+
+        console.log(localPath, isChannel, isChannel.test(localPath));
         stylusElemWatch.textContent = '';
         if (!isChannel.test(localPath)) { stylusElemCh.textContent = ''; }
-      });
-      obsManager.observe(ytManager, config);
       }
     });
     obsUrl.observe(document, config);
