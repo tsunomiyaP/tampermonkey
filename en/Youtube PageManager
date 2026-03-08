@@ -399,25 +399,28 @@
       ytMutation.observe(ytArea, config);
     }
   };
-  const changeUrl = async () => {
-    let href;
+  const changeUrl = async (ytManager) => {
+    let localBefore, localAfter;
 
-    const url_config = { 'attributes': false, 'childList': true, 'subtree': true };
-    const url_obs = new MutationObserver(async () => {
-
+    const config = { 'attributes': false, 'childList': true, 'subtree': true };
+    const obsUrl = new MutationObserver(async () => {
       // const href_path = location.pathname;
-      const href_path = location.pathname + '/' + location.search;
-      if (href !== href_path) {
-        // console.log('Before:', href);
-        // console.log('After:', location.href);
-        href = href_path;
+      const localAfter = location.pathname + '?' + location.search;
+      if (localBefore !== localAfter) {
+        console.log('Before:', localBefore);
+        console.log('After :', localAfter);
+        localBefore = localAfter;
+        const localPath = localAfter.split('?')[0];
+
+        const obsManager = new MutationObserver(async () => {
+
+          if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
 
         const isWatch = new RegExp(regWatch, 'gis');
         const isChannel = new RegExp(regChannel, 'gis');
-        if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
 
         // 動画エリア初期非表示 : player 以外
-        if (isWatch.test(location.pathname)) {
+        if (isWatch.test(localPath)) {
           let appendStylusWatch = '';
           for (const yt of itemsArray) {
             appendStylusWatch += yt.area + ' { display: none !important; } ';
@@ -439,17 +442,18 @@
         if (!isNuN(ytMutation)) { ytMutation.disconnect(); }
 
         // youtube Channel Area Manager
-        if (isChannel.test(location.pathname)) {
+        if (isChannel.test(localPath)) {
           let appendStylusChannel = '';
-          appendStylusChannel += '.ytd-browse[page-subtype="channels"i] > :is(#primary, #secondary) { display: none !important; } ';
-          appendStylusChannel += 'ytm-browse > .modern-tabs > div > div.tab-content[tab-title="ホーム"i]:not([tab-identifier="FEwhat_to_watch"i]) { display: none !important; } ';
 
           const channelPc = '.ytd-browse[page-subtype="channels"i] > :is(#primary, #secondary)'; // ホームタブ
-          const channelMb = 'ytm-browse > .modern-tabs > div > div.tab-content[tab-title="ホーム"i]'; // ホームタブ
           const channelPcItem = 'ytd-section-list-renderer[page-subtype="channels"]';
+          const channelMb = 'ytm-browse > .modern-tabs > div > div.tab-content[tab-title="ホーム"i]'; // ホームタブ
+
+          appendStylusChannel += channelPc + ' { display: none !important; } ';
+          appendStylusChannel += channelMb + ' { display: none !important; } ';
 
           const hsChannel = new RegExp('(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)(/videos|/streams|/playlists|/releases|/posts|/search)', 'gis');
-          if (hsChannel.test(location.pathname)) {
+          if (hsChannel.test(localPath)) {
             if ('www.youtube.com' === location.hostname) {
               const section = await waitQuerySelector(channelPc);
               appendStylusChannel = '';
@@ -460,7 +464,8 @@
           } else {
             const excChannel = 'tsunomiyaP|UCSsBxdA7yg523PegCT7O7Mg';
             const isOwn = new RegExp(excChannel, 'gis');
-            if (!isOwn.test(location.pathname)) {
+            if (!isOwn.test(localPath)) {
+              console.log('fav channel');
               if ('www.youtube.com' === location.hostname) {
                 appendStylusChannel = channelPc + ' { display: none !important; } ';
                 const section = await waitQuerySelector(channelPc);
@@ -470,7 +475,7 @@
                 const section = await waitQuerySelector(channelMb);
               }
             } else {
-              console.log('own');
+              console.log('own channel');
               if ('www.youtube.com' === location.hostname) {
                 const section = await waitQuerySelector(channelPc);
                 appendStylusChannel = '';
@@ -485,9 +490,6 @@
           if (stylusNone(stylusElemCh.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemCh); }
         }
 
-        // youtube Area Manager
-        await waitQuerySelector(manager);
-
         // 動画URLから「t=」パラメータを排除
         const pathTime = new RegExp('&t=.+', 'gis');
         if (pathTime.test(location.href)) {
@@ -499,14 +501,16 @@
         const ytArray = itemsArray.filter((yt) => location.hostname === yt.device);
         for await (const yt of ytArray) {
           const path = new RegExp(yt.path, 'gis');
-          // console.log(path, location.pathname);
-          if (path.test(location.pathname)) {
+          // console.log(path, localPath);
+          if (path.test(localPath)) {
             console.log('> youtube get ...', path, yt.area);
             await initial(yt.area);
           }
         }
 
-        if (isWatch.test(location.pathname)) {
+        console.log('flg', isChannel.test(localPath), isWatch.test(localPath));
+
+        if (isWatch.test(localPath)) {
           if ('www.youtube.com' === location.hostname) {
             // pc
             await ytChatArea();
@@ -528,11 +532,14 @@
           const section = await waitQuerySelector('ytm-app#app');
           section.style.setProperty('visibility', 'visible');
         }
+        console.log('flg', isChannel.test(localPath), isWatch.test(localPath));
         stylusElemWatch.textContent = '';
-        if (!isChannel.test(location.pathname)) { stylusElemCh.textContent = ''; }
+        if (!isChannel.test(localPath)) { stylusElemCh.textContent = ''; }
+      });
+      obsManager.observe(ytManager, config);
       }
     });
-    url_obs.observe(document, url_config);
+    obsUrl.observe(document, config);
   };
   const stylusNone = (stylus) => {
     if (isNuN(document.querySelector('style#' + stylus))) {
@@ -540,6 +547,12 @@
     }
     return false;
   };
-  // URLが変更されたとき
-  changeUrl();
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    // DOM生成されたとき
+
+    // youtube Area Manager
+    const ytManager = await waitQuerySelector(manager);
+    await changeUrl(ytManager);
+  });
 })();
