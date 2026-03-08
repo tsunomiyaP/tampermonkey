@@ -237,12 +237,10 @@
   };
   const removeMovieInformation = async (item) => {
     const mode = {'pc': {}, 'mobile': {}};
-    const isWatch = new RegExp(regWatch, 'gis');
-    const isChannel = new RegExp(regChannel, 'gis');
     const device = 'www.youtube.com' === location.hostname ? mode.pc : mode.mobile;
     const youtubeItem = {};
 
-    if (isWatch.test(location.pathname)) {
+    if (new RegExp(regWatch, 'gis').test(location.pathname)) {
       let YtChannel = '';
       await waitQuerySelector('div#owner ytd-video-owner-renderer ytd-channel-name#channel-name #text-container > yt-formatted-string#text[title], ytm-slim-owner-renderer h3.slim-owner-channel-name span');
       // pc 動画
@@ -275,7 +273,7 @@
 
       console.log(user, YtChannel);
       if (user !== YtChannel) { item.classList.add('remove_item'); }
-    } else if (isChannel.test(location.pathname)) {
+    } else if (new RegExp(regChannel, 'gis').test(location.pathname)) {
       // pc 動画
       mode.pc.ytTitle = isNuN(item.querySelector('div#dismissible div#details div#meta > h3')) ? '' : item.querySelector('div#dismissible div#details div#meta > h3').textContent;
       mode.pc.userNam = isNuN(item.querySelector('div#dismissible div#details div#meta > h3')) ? '' : item.querySelector('div#dismissible div#details div#meta > h3').textContent;
@@ -305,8 +303,7 @@
     if (isNuN(words)) { return false; }
     const txt = youtubeItem.userNam + youtubeItem.ytTitle;
     for (const word of words) {
-      const regw = new RegExp(word, 'gis');
-      if (regw.test(txt)) {
+      if (new RegExp(word, 'gis').test(txt)) {
         item.classList.add('remove_item');
         youtubeItem.word = word;
         console.log('> hide all words : ', youtubeItem);
@@ -316,8 +313,7 @@
 
     if (isNuN(excludes)) { return false; }
     for (const word of excludes) {
-      const regw = new RegExp(word, 'gis');
-      if (regw.test(txt)) {
+      if (new RegExp(word, 'gis').test(txt)) {
         item.classList.remove('remove_item');
         // console.log('> un hide words : ', youtubeItem);
         break;
@@ -337,8 +333,7 @@
         if (e.target.classList.contains('target')) {
 
           const device = 'www.youtube.com' === location.hostname || 'm.youtube.com' === location.hostname ? true : false;
-          const searcher = new RegExp(regSearch, 'gis');
-          if (device && searcher.test(location.pathname)) {
+          if (device && new RegExp(regSearch, 'gis').test(location.pathname)) {
             for (const result of ytArea.querySelectorAll('ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list')) {
               for (const ytItem of result.children) {
                 ytItem.classList.add('minScale');
@@ -355,8 +350,7 @@
     }
   };
   const ytMovieList = async (area) => {
-    const searcher = new RegExp(regSearch, 'gis');
-    if (searcher.test(location.pathname)) {
+    if (new RegExp(regSearch, 'gis').test(location.pathname)) {
       // console.log('> ytMovie search result');
       for (const result of area.querySelectorAll('ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list')) {
         for (const item of result.children) {
@@ -408,12 +402,8 @@
         if (stylusNone(stylusElemCh.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemCh); }
         if (stylusNone(stylusElemSettings.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemSettings); }
 
-        const isWatch = new RegExp(regWatch, 'gis');
-        const isChannel = new RegExp(regChannel, 'gis');
-
         // 動画エリア初期非表示 : player 以外
-        console.log('> watch area manager...', isWatch.test(localPath));
-        if (isWatch.test(localPath)) {
+        if (new RegExp(regWatch, 'gis').test(localPath)) {
           let appendStylusWatch = '';
           for (const yt of itemsArray) {
             appendStylusWatch += yt.area + ' { display: none !important; } ';
@@ -432,8 +422,7 @@
         if (!isNuN(ytMutation)) { ytMutation.disconnect(); }
 
         // youtube Channel Area Manager
-        console.log('> channel manager...', isChannel.test(localPath));
-        if (isChannel.test(localPath)) {
+        if (new RegExp(regChannel, 'gis').test(localPath)) {
           let appendStylusChannel = '';
 
           const channelPc = '.ytd-browse[page-subtype="channels"i] > :is(#primary, #secondary)'; // ホームタブ
@@ -443,8 +432,7 @@
           appendStylusChannel += channelPc + ' { display: none !important; } ';
           appendStylusChannel += channelMb + ' { display: none !important; } ';
 
-          const hsChannel = new RegExp('(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)(/videos|/streams|/playlists|/releases|/posts|/search)', 'gis');
-          if (hsChannel.test(localPath)) {
+          if (new RegExp('(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)(/videos|/streams|/playlists|/releases|/posts|/search)', 'gis').test(localPath)) {
             if ('www.youtube.com' === location.hostname) {
               // const section = await waitQuerySelector(channelPc);
               appendStylusChannel = '';
@@ -481,8 +469,7 @@
         }
 
         // 動画URLから「t=」パラメータを排除
-        const pathTime = new RegExp('&t=.+', 'gis');
-        if (pathTime.test(location.href)) {
+        if (new RegExp('&t=.+', 'gis').test(location.href)) {
           const replaceURL = deleteParam(location.href, 't').href;
           location.replace(replaceURL);
         }
@@ -490,16 +477,14 @@
         // movie contents
         const ytArray = itemsArray.filter((yt) => location.hostname === yt.device);
         for await (const yt of ytArray) {
-          const path = new RegExp(yt.path, 'gis');
           // console.log(path, localPath);
-          if (path.test(localPath)) {
-            console.log('> youtube get ...', path, yt.area);
+          if (new RegExp(yt.path, 'gis').test(localPath)) {
+            console.log('> youtube get ...', yt.area);
             await initial(yt.area);
           }
         }
 
-        console.log('> watch settings...', isWatch.test(localPath));
-        if (isWatch.test(localPath)) {
+        if (new RegExp(regWatch, 'gis').test(localPath)) {
           if ('www.youtube.com' === location.hostname) {
             // pc
             console.log('> chat area ... remover');
@@ -524,9 +509,8 @@
           ytManager.style.setProperty('visibility', 'visible');
         }
 
-        console.log(localPath, isChannel, isChannel.test(localPath));
         stylusElemWatch.textContent = '';
-        if (!isChannel.test(localPath)) { stylusElemCh.textContent = ''; }
+        if (!new RegExp(regChannel, 'gis').test(localPath)) { stylusElemCh.textContent = ''; }
       }
     });
     obsUrl.observe(document, config);
