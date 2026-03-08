@@ -197,23 +197,18 @@
   };
 
   const ytChatArea = async () => {
-    if ('www.youtube.com' !== location.hostname) { return false; }
-    const watcher = new RegExp(regWatch, 'gis');
-    if (!watcher.test(location.pathname)) { return false; }
-    console.log('> chat area create...');
     const chat = await waitQuerySelectorCount(4, 'div#chat-container');
     if (!isNuN(chat)) { chat.remove(); }
   };
   const ytStableVolume = async (settingBtn, drcBtn, closeArea) => {
-    const watcher = new RegExp(regWatch, 'gis');
-    if (!watcher.test(location.pathname)) { return false; }
     // 設定ポップアップ初期非表示
     let appendStylusSettings = '';
     appendStylusSettings += 'div.ytp-popup.ytp-settings-menu { display: none !important; } ';
     appendStylusSettings += 'div#full-screen-content-id, ytm-app > bottom-sheet-container[role="dialog"] { display: none !important; } ';
     stylusElemSettings.textContent = appendStylusSettings;
 
-    await new Promise(resolve => setTimeout(resolve, waitTime * 4));
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
     const setting = await waitQuerySelectorCount(4, settingBtn);
     if (!isNuN(setting)) { setting.click(); }
 
@@ -230,18 +225,15 @@
       }
       document.querySelector(closeArea).click();
     }
-    await new Promise(resolve => setTimeout(resolve, waitTime * 4));
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
     // style 無効化
     stylusElemSettings.textContent = '';
   };
   const ytNavBtn = async () => {
-    const watcher = new RegExp(regWatch, 'gis');
-    if (!watcher.test(location.pathname)) { return false; }
-    const toggleBtn = 'button.ytp-autonav-toggle:has(> div > div.ytp-autonav-toggle-button[aria-checked="true"])';
-    const area = await waitQuerySelectorCount(4, toggleBtn);
-    if (!isNuN(area)) {
-      area.click();
-    }
+    const toggleBtn = 'button.ytp-autonav-toggle:has(> div > div.ytp-autonav-toggle-button[aria-checked="true"i])';
+    const area = await waitQuerySelectorCount(10, toggleBtn);
+    if (!isNuN(area)) { area.click(); }
   };
   const removeMovieInformation = async (item) => {
     const mode = {'pc': {}, 'mobile': {}};
@@ -420,6 +412,7 @@
         const isChannel = new RegExp(regChannel, 'gis');
 
         // 動画エリア初期非表示 : player 以外
+        console.log('> watch area manager...', isWatch.test(localPath));
         if (isWatch.test(localPath)) {
           let appendStylusWatch = '';
           for (const yt of itemsArray) {
@@ -439,6 +432,7 @@
         if (!isNuN(ytMutation)) { ytMutation.disconnect(); }
 
         // youtube Channel Area Manager
+        console.log('> channel manager...', isChannel.test(localPath));
         if (isChannel.test(localPath)) {
           let appendStylusChannel = '';
 
@@ -504,14 +498,19 @@
           }
         }
 
+        console.log('> watch settings...', isWatch.test(localPath));
         if (isWatch.test(localPath)) {
           if ('www.youtube.com' === location.hostname) {
             // pc
+            console.log('> chat area ... remover');
             await ytChatArea();
-            await ytStableVolume('button.ytp-settings-button', 'div.ytp-drc-menu-item[role="menuitemcheckbox"i]', manager);
+            console.log('> stable volume 一定音量 setting...');
+            await ytStableVolume('button.ytp-settings-button[aria-label="設定"i]', 'div.ytp-drc-menu-item[role="menuitemcheckbox"i]', manager);
+            console.log('> auto nav next movies setting...');
             await ytNavBtn();
           } else if ('m.youtube.com' === location.hostname) {
             // mobile
+            console.log('> stable volume 一定音量 setting...');
             await ytStableVolume('button.player-settings-icon[aria-label="再生設定"i]', 'stable-volume-toggle switch-button-view-model > button.ytSwitchButtonViewModelButton[role="switch"i]', 'button.ytWebScrimHiddenButton[aria-label="閉じる"i]');
           }
         }
