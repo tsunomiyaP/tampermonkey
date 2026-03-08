@@ -103,6 +103,8 @@
   stylusElem.textContent = appendStylus;
   const stylusElemSettings = document.createElement('style');
   stylusElemSettings.id = 'stylusElemSettings';
+  const stylusElemWatch = document.createElement('style');
+  stylusElemWatch.id = 'stylusElemWatch';
   const stylusElemCh = document.createElement('style');
   stylusElemCh.id = 'stylusElemCh';
   // ==========================================================
@@ -410,11 +412,19 @@
         // console.log('After:', location.href);
         href = href_path;
 
+        const isWatch = new RegExp(regWatch, 'gis');
+        const isChannel = new RegExp(regChannel, 'gis');
         if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
 
         // 動画エリア初期非表示 : player 以外
-        const isWatch = new RegExp(regWatch, 'gis');
-        if (!isWatch.test(location.pathname)) {
+        if (isWatch.test(location.pathname)) {
+          let appendStylusWatch = '';
+          for (const yt of itemsArray) {
+            appendStylusWatch += yt.area + ' { display: none !important; } ';
+          }
+          stylusElemWatch.textContent = appendStylusWatch;
+          if (stylusNone(stylusElemWatch.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemWatch); }
+        } else {
           if ('www.youtube.com' === location.hostname) {
             // pc
             const section = await waitQuerySelector('ytd-app');
@@ -429,7 +439,6 @@
         if (!isNuN(ytMutation)) { ytMutation.disconnect(); }
 
         // youtube Channel Area Manager
-        const isChannel = new RegExp(regChannel, 'gis');
         if (isChannel.test(location.pathname)) {
           let appendStylusChannel = '';
           appendStylusChannel += '.ytd-browse[page-subtype="channels"i] > :is(#primary, #secondary) { display: none !important; } ';
@@ -493,6 +502,18 @@
           }
         }
 
+        if (isWatch.test(location.pathname)) {
+          if ('www.youtube.com' === location.hostname) {
+            // pc
+            await ytChatArea();
+            await ytStableVolume('button.ytp-settings-button', 'div.ytp-drc-menu-item[role="menuitemcheckbox"i]', manager);
+            await ytNavBtn();
+          } else if ('m.youtube.com' === location.hostname) {
+            // mobile
+            await ytStableVolume('button.player-settings-icon[aria-label="再生設定"i]', 'stable-volume-toggle switch-button-view-model > button.ytSwitchButtonViewModelButton[role="switch"i]', 'button.ytWebScrimHiddenButton[aria-label="閉じる"i]');
+          }
+        }
+
         await new Promise(resolve => setTimeout(resolve, 1000));
         if ('www.youtube.com' === location.hostname) {
           // pc
@@ -503,16 +524,8 @@
           const section = await waitQuerySelector('ytm-app#app');
           section.style.setProperty('visibility', 'visible');
         }
-
-        if ('www.youtube.com' === location.hostname) {
-          // pc
-          await ytChatArea();
-          await ytStableVolume('button.ytp-settings-button', 'div.ytp-drc-menu-item[role="menuitemcheckbox"i]', manager);
-          await ytNavBtn();
-        } else if ('m.youtube.com' === location.hostname) {
-          // mobile
-          await ytStableVolume('button.player-settings-icon[aria-label="再生設定"i]', 'stable-volume-toggle switch-button-view-model > button.ytSwitchButtonViewModelButton[role="switch"i]', 'button.ytWebScrimHiddenButton[aria-label="閉じる"i]');
-        }
+        stylusElemWatch.textContent = '';
+        stylusElemCh.textContent = '';
       }
     });
     url_obs.observe(document, url_config);
