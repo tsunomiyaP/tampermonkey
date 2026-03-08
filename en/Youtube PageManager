@@ -444,13 +444,17 @@
           appendStylusChannel += '.ytd-browse[page-subtype="channels"i] > :is(#primary, #secondary) { display: none !important; } ';
           appendStylusChannel += 'ytm-browse > .modern-tabs > div > div.tab-content[tab-title="ホーム"i]:not([tab-identifier="FEwhat_to_watch"i]) { display: none !important; } ';
 
+          const channelPc = '.ytd-browse[page-subtype="channels"i] > :is(#primary, #secondary)'; // ホームタブ
+          const channelMb = 'ytm-browse > .modern-tabs > div > div.tab-content[tab-title="ホーム"i]'; // ホームタブ
+          const channelPcItem = 'ytd-section-list-renderer[page-subtype="channels"]';
+
           const hsChannel = new RegExp('(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)(/videos|/streams|/playlists|/releases|/posts|/search)', 'gis');
           if (hsChannel.test(location.pathname)) {
             if ('www.youtube.com' === location.hostname) {
-              const section = await waitQuerySelector('.ytd-browse[page-subtype="channels"i] > :is(#primary, #secondary)');
+              const section = await waitQuerySelector(channelPc);
               appendStylusChannel = '';
             } else if ('m.youtube.com' === location.hostname) {
-              const section = await waitQuerySelector('ytm-browse > .modern-tabs > div > div.tab-content[tab-title="ホーム"i]:not([tab-identifier="FEwhat_to_watch"i])');
+              const section = await waitQuerySelector(channelMb);
               appendStylusChannel = '';
             }
           } else {
@@ -458,20 +462,20 @@
             const isOwn = new RegExp(excChannel, 'gis');
             if (!isOwn.test(location.pathname)) {
               if ('www.youtube.com' === location.hostname) {
-                const section = await waitQuerySelector('.ytd-browse[page-subtype="channels"] > :is(#primary, #secondary)');
-                appendStylusChannel = '.ytd-browse[page-subtype="channels"i] > :is(#primary, #secondary) { display: none !important; } ';
-                section.querySelector('ytd-section-list-renderer[page-subtype="channels"]').remove();
+                appendStylusChannel = channelPc + ' { display: none !important; } ';
+                const section = await waitQuerySelector(channelPc);
+                section.querySelector(channelPcItem).remove();
               } else if ('m.youtube.com' === location.hostname) {
-                const section = await waitQuerySelector('ytm-browse > .modern-tabs > div > div.tab-content[tab-title="ホーム"]:not([tab-identifier="FEwhat_to_watch"i])');
-                appendStylusChannel = 'ytm-browse > .modern-tabs > div > div.tab-content[tab-title="ホーム"i]:not([tab-identifier="FEwhat_to_watch"i]) { display: none !important; } ';
+                appendStylusChannel = channelMb + ' { display: none !important; } ';
+                const section = await waitQuerySelector(channelMb);
               }
             } else {
               console.log('own');
               if ('www.youtube.com' === location.hostname) {
-                const section = await waitQuerySelector('.ytd-browse[page-subtype="channels"i] > :is(#primary, #secondary)');
+                const section = await waitQuerySelector(channelPc);
                 appendStylusChannel = '';
               } else if ('m.youtube.com' === location.hostname) {
-                const section = await waitQuerySelector('ytm-browse > .modern-tabs > div > div.tab-content[tab-title="ホーム"i]');
+                const section = await waitQuerySelector(channelMb);
                 appendStylusChannel = '';
               }
             }
@@ -525,7 +529,7 @@
           section.style.setProperty('visibility', 'visible');
         }
         stylusElemWatch.textContent = '';
-        stylusElemCh.textContent = '';
+        if (!isChannel.test(location.pathname)) { stylusElemCh.textContent = ''; }
       }
     });
     url_obs.observe(document, url_config);
