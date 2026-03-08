@@ -20,7 +20,7 @@
   // 変数宣言
   const isChatMode = false;
   const scale = 'scale(0.8)';
-  const waitTime = 500;
+  const waitTime = 1000;
   const manager = 'ytd-app, ytm-app[id="app"i]';
   const itemsArray = [
     { device: 'www.youtube.com', path: '^/$|^/index', area: 'div#primary > ytd-rich-grid-renderer > div#contents', stylus: 'transform: ' + scale + ' !important; pointer-events: none !important;' },
@@ -207,7 +207,7 @@
     appendStylusSettings += 'div#full-screen-content-id, ytm-app > bottom-sheet-container[role="dialog"] { display: none !important; } ';
     stylusElemSettings.textContent = appendStylusSettings;
 
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, waitTime));
 
     const setting = await waitQuerySelectorCount(4, settingBtn);
     if (!isNuN(setting)) { setting.click(); }
@@ -225,7 +225,7 @@
       }
       document.querySelector(closeArea).click();
     }
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, waitTime));
 
     // style 無効化
     stylusElemSettings.textContent = '';
@@ -370,7 +370,7 @@
     for (const ytTarget of ytMovies) {
       ytTarget.classList.remove('target', 'show');
     }
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, waitTime));
 
     const ytAreas = document.querySelectorAll(area);
     for (const ytArea of ytAreas) {
@@ -464,7 +464,6 @@
               }
             }
           }
-          // await new Promise(resolve => setTimeout(resolve, 2000));
           stylusElemCh.textContent = appendStylusChannel;
         }
 
@@ -500,7 +499,8 @@
           }
         }
 
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+
         if ('www.youtube.com' === location.hostname) {
           // pc
           ytManager.style.setProperty('visibility', 'visible');
