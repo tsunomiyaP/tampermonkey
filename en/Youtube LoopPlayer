@@ -18,7 +18,8 @@
 
   // ==========================================================
   // 変数宣言
-  const manager = 'ytd-page-manager#page-manager, ytm-app[id="app"]';
+  const waitTime = 1000;
+  const manager = 'ytd-app, ytm-app[id="app"i]';
   const player = 'div#movie_player.html5-video-player';
   const regWatch = '/watch|/live';
   // 可変数
@@ -72,7 +73,7 @@
       }
     }
     while (!obj) {
-      await new Promise(resolve => setTimeout(resolve, 10000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
       obj = node.querySelector(selector);
     }
     return obj;
@@ -130,6 +131,13 @@
       return true;
     }
   };
+  // eslint-disable-next-line no-unused-vars
+  const stylusNone = (stylus) => {
+    if (isNuN(document.querySelector('style#' + stylus))) {
+      return true;
+    }
+    return false;
+  };
 
   document.addEventListener('click', (e) => {
     if (e.target && e.target.id === 'loop_on') {
@@ -183,20 +191,23 @@
       document.body.insertAdjacentElement('beforeend', elemLoopOff);
     }
   };
-  const changeUrl = async () => {
-    let href;
+  // eslint-disable-next-line no-unused-vars
+  const changeUrl = async (ytManager) => {
+    let localBefore, localAfter;
 
-    const url_config = { 'attributes': false, 'childList': true, 'subtree': true };
-    const url_obs = new MutationObserver(async () => {
-      if (href != location.pathname) {
-        // console.log('Before:', href);
-        // console.log('After:', location.href);
-        href = location.pathname;
+    const config = { 'attributes': false, 'childList': true, 'subtree': true };
+    const obsUrl = new MutationObserver(async () => {
+      // const href_path = location.pathname;
+      localAfter = location.pathname + '?' + location.search;
+      if (localBefore !== localAfter) {
+        console.log('Before:', localBefore);
+        console.log('After :', localAfter);
+        localBefore = localAfter;
+        const localPath = localAfter.split('?')[0];
 
-        if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
-
-        const watch = new RegExp(regWatch, 'gis');
-        if (watch.test(location.pathname)) {
+        if (new RegExp(regWatch, 'gis').test(localPath)) {
+          if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
+          await new Promise(resolve => setTimeout(resolve, waitTime));
           await initial();
         } else {
           if (!isNuN(document.querySelector('#loop_on'))) { document.querySelector('#loop_on').remove(); }
@@ -204,14 +215,14 @@
         }
       }
     });
-    url_obs.observe(document, url_config);
+    obsUrl.observe(document, config);
   };
-  const stylusNone = (stylus) => {
-    if (isNuN(document.querySelector('style#' + stylus))) {
-      return true;
-    }
-    return false;
-  };
-  // URLが変更されたとき
-  changeUrl();
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    // DOM生成されたとき
+
+    // youtube Area Manager
+    const ytManager = await waitQuerySelector(manager);
+    await changeUrl(ytManager);
+  });
 })();
