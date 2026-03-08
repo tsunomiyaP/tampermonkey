@@ -18,9 +18,9 @@
 
   // ==========================================================
   // 変数宣言
+  const waitTime = 1000;
   const isChatMode = false;
   const scale = 'scale(0.8)';
-  const waitTime = 1000;
   const manager = 'ytd-app, ytm-app[id="app"i]';
   const itemsArray = [
     { device: 'www.youtube.com', path: '^/$|^/index', area: 'div#primary > ytd-rich-grid-renderer > div#contents', stylus: 'transform: ' + scale + ' !important; pointer-events: none !important;' },
@@ -194,6 +194,13 @@
       // pc
       return true;
     }
+  };
+  // eslint-disable-next-line no-unused-vars
+  const stylusNone = (stylus) => {
+    if (isNuN(document.querySelector('style#' + stylus))) {
+      return true;
+    }
+    return false;
   };
 
   const ytChatArea = async () => {
@@ -384,6 +391,7 @@
       ytMutation.observe(ytArea, config);
     }
   };
+  // eslint-disable-next-line no-unused-vars
   const changeUrl = async (ytManager) => {
     let localBefore, localAfter;
 
@@ -514,12 +522,6 @@
       }
     });
     obsUrl.observe(document, config);
-  };
-  const stylusNone = (stylus) => {
-    if (isNuN(document.querySelector('style#' + stylus))) {
-      return true;
-    }
-    return false;
   };
 
   document.addEventListener('DOMContentLoaded', async () => {
