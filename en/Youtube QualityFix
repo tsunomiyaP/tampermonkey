@@ -19,6 +19,8 @@
 
   // ==========================================================
   // 変数宣言
+  const waitTime = 1000;
+  const manager = 'ytd-app, ytm-app[id="app"i]';
   const player = 'div#movie_player.html5-video-player';
   // youtube 画質 [0 : 1080, 1 : 720, 2 : 480, 3 : 360, 4 : 240, 5 : 144, 6 : auto]
   const qualitys = ['hd1080', 'hd720', 'large', 'medium', 'small', 'tiny', 'auto'];
@@ -27,6 +29,7 @@
     { device: 'www.youtube.com', path: '/watch|/live' },
     { device: 'm.youtube.com', path: '/watch|/live' },
   ];
+  const regWatch = '/watch|/live';
   // 可変数
   // ==========================================================
 
@@ -58,7 +61,7 @@
       }
     }
     while (!obj) {
-      await new Promise(resolve => setTimeout(resolve, 10000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
       obj = node.querySelector(selector);
     }
     return obj;
@@ -116,6 +119,13 @@
       return true;
     }
   };
+  // eslint-disable-next-line no-unused-vars
+  const stylusNone = (stylus) => {
+    if (isNuN(document.querySelector('style#' + stylus))) {
+      return true;
+    }
+    return false;
+  };
 
   const qualityFix = async () => {
     let q = qualitys[target];
@@ -151,32 +161,41 @@
   };
   const initial = async (ytArray) => {
     for await (const yt of ytArray) {
-      const path = new RegExp(yt.path, 'gis');
-      const isPath = path.test(location.pathname);
-
-      if (isPath) {
+      if (new RegExp(yt.path, 'gis').test(location.pathname)) {
         qualityFix();
       }
     }
   };
-  const changeUrl = async () => {
-    let href;
+  // eslint-disable-next-line no-unused-vars
+  const changeUrl = async (ytManager) => {
+    let localBefore, localAfter;
 
-    const url_config = { 'attributes': false, 'childList': true, 'subtree': true };
-    const url_obs = new MutationObserver(async () => {
-      if (href != location.pathname + location.search) {
-        // console.log('Before:', href);
-        // console.log('After:', location.href);
-        href = location.pathname + location.search;
+    const config = { 'attributes': false, 'childList': true, 'subtree': true };
+    const obsUrl = new MutationObserver(async () => {
+      // const href_path = location.pathname;
+      localAfter = location.pathname + '?' + location.search;
+      if (localBefore !== localAfter) {
+        console.log('Before:', localBefore);
+        console.log('After :', localAfter);
+        localBefore = localAfter;
+        const localPath = localAfter.split('?')[0];
 
-        const ytArray = itemsArray.filter((yt) => location.hostname === yt.device);
+        if (new RegExp(regWatch, 'gis').test(localPath)) {
+          const ytArray = itemsArray.filter((yt) => location.hostname === yt.device);
 
-        initial(ytArray);
+          await new Promise(resolve => setTimeout(resolve, waitTime));
+          initial(ytArray);
+        }
       }
     });
-    url_obs.observe(document, url_config);
+    obsUrl.observe(document, config);
   };
 
-  // URLが変更されたとき
-  changeUrl();
+  document.addEventListener('DOMContentLoaded', async () => {
+    // DOM生成されたとき
+
+    // youtube Area Manager
+    const ytManager = await waitQuerySelector(manager);
+    await changeUrl(ytManager);
+  });
 })();
