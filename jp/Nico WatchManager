@@ -16,7 +16,7 @@
 
   // ==========================================================
   // 変数宣言
-  const waitTime = 500;
+  const waitTime = 1000;
   const regWatch = '/watch';
   // 可変数
   let ncMutation;
@@ -58,7 +58,7 @@
       }
     }
     while (!obj) {
-      await new Promise(resolve => setTimeout(resolve, waitTime));
+      await new Promise(resolve => setTimeout(resolve, 1000));
       obj = node.querySelector(selector);
     }
     return obj;
@@ -116,13 +116,35 @@
       return true;
     }
   };
+  // eslint-disable-next-line no-unused-vars
+  const stylusNone = (stylus) => {
+    if (isNuN(document.querySelector('style#' + stylus))) {
+      return true;
+    }
+    return false;
+  };
 
+  const dialogHide = () => {
+    // 動画読み込みに失敗
+    if (document.querySelector('div#jsModalDialogContainer') !== null) {
+      document.querySelector('div#jsModalDialogContainer').style.display = 'none';
+    }
+    if (document.querySelector('div#jsMarqueeContainer') !== null) {
+      document.querySelector('div#jsMarqueeContainer').style.display = 'none';
+    }
+    if (document.querySelector('div#jsSmartAppBanner') !== null) {
+      document.querySelector('div#jsSmartAppBanner').style.display = 'none';
+    }
+    if (document.querySelector('a.common-header-oidyxs') !== null) {
+      document.querySelector('a.common-header-oidyxs').style.display = 'none';
+    }
+  };
   const playingWatchM = async () => {
     // ブラウザ設定 > サイト設定 自動再生オンにすること 必須
     await waitQuerySelector('div.watch-Player_Container');
     // const ncvid = await waitQuerySelector('div#watchVideoContainer.watch-Video_Container > video');
     const ncbtn = await waitQuerySelector('div.watch-OpeningPlayerInfo_Container > button#jsWatchThisPage.watch-OpeningPlayerInfo_PlayButton');
-    await new Promise(resolve => setTimeout(resolve, waitTime * 10));
+    await new Promise(resolve => setTimeout(resolve, waitTime));
     ncbtn.click();
 
     ncMutation = new MutationObserver(async () => {
@@ -150,7 +172,7 @@
     ncMutation.observe(document.querySelector('div.watch-Player_Container'), config);
   };
   const playingWatchW = async () => {
-    await new Promise(resolve => setTimeout(resolve, waitTime * 10));
+    await new Promise(resolve => setTimeout(resolve, waitTime));
     const player = await waitQuerySelector('div[class^="grid-area_"][class*="player"] div.PlayerPresenter video');
 
     // 広場、チャット、シリーズ、広告エリア 削除
@@ -187,58 +209,41 @@
     });
   };
   const changeUrl = async () => {
-    let href;
+    let localBefore, localAfter;
 
-    const url_config = { 'attributes': false, 'childList': true, 'subtree': true };
-    const url_obs = new MutationObserver(async () => {
-
-      if (href != location.pathname + location.search) {
-        // console.log('Before:', href);
-        // console.log('After:', location.href);
-        href = location.pathname + location.search;
+    const config = { 'attributes': false, 'childList': true, 'subtree': true };
+    const obsUrl = new MutationObserver(async () => {
+      // const href_path = location.pathname;
+      localAfter = location.pathname + '?' + location.search;
+      if (localBefore !== localAfter) {
+        console.log('Before:', localBefore);
+        console.log('After :', localAfter);
+        localBefore = localAfter;
+        const localPath = localAfter.split('?')[0];
 
         if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
 
         if (!isNuN(ncMutation)) { ncMutation.disconnect(); }
 
         dialogHide();
-        const watch = new RegExp(regWatch, 'gis');
-        const isWatch = watch.test(location.pathname);
-        if (!isWatch) { return false; }
 
-        if ('www.nicovideo.jp' == location.hostname) {
-          console.log('pc > ');
-          playingWatchW();
-        } else {
-          console.log('sp > ');
-          playingWatchM();
+        if (new RegExp(regWatch, 'gis').test(localPath)) {
+          if ('www.nicovideo.jp' == location.hostname) {
+            console.log('pc > ');
+            playingWatchW();
+          } else {
+            console.log('sp > ');
+            playingWatchM();
+          }
         }
       }
     });
-    url_obs.observe(document, url_config);
+    obsUrl.observe(document, config);
   };
 
-  const dialogHide = () => {
-    // 動画読み込みに失敗
-    if (document.querySelector('div#jsModalDialogContainer') !== null) {
-      document.querySelector('div#jsModalDialogContainer').style.display = 'none';
-    }
-    if (document.querySelector('div#jsMarqueeContainer') !== null) {
-      document.querySelector('div#jsMarqueeContainer').style.display = 'none';
-    }
-    if (document.querySelector('div#jsSmartAppBanner') !== null) {
-      document.querySelector('div#jsSmartAppBanner').style.display = 'none';
-    }
-    if (document.querySelector('a.common-header-oidyxs') !== null) {
-      document.querySelector('a.common-header-oidyxs').style.display = 'none';
-    }
-  };
-  const stylusNone = (stylus) => {
-    if (isNuN(document.querySelector('style#' + stylus))) {
-      return true;
-    }
-    return false;
-  };
-  // URLが変更されたとき
-  changeUrl();
+  document.addEventListener('DOMContentLoaded', async () => {
+    // DOM生成されたとき
+
+    await changeUrl();
+  });
 })();
