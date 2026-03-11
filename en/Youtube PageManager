@@ -211,12 +211,10 @@
     // 設定ポップアップ初期非表示
     let appendStylusSettings = '';
     appendStylusSettings += 'div.ytp-popup.ytp-settings-menu { display: none !important; } ';
-    appendStylusSettings += 'div#full-screen-content-id, ytm-app > bottom-sheet-container[role="dialog"] { display: none !important; } ';
+    appendStylusSettings += 'ytm-app > bottom-sheet-container[role="dialog"i] { display: none !important; } ';
     stylusElemSettings.textContent = appendStylusSettings;
 
-    await new Promise(resolve => setTimeout(resolve, waitTime));
-
-    const setting = await waitQuerySelectorCount(4, settingBtn);
+    const setting = await waitQuerySelector(settingBtn);
     if (!isNuN(setting)) { setting.click(); }
 
     const drcMenuItem = await waitQuerySelectorCount(4, drcBtn);
@@ -232,8 +230,6 @@
       }
       document.querySelector(closeArea).click();
     }
-    await new Promise(resolve => setTimeout(resolve, waitTime));
-
     // style 無効化
     stylusElemSettings.textContent = '';
   };
@@ -503,7 +499,7 @@
           } else if ('m.youtube.com' === location.hostname) {
             // mobile
             console.log('> stable volume 一定音量 setting...');
-            await ytStableVolume('button.player-settings-icon[aria-label="再生設定"i]', 'stable-volume-toggle switch-button-view-model > button.ytSwitchButtonViewModelButton[role="switch"i]', 'button.ytWebScrimHiddenButton[aria-label="閉じる"i]');
+            await ytStableVolume('button.player-settings-icon[aria-label="再生設定"i]', 'player-settings-menu > stable-volume-toggle yt-list-item-view-model > div > div > switch-button-view-model > button[aria-checked="true"i]', 'ytm-app > bottom-sheet-container[role="dialog"i]:not([hidden="true"i]) > ytw-scrim');
           }
         }
 
