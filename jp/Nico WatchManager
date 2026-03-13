@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         Nico WatchManager
 // @namespace    http://tampermonkey.net/
-// @version      2.0
+// @version      5.0
 // @description  サイト設定 自動再生オンにすること > 自動遷移後の再生のため
 // @author       You
 // @match        https://*.nicovideo.jp/*
 // @grant        none
+// @license      GNU GPLv3
 // @icon         https://www.google.com/s2/favicons?domain=www.nicovideo.jp
 // @run-at       document-body
 // @noframes
