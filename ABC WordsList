@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ABC WordsList
 // @namespace    http://tampermonkey.net/
-// @version      3.0
+// @version      5.0
 // @description  try to take over the world!
 // @author       You
 // @match        https://*.youtube.com/*
@@ -11,6 +11,7 @@
 // @exclude      https://music.youtube.com/*
 // @exclude      https://studio.youtube.com/*
 // @grant        none
+// @license      GNU GPLv3
 // @icon         https://www.google.com/s2/favicons?domain=www.google.com
 // @run-at       document-body
 // @noframes
@@ -58,7 +59,7 @@
 
       // nijisanji jp
       '渋谷(\\s)*ハジメ|sibuya_hajime|ShibuyaHajime',
-      'ギルザレン(Ⅲ世)*|gilzaren_iii|GilzarenIII',
+      'ギルザレンⅢ世|gilzaren_iii|GilzarenIII',
       '剣持(\\s)*刀也|rei_Toya_rei|KenmochiToya',
       '伏見(\\s)*ガク|gaku_fushimi|FushimiGaku',
       '(?=.*(niji|にじ))(?=.*(叶).*)|kanae_2434|Kanae',
@@ -145,7 +146,7 @@
       '(?=.*(niji|にじ))(?=.*(社長|アッキーナ|エビオ|かなかな|ズハ|やしきず|ベルさん|ふわっち|委員長).*)',
 
       // other groups nijisanji
-      'nijisanji|nijisanji_en|nijisanji(\\s)*en',
+      '^にじさんじ$|nijisanji|nijisanji_en|nijisanji(\\s)*en',
       '#(にじ|NIJI|NJ)',
       'oriens|dytica|3skm|メイフ|SMC|チューリップ組|エデン組',
       'chronoir|くろのわ|くろなん',
@@ -184,7 +185,6 @@
       'うるか|CR_uruca|crazyraccoon',
       'クイズノック|quizknock',
       'なつめさんち|natsume_sanchi',
-      'REAL(\\s)*AKIBA(\\s)*BOYZ|RAB|realakibaboyz',
       'ぽんぽこ|ぽこピー|ピーナッツくん|pokopea',
 
       // others streamer
