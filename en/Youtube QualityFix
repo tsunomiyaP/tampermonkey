@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube QualityFix
 // @namespace    http://tampermonkey.net/
-// @version      3.0
+// @version      5.0
 // @description  try to take over the world!
 // @author       You
 // @match        https://*.youtube.com/*
