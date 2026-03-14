@@ -29,6 +29,7 @@
   const regWatch = '/watch|/live';
   // 可変数
   let moYt;
+  let urlBefore = ''; // URLの記憶用
   // ==========================================================
   // 静的style適用エリア
   // stylus: beforebegin, afterbegin, beforeend, afterend
@@ -253,29 +254,27 @@
       moYt.observe(document.querySelector(player), config);
     }
   };
-  // eslint-disable-next-line no-unused-vars
-  const changeUrl = async (ytManager) => {
-    let localBefore, localAfter;
-
+  const changeUrl = async () => {
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
     const obsUrl = new MutationObserver(async () => {
-      // const href_path = location.pathname;
-      localAfter = location.pathname + '?' + location.search;
-      if (localBefore !== localAfter) {
-        console.log('Before:', localBefore);
-        console.log('After :', localAfter);
-        localBefore = localAfter;
-        const localPath = localAfter.split('?')[0];
+      setTimeout(async () => { // 遅延
+        if (urlBefore !== location.pathname + '?' + location.search) {
+          const localPath = location.pathname;
+          // URL更新
+          urlBefore = location.pathname + '?' + location.search;
 
-        if (!isNuN(moYt)) { moYt.disconnect(); }
+          if (!isNuN(moYt)) { moYt.disconnect(); }
 
-        if (new RegExp(regWatch, 'gis').test(localPath)) {
-          if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
+          // youtube Area Manager
+          await waitQuerySelector(manager);
+          if (new RegExp(regWatch, 'gis').test(localPath)) {
+            if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
 
-          await new Promise(resolve => setTimeout(resolve, waitTime));
-          reWatch();
+            await new Promise(resolve => setTimeout(resolve, waitTime));
+            reWatch();
+          }
         }
-      }
+      }, 50);
     });
     obsUrl.observe(document, config);
   };
@@ -283,8 +282,6 @@
   document.addEventListener('DOMContentLoaded', async () => {
     // DOM生成されたとき
 
-    // youtube Area Manager
-    const ytManager = await waitQuerySelector(manager);
-    await changeUrl(ytManager);
+    await changeUrl();
   });
 })();
