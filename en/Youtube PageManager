@@ -41,6 +41,7 @@
   const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
   // 可変数
   let ytMutation;
+  let urlBefore = ''; // URLの記憶用
   // ==========================================================
   // 静的style適用エリア
   // stylus: beforebegin, afterbegin, beforeend, afterend
@@ -390,17 +391,13 @@
   };
   // eslint-disable-next-line no-unused-vars
   const changeUrl = async (ytManager) => {
-    let localBefore, localAfter;
-
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
     const obsUrl = new MutationObserver(async () => {
-      // const href_path = location.pathname;
-      localAfter = location.pathname + '?' + location.search;
-      if (localBefore !== localAfter) {
-        console.log('Before:', localBefore);
-        console.log('After :', localAfter);
-        localBefore = localAfter;
-        const localPath = localAfter.split('?')[0];
+      setTimeout(async () => { // 遅延
+        if (urlBefore !== location.pathname + '?' + location.search) {
+        const localPath = location.pathname;
+
+        if (!isNuN(ytMutation)) { ytMutation.disconnect(); }
 
         if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
         if (stylusNone(stylusElemWatch.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemWatch); }
@@ -423,8 +420,6 @@
             ytManager.style.setProperty('visibility', 'hidden', 'important');
           }
         }
-
-        if (!isNuN(ytMutation)) { ytMutation.disconnect(); }
 
         // youtube Channel Area Manager
         if (new RegExp(regChannel, 'gis').test(localPath)) {
@@ -516,9 +511,13 @@
 
         stylusElemWatch.textContent = '';
         if (!new RegExp(regChannel, 'gis').test(localPath)) { stylusElemCh.textContent = ''; }
-      }
+
+          // 最後にURL更新
+          urlBefore = location.pathname + '?' + location.search;
+        }
+      }, 50);
     });
-    obsUrl.observe(document, config);
+    obsUrl.observe(document.body, config);
   };
 
   document.addEventListener('DOMContentLoaded', async () => {
