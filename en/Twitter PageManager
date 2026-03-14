@@ -221,19 +221,19 @@
       const tab = await waitQuerySelectorCount(4, 'div[role="presentation"i] *[role="tab"i][aria-selected="true"i]');
       const tabLabel = isNuN(tab) ? '' : tab.textContent;
       setTimeout(async () => { // 遅延
-        if (urlBefore !== location.pathname || label !== tabLabel) {
-          const localPath = location.pathname;
-          // URL更新
-          urlBefore = location.pathname + '?' + location.search;
+        if (urlBefore !== location.pathname) {
+          if (label !== tabLabel) {
+            // URL更新
+            urlBefore = location.pathname + '?' + location.search;
+            label = tabLabel;
+            console.log(label, urlBefore);
 
-          label = tabLabel;
-          console.log(label, localPath);
+            obsTw.disconnect();
+            clearTimeout(timerCount);
 
-          obsTw.disconnect();
-          clearTimeout(timerCount);
-
-          await initial();
-          obsTw.observe(targetNode, config);
+            await initial();
+            obsTw.observe(targetNode, config);
+          }
         }
       }, 50);
     });
