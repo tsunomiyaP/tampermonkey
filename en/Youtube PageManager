@@ -405,8 +405,6 @@
           if (stylusNone(stylusElemCh.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemCh); }
           if (stylusNone(stylusElemSettings.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemSettings); }
 
-          // youtube Area Manager
-          const ytManager = await waitQuerySelector(manager);
           // 動画エリア初期非表示 : player 以外
           if (new RegExp(regWatch, 'gis').test(localPath)) {
             let appendStylusWatch = '';
@@ -415,14 +413,20 @@
             }
             stylusElemWatch.textContent = appendStylusWatch;
           } else {
+            let appendStylusWatch = '';
             if ('www.youtube.com' === location.hostname) {
               // pc
-              ytManager.style.setProperty('visibility', 'hidden', 'important');
+              appendStylusWatch += manager + ' { visibility: hidden !important; } ';
+              // ytManager.style.setProperty('visibility', 'hidden', 'important');
             } else if ('m.youtube.com' === location.hostname) {
               // mobile
-              ytManager.style.setProperty('visibility', 'hidden', 'important');
+              appendStylusWatch += manager + ' { visibility: hidden !important; } ';
             }
+            stylusElemWatch.textContent = appendStylusWatch;
           }
+
+          // youtube Area Manager
+          const ytManager = await waitQuerySelector(manager);
 
           // youtube Channel Area Manager
           if (new RegExp(regChannel, 'gis').test(localPath)) {
@@ -503,14 +507,6 @@
           }
 
           await new Promise(resolve => setTimeout(resolve, waitTime));
-
-          if ('www.youtube.com' === location.hostname) {
-          // pc
-            ytManager.style.setProperty('visibility', 'visible');
-          } else if ('m.youtube.com' === location.hostname) {
-          // mobile
-            ytManager.style.setProperty('visibility', 'visible');
-          }
 
           stylusElemWatch.textContent = '';
           if (!new RegExp(regChannel, 'gis').test(localPath)) { stylusElemCh.textContent = ''; }
