@@ -21,11 +21,12 @@
   const regWatch = '/watch';
   // 可変数
   let ncMutation;
+  let urlBefore = ''; // URLの記憶用
   // ==========================================================
   // 静的style適用エリア
   // stylus: beforebegin, afterbegin, beforeend, afterend
   let appendStylus = '';
-  appendStylus += 'a[href*="/premium"] { display: none !important; } ';
+  appendStylus += 'a[href*="/premium"i] { display: none !important; } ';
   const stylusElem = document.createElement('style');
   stylusElem.id = 'stylusElem';
   stylusElem.textContent = appendStylus;
@@ -210,34 +211,31 @@
     });
   };
   const changeUrl = async () => {
-    let localBefore, localAfter;
-
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
     const obsUrl = new MutationObserver(async () => {
-      // const href_path = location.pathname;
-      localAfter = location.pathname + '?' + location.search;
-      if (localBefore !== localAfter) {
-        console.log('Before:', localBefore);
-        console.log('After :', localAfter);
-        localBefore = localAfter;
-        const localPath = localAfter.split('?')[0];
+      setTimeout(async () => { // 遅延
+        if (urlBefore !== location.pathname + '?' + location.search) {
+          const localPath = location.pathname;
+          // URL更新
+          urlBefore = location.pathname + '?' + location.search;
 
-        if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
+          if (!isNuN(ncMutation)) { ncMutation.disconnect(); }
 
-        if (!isNuN(ncMutation)) { ncMutation.disconnect(); }
+          if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
 
-        dialogHide();
+          dialogHide();
 
-        if (new RegExp(regWatch, 'gis').test(localPath)) {
-          if ('www.nicovideo.jp' == location.hostname) {
-            console.log('pc > ');
-            playingWatchW();
-          } else {
-            console.log('sp > ');
-            playingWatchM();
+          if (new RegExp(regWatch, 'gis').test(localPath)) {
+            if ('www.nicovideo.jp' == location.hostname) {
+              console.log('pc > ');
+              playingWatchW();
+            } else {
+              console.log('sp > ');
+              playingWatchM();
+            }
           }
         }
-      }
+      }, 50);
     });
     obsUrl.observe(document, config);
   };
