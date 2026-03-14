@@ -437,7 +437,7 @@
           appendStylusChannel += channelPc + ' { display: none !important; } ';
           appendStylusChannel += channelMb + ' { display: none !important; } ';
 
-          if (new RegExp('(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)(/videos|/streams|/playlists|/releases|/posts|/search)', 'gis').test(localPath)) {
+          if (new RegExp('(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)(/videos|/streams|/playlists|/releases|/posts|/search|/membership)', 'gis').test(localPath)) {
             if ('www.youtube.com' === location.hostname) {
               // const section = await waitQuerySelector(channelPc);
               appendStylusChannel = '';
