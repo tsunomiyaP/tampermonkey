@@ -31,6 +31,7 @@
   ];
   const regWatch = '/watch|/live';
   // 可変数
+  let urlBefore = ''; // URLの記憶用
   // ==========================================================
 
   // eslint-disable-next-line no-unused-vars
@@ -166,27 +167,25 @@
       }
     }
   };
-  // eslint-disable-next-line no-unused-vars
-  const changeUrl = async (ytManager) => {
-    let localBefore, localAfter;
-
+  const changeUrl = async () => {
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
     const obsUrl = new MutationObserver(async () => {
-      // const href_path = location.pathname;
-      localAfter = location.pathname + '?' + location.search;
-      if (localBefore !== localAfter) {
-        console.log('Before:', localBefore);
-        console.log('After :', localAfter);
-        localBefore = localAfter;
-        const localPath = localAfter.split('?')[0];
+      setTimeout(async () => { // 遅延
+        if (urlBefore !== location.pathname + '?' + location.search) {
+          const localPath = location.pathname;
+          // URL更新
+          urlBefore = location.pathname + '?' + location.search;
 
-        if (new RegExp(regWatch, 'gis').test(localPath)) {
-          const ytArray = itemsArray.filter((yt) => location.hostname === yt.device);
+          // youtube Area Manager
+          await waitQuerySelector(manager);
+          if (new RegExp(regWatch, 'gis').test(localPath)) {
+            const ytArray = itemsArray.filter((yt) => location.hostname === yt.device);
 
-          await new Promise(resolve => setTimeout(resolve, waitTime));
-          initial(ytArray);
+            await new Promise(resolve => setTimeout(resolve, waitTime));
+            initial(ytArray);
+          }
         }
-      }
+      }, 50);
     });
     obsUrl.observe(document, config);
   };
@@ -194,8 +193,6 @@
   document.addEventListener('DOMContentLoaded', async () => {
     // DOM生成されたとき
 
-    // youtube Area Manager
-    const ytManager = await waitQuerySelector(manager);
-    await changeUrl(ytManager);
+    await changeUrl();
   });
 })();
