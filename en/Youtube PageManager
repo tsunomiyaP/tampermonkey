@@ -412,14 +412,9 @@
             stylusElemWatch.textContent = appendStylusWatch;
           } else {
             let appendStylusWatch = '';
-            if ('www.youtube.com' === location.hostname) {
-              // pc
-              appendStylusWatch += manager + ' { visibility: hidden !important; } ';
-              // ytManager.style.setProperty('visibility', 'hidden', 'important');
-            } else if ('m.youtube.com' === location.hostname) {
-              // mobile
-              appendStylusWatch += manager + ' { visibility: hidden !important; } ';
-            }
+            // pc, mobile
+            appendStylusWatch = manager + ' { visibility: hidden !important; } ';
+            // ytManager.style.setProperty('visibility', 'hidden', 'important');
             stylusElemWatch.textContent = appendStylusWatch;
           }
 
