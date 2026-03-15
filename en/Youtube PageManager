@@ -74,7 +74,6 @@
   appendStylus += 'ytm-watch :is(ytm-compact-playlist-renderer, ytm-compact-radio-renderer, ytm-item-section-renderer ytm-video-with-context-renderer:has(a[href*="/shorts/"i]), ytm-item-section-renderer ytm-video-with-context-renderer:has(a[href*="&start_radio="i]), ytm-item-section-renderer ytm-video-with-context-renderer:has(a[href*="&list="i]), ytm-video-with-context-renderer:has(ytm-badge-supported-renderer), div.ytVideoMetadataCarouselViewModelCarouselContainer:has(yt-carousel-item-view-model[aria-label="コメント"i])), ytm-custom-control div#player-control-overlay div.player-controls-background-container { display: none !important; } ';
   // 検索
   appendStylus += 'ytm-search :is(ytm-universal-watch-card-renderer, ytm-horizontal-card-list-renderer, ytm-reel-shelf-renderer:has(a[href*="/shorts/"i]), ytm-video-with-context-renderer:has(a[href*="/shorts/"i]), ytm-video-with-context-renderer:has(a[href*="&start_radio="i]), ytm-video-with-context-renderer:has(a[href*="&list="i]), ytm-video-with-context-renderer:has(ytm-badge-supported-renderer), ytm-video-with-context-renderer:has([aria-label*="#shorts"i]), ytm-compact-channel-renderer, ytm-compact-playlist-renderer, ytm-compact-radio-renderer, grid-shelf-view-model) { display: none !important; } ';
-
   // ext
   appendStylus += 'ytm-pivot-bar-item-renderer:has(div.pivot-bar-item-tab.pivot-shorts) { display: none !important; } ';
   appendStylus += 'header.mobile-topbar-header div.mobile-topbar-header-sign-in-button { display: none !important; } ';
@@ -89,7 +88,6 @@
     // [Mix & playlist] [他(headline)]動画 削除
     appendStylus += yt.area + ' .target:has(a[href*="&list="i], #rich-shelf-header-container, .rich-shelf-header, chips-shelf-with-video-shelf-renderer, ytd-brand-video-singleton-renderer) { display: none; } ';
   }
-
   // preview : 無効化
   appendStylus += 'ytd-video-preview { display: none !important; } ';
   appendStylus += '.ytd-thumbnail-overlay-loading-preview-renderer { display: none !important; } ';
@@ -425,9 +423,6 @@
             stylusElemWatch.textContent = appendStylusWatch;
           }
 
-          // youtube Area Manager
-          const ytManager = await waitQuerySelector(manager);
-
           // youtube Channel Area Manager
           if (new RegExp(regChannel, 'gis').test(localPath)) {
             let appendStylusChannel = '';
@@ -473,6 +468,9 @@
             }
             stylusElemCh.textContent = appendStylusChannel;
           }
+
+          // youtube Area Manager
+          const ytManager = await waitQuerySelector(manager);
 
           // 動画URLから「t=」パラメータを排除
           if (new RegExp('&t=.+', 'gis').test(location.href)) {
