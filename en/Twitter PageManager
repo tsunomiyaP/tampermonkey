@@ -27,7 +27,7 @@
   const moreTweet = 'button[data-testid="tweet-text-show-more-link"i]';
   const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
   // 可変数
-  let timerCount;
+  let twMutationManager, twMutationTimeline;
   let urlBefore = ''; // URLの記憶用
   let label = ''; // 現在のタブ
   // ==========================================================
@@ -196,13 +196,13 @@
     // Mutation Observer
     const nodeTimeline = await waitQuerySelector('div[aria-label^="タイムライン: "i] > div');
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
-    const obsTw = new MutationObserver(async () => {
-      obsTw.disconnect();
+    twMutationTimeline = new MutationObserver(async () => {
+      twMutationTimeline.disconnect();
       const tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
       if (tweets.length !== 0) await removeElements(tweets);
-      obsTw.observe(nodeTimeline, config);
+      twMutationTimeline.observe(nodeTimeline, config);
     });
-    obsTw.observe(nodeTimeline, config);
+    twMutationTimeline.observe(nodeTimeline, config);
   };
   const initial = async () => {
     await waitQuerySelector(twColumns + ':not(.' + quoBColumn + ')');
@@ -211,7 +211,7 @@
   const twPath = async (nodeMain) => {
     // Mutation Observer
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
-    const obsTw = new MutationObserver(async () => {
+    twMutationManager = new MutationObserver(async () => {
       const tab = await waitQuerySelectorCount(4, 'div[role="presentation"i] *[role="tab"i][aria-selected="true"i]');
       const tabLabel = isNuN(tab) ? '' : tab.textContent;
       // console.log('A : ', label, 'B : ', tab, 'C : ', tabLabel);
@@ -220,12 +220,12 @@
         label = tabLabel;
         console.log('tab : ', label, '、URL : ', urlBefore);
 
-        obsTw.disconnect();
+        twMutationManager.disconnect();
         await initial();
-        obsTw.observe(nodeMain, config);
+        twMutationManager.observe(nodeMain, config);
       }
     });
-    obsTw.observe(nodeMain, config);
+    twMutationManager.observe(nodeMain, config);
   };
   const changeUrl = async () => {
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
@@ -234,6 +234,9 @@
         if (urlBefore !== location.pathname) {
           // URL更新
           urlBefore = location.pathname;
+
+          if (!isNuN(twMutationManager)) { twMutationManager.disconnect(); }
+          if (!isNuN(twMutationTimeline)) { twMutationTimeline.disconnect(); }
 
           if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
           const nodeMain = await waitQuerySelector(twMain);
