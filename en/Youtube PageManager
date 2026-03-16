@@ -208,12 +208,6 @@
     if (!isNuN(chat)) { chat.remove(); }
   };
   const ytStableVolume = async (settingBtn, drcBtn, closeArea) => {
-    // 設定ポップアップ初期非表示
-    let appendStylusSettings = '';
-    appendStylusSettings += 'div.ytp-popup.ytp-settings-menu { display: none !important; } ';
-    appendStylusSettings += 'ytm-app > bottom-sheet-container[role="dialog"i] { display: none !important; } ';
-    stylusElemSettings.textContent = appendStylusSettings;
-
     const setting = await waitQuerySelector(settingBtn);
     if (!isNuN(setting)) { setting.click(); }
 
@@ -230,8 +224,6 @@
       }
       document.querySelector(closeArea).click();
     }
-    // style 無効化
-    stylusElemSettings.textContent = '';
   };
   const ytNavBtn = async () => {
     const toggleBtn = 'button.ytp-autonav-toggle:has(> div > div.ytp-autonav-toggle-button[aria-checked="true"i])';
@@ -403,6 +395,12 @@
           if (stylusNone(stylusElemCh.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemCh); }
           if (stylusNone(stylusElemSettings.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemSettings); }
 
+          // 設定ポップアップ初期非表示
+          let appendStylusSettings = '';
+          appendStylusSettings += 'div.ytp-popup.ytp-settings-menu { display: none !important; } ';
+          appendStylusSettings += 'ytm-app > bottom-sheet-container[role="dialog"i] { display: none !important; } ';
+          stylusElemSettings.textContent = appendStylusSettings;
+
           // 動画エリア初期非表示 : player 以外
           if (new RegExp(regWatch, 'gis').test(localPath)) {
             let appendStylusWatch = '';
@@ -503,6 +501,8 @@
 
           stylusElemWatch.textContent = '';
           if (!new RegExp(regChannel, 'gis').test(localPath)) { stylusElemCh.textContent = ''; }
+          // style 無効化
+          stylusElemSettings.textContent = '';
         }
       }, 50);
     });
