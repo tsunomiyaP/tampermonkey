@@ -197,10 +197,10 @@
     const nodeTimeline = await waitQuerySelector('div[aria-label^="タイムライン: "i] > div');
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
     twMutationTimeline = new MutationObserver(async () => {
-      twMutationTimeline.disconnect();
-      const tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
-      if (tweets.length !== 0) await removeElements(tweets);
-      twMutationTimeline.observe(nodeTimeline, config);
+      setTimeout(async () => {
+        const tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
+        if (tweets.length !== 0) await removeElements(tweets);
+      }, waitTime);
     });
     twMutationTimeline.observe(nodeTimeline, config);
   };
