@@ -391,10 +391,10 @@
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
     const obsUrl = new MutationObserver(async () => {
       setTimeout(async () => { // 遅延
-        if (urlBefore !== location.pathname + '?' + location.search) {
+        if (urlBefore !== location.pathname + location.search) {
           const localPath = location.pathname;
           // URL更新
-          urlBefore = location.pathname + '?' + location.search;
+          urlBefore = location.pathname + location.search;
 
           if (!isNuN(ytMutation)) { ytMutation.disconnect(); }
 
@@ -465,7 +465,7 @@
           }
 
           // youtube Area Manager
-          await waitQuerySelector(manager);
+          const ytManager = await waitQuerySelector(manager);
 
           // 動画URLから「t=」パラメータを排除
           if (new RegExp('&t=.+', 'gis').test(location.href)) {
