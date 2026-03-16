@@ -258,10 +258,10 @@
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
     const obsUrl = new MutationObserver(async () => {
       setTimeout(async () => { // 遅延
-        if (urlBefore !== location.pathname + '?' + location.search) {
+        if (urlBefore !== location.pathname + location.search) {
           const localPath = location.pathname;
           // URL更新
-          urlBefore = location.pathname + '?' + location.search;
+          urlBefore = location.pathname + location.search;
 
           if (!isNuN(moYt)) { moYt.disconnect(); }
 
