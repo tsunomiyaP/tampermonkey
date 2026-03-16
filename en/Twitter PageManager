@@ -29,21 +29,23 @@
   // 可変数
   let timerCount;
   let urlBefore = ''; // URLの記憶用
+  let label = ''; // 現在のタブ
   // ==========================================================
   // stylus: beforebegin, afterbegin, beforeend, afterend
   let appendStylus = '';
   // area stylus
-  appendStylus += twColumns + ' *:not(:is(div[data-testid="tweetPhoto"i]:has(div[data-testid="videoPlayer"i]) *)), [data-testid="sidebarColumn"i] *, header[role="banner"i] *, nav[role="navigation"i] * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background-color: rgba(255, 255, 255, 0.9) !important; /* または背景色を調整 */ color: rgba(0, 0, 0, 1) !important; } ';
+  appendStylus += twColumns + ' *:not(:is(div[data-testid="tweetPhoto"i]:has(div[data-testid="videoPlayer"i]) *, div[data-testid="card.wrapper"i], div[data-testid="card.wrapper"i] *)), [data-testid="sidebarColumn"i] *, header[role="banner"i] *, nav[role="navigation"i] * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background-color: rgba(255, 255, 255, 0.9) !important; /* または背景色を調整 */ color: rgba(0, 0, 0, 1) !important; } ';
   appendStylus += twColumns + ' *:is(div[data-testid^="inline_reply"i] div[data-testid^="UserAvatar-Container"i], div[data-testid="tweetPhoto"i] button, div[data-testid="previewInterstitial"i] button, div[data-testid="card.wrapper"i] div[aria-label="プレイ"i]) { display: none !important; } ';
   appendStylus += twColumns + ' div[class="css-175oi2r r-18u37iz r-136ojw6"i] > div:first-child { display: none !important; } ';
   appendStylus += twColumns + ' div[class="css-175oi2r r-18u37iz r-184en5c"i] > div:first-child { display: none !important; } ';
+  appendStylus += 'a[href*="/grok.com/"i], div[data-testid="GrokDrawer"i], button[aria-label="プロフィールの要約"i] { display: none !important; } ';
   /* gradient stylus :意味あるかは不明 */
   appendStylus += '[style*="backdrop-filter"i], [style*="filter: blur"i], *[style*="blur("i] { filter: none !important; }';
   appendStylus += '[class*="shadow"], [style*="box-shadow"i] { box-shadow: none !important; }';
   appendStylus += '[class*="gradient"], [class*="bg-gradient"i], [style*="linear-gradient("i] { background-image: none !important; }';
   appendStylus += 'video { transform: none !important; will-change: auto !important; background-color: black !important; }';
   appendStylus += 'img[src*="twimg.com/emoji"i] { display: none !important; } ';
-
+  /** css style border line */
   appendStylus += twColumns + ' .r-1867qdf { border-radius: 0px !important; }';
   appendStylus += 'form[aria-label="検索"i] > div > div.r-sdzlij { border-bottom-left-radius: 0px !important; border-bottom-right-radius: 0px !important; border-top-left-radius: 0px !important; border-top-right-radius: 0px !important; }';
   // tweet hide
@@ -174,19 +176,18 @@
     timerCount = setTimeout(async () => {
       clearTimeout(timerCount);
       if (0 === tweets.length) {
-        return polling();
+        return await polling();
       } else {
         await removeElements(tweets);
       }
-    }, 1000);
+    }, waitTime);
   };
   const removeElements = async (tweets) => {
-    // console.log(tweets.length);
-
     for await (const tweet of tweets) {
       if (!isNuN(tweet.querySelector(moreTweet))) {
         tweet.querySelector(moreTweet).click();
       }
+      tweet.classList.add(quoBColumn);
 
       const words = isNuN(abc) ? [] : abc.hideword;
       // 非表示対象文字列
@@ -198,51 +199,57 @@
           tweet.classList.add(quoAColumn);
         }
       }
-      tweet.classList.add(quoBColumn);
-      await new Promise(resolve => setTimeout(resolve, waitTime));
+      await new Promise(resolve => setTimeout(resolve, 50));
     }
-    polling();
+    await polling();
   };
   const initial = async () => {
     // console.log('refresh tweets list');
-    await waitQuerySelector(twColumns);
-    polling();
+    await waitQuerySelector(twColumns + ':not(.' + quoBColumn + ')');
+    await polling();
   };
-  const twPath = async () => {
-
-    if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
-
-    let label;
+  const twPath = async (targetNode) => {
     // Mutation Observer
-    const targetNode = await waitQuerySelector(twMain);
-
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
     const obsTw = new MutationObserver(async () => {
       const tab = await waitQuerySelectorCount(4, 'div[role="presentation"i] *[role="tab"i][aria-selected="true"i]');
       const tabLabel = isNuN(tab) ? '' : tab.textContent;
+      // console.log('A : ', label, 'B : ', tab, 'C : ', tabLabel);
+      if (label !== tabLabel) {
+        // URL更新
+        label = tabLabel;
+        console.log('tab : ', label, '、URL : ', urlBefore);
+
+        obsTw.disconnect();
+        clearTimeout(timerCount);
+
+        console.log('removeTweet ...');
+        await initial();
+        obsTw.observe(targetNode, config);
+      }
+    });
+    obsTw.observe(targetNode, config);
+  };
+  const changeUrl = async () => {
+    const config = { 'attributes': false, 'childList': true, 'subtree': true };
+    const obsUrl = new MutationObserver(async () => {
       setTimeout(async () => { // 遅延
         if (urlBefore !== location.pathname) {
-          if (label !== tabLabel) {
-            // URL更新
-            urlBefore = location.pathname + '?' + location.search;
-            label = tabLabel;
-            console.log(label, urlBefore);
+          // URL更新
+          urlBefore = location.pathname;
 
-            obsTw.disconnect();
-            clearTimeout(timerCount);
-
-            await initial();
-            obsTw.observe(targetNode, config);
-          }
+          if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
+          const targetNode = await waitQuerySelector(twMain);
+          await twPath(targetNode);
         }
       }, 50);
     });
-    obsTw.observe(targetNode, config);
+    obsUrl.observe(document, config);
   };
 
   document.addEventListener('DOMContentLoaded', async () => {
     // DOM生成されたとき
 
-    await twPath();
+    await changeUrl();
   });
 })();
