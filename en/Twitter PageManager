@@ -171,19 +171,8 @@
     return false;
   };
 
-  const polling = async () => {
-    const tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
-
-    timerCount = setTimeout(async () => {
-      clearTimeout(timerCount);
-      if (0 === tweets.length) {
-        return await polling();
-      } else {
-        await removeElements(tweets);
-      }
-    }, waitTime);
-  };
   const removeElements = async (tweets) => {
+    console.log('tweet remove item length > ', tweets.length);
     for await (const tweet of tweets) {
       if (!isNuN(tweet.querySelector(moreTweet))) {
         tweet.querySelector(moreTweet).click();
@@ -202,14 +191,24 @@
       }
       await new Promise(resolve => setTimeout(resolve, 50));
     }
-    await polling();
+  };
+  const polling = async () => {
+    // Mutation Observer
+    const nodeTimeline = await waitQuerySelector('div[aria-label^="タイムライン: "i] > div');
+    const config = { 'attributes': false, 'childList': true, 'subtree': true };
+    const obsTw = new MutationObserver(async () => {
+      obsTw.disconnect();
+      const tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
+      if (tweets.length !== 0) await removeElements(tweets);
+      obsTw.observe(nodeTimeline, config);
+    });
+    obsTw.observe(nodeTimeline, config);
   };
   const initial = async () => {
-    // console.log('refresh tweets list');
     await waitQuerySelector(twColumns + ':not(.' + quoBColumn + ')');
     await polling();
   };
-  const twPath = async (targetNode) => {
+  const twPath = async (nodeMain) => {
     // Mutation Observer
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
     const obsTw = new MutationObserver(async () => {
@@ -222,14 +221,11 @@
         console.log('tab : ', label, '、URL : ', urlBefore);
 
         obsTw.disconnect();
-        clearTimeout(timerCount);
-
-        console.log('removeTweet ...');
         await initial();
-        obsTw.observe(targetNode, config);
+        obsTw.observe(nodeMain, config);
       }
     });
-    obsTw.observe(targetNode, config);
+    obsTw.observe(nodeMain, config);
   };
   const changeUrl = async () => {
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
@@ -240,8 +236,8 @@
           urlBefore = location.pathname;
 
           if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
-          const targetNode = await waitQuerySelector(twMain);
-          await twPath(targetNode);
+          const nodeMain = await waitQuerySelector(twMain);
+          await twPath(nodeMain);
         }
       }, 50);
     });
