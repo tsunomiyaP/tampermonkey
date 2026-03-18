@@ -268,8 +268,6 @@
           // youtube Area Manager
           await waitQuerySelector(manager);
           if (new RegExp(regWatch, 'gis').test(localPath)) {
-            if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
-
             await new Promise(resolve => setTimeout(resolve, waitTime));
             reWatch();
           }
@@ -282,6 +280,7 @@
   document.addEventListener('DOMContentLoaded', async () => {
     // DOM生成されたとき
 
+    if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
     await changeUrl();
   });
 })();
