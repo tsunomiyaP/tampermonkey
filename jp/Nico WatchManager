@@ -220,9 +220,6 @@
           urlBefore = location.pathname + location.search;
 
           if (!isNuN(ncMutation)) { ncMutation.disconnect(); }
-
-          if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
-
           dialogHide();
 
           if (new RegExp(regWatch, 'gis').test(localPath)) {
@@ -243,6 +240,7 @@
   document.addEventListener('DOMContentLoaded', async () => {
     // DOM生成されたとき
 
+    if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
     await changeUrl();
   });
 })();
