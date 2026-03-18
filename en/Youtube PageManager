@@ -390,11 +390,6 @@
 
           if (!isNuN(ytMutation)) { ytMutation.disconnect(); }
 
-          if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
-          if (stylusNone(stylusElemWatch.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemWatch); }
-          if (stylusNone(stylusElemCh.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemCh); }
-          if (stylusNone(stylusElemSettings.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemSettings); }
-
           // 設定ポップアップ初期非表示
           let appendStylusSettings = '';
           appendStylusSettings += 'div.ytp-popup.ytp-settings-menu { display: none !important; } ';
@@ -512,6 +507,10 @@
   document.addEventListener('DOMContentLoaded', async () => {
     // DOM生成されたとき
 
+    if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
+    if (stylusNone(stylusElemWatch.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemWatch); }
+    if (stylusNone(stylusElemCh.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemCh); }
+    if (stylusNone(stylusElemSettings.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemSettings); }
     await changeUrl();
   });
 })();
