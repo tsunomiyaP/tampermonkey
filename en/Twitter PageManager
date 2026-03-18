@@ -242,7 +242,6 @@
           if (!isNuN(twMutationManager)) { twMutationManager.disconnect(); }
           if (!isNuN(twMutationTimeline)) { twMutationTimeline.disconnect(); }
 
-          if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
           const nodeMain = await waitQuerySelector(twMain);
           await twPath(nodeMain);
         }
@@ -254,6 +253,7 @@
   document.addEventListener('DOMContentLoaded', async () => {
     // DOM生成されたとき
 
+    if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
     await changeUrl();
   });
 })();
