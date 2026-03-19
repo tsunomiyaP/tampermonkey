@@ -216,18 +216,9 @@
     // Mutation Observer
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
     twMutationManager = new MutationObserver(async () => {
-      const tab = await waitQuerySelectorCount(4, 'div[role="presentation"i] *[role="tab"i][aria-selected="true"i]');
-      const tabLabel = isNuN(tab) ? '' : tab.textContent;
-      // console.log('A : ', label, 'B : ', tab, 'C : ', tabLabel);
-      if (label !== tabLabel) {
-        // URL更新
-        label = tabLabel;
-        console.log('tab : ', label, '、URL : ', urlBefore);
-
-        twMutationManager.disconnect();
-        await initial();
-        twMutationManager.observe(nodeMain, config);
-      }
+      twMutationManager.disconnect();
+      await initial();
+      twMutationManager.observe(nodeMain, config);
     });
     twMutationManager.observe(nodeMain, config);
   };
@@ -235,9 +226,14 @@
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
     const obsUrl = new MutationObserver(async () => {
       setTimeout(async () => { // 遅延
-        if (urlBefore !== location.pathname + location.search) {
+        const tab = await waitQuerySelectorCount(4, 'div[role="presentation"i] *[role="tab"i][aria-selected="true"i]');
+        const tabLabel = isNuN(tab) ? '' : tab.textContent;
+        if (urlBefore !== location.pathname + location.search || label !== tabLabel) {
+          // console.log('A : ', label, 'B : ', tab, 'C : ', tabLabel);
           // URL更新
           urlBefore = location.pathname + location.search;
+          label = tabLabel;
+          console.log('tab : ', label, '、URL : ', urlBefore);
 
           if (!isNuN(twMutationManager)) { twMutationManager.disconnect(); }
           if (!isNuN(twMutationTimeline)) { twMutationTimeline.disconnect(); }
