@@ -142,11 +142,11 @@
     }
   };
   const playingWatchM = async () => {
+    console.log('sp > ');
     // ブラウザ設定 > サイト設定 自動再生オンにすること 必須
     await waitQuerySelector('div.watch-Player_Container');
     // const ncvid = await waitQuerySelector('div#watchVideoContainer.watch-Video_Container > video');
     const ncbtn = await waitQuerySelector('div.watch-OpeningPlayerInfo_Container > button#jsWatchThisPage.watch-OpeningPlayerInfo_PlayButton');
-    await new Promise(resolve => setTimeout(resolve, waitTime));
     ncbtn.click();
 
     ncMutation = new MutationObserver(async () => {
@@ -174,24 +174,14 @@
     ncMutation.observe(document.querySelector('div.watch-Player_Container'), config);
   };
   const playingWatchW = async () => {
-    await new Promise(resolve => setTimeout(resolve, waitTime));
-    const player = await waitQuerySelector('div[class^="grid-area_"][class*="player"] div.PlayerPresenter video');
+    console.log('pc > ');
 
-    // 広場、チャット、シリーズ、広告エリア 削除
-    const hiroba = document.querySelector('div.d_flex.flex-d_column:has(> * > button[data-element-name="hiroba_navigation"])');
-    const ncChat = document.querySelector('div[class^="grid-area_"][class*="sidebar"] > div > div[class*="pos_relative"]:not(:has([data-scope="tabs"])):has(> section)');
-    const series = document.querySelector('div[class^="grid-area_"][class*="sidebar"] > div > section');
-    if (!isNuN(hiroba)) { hiroba.remove(); }
-    if (!isNuN(ncChat)) { ncChat.remove(); }
-    if (!isNuN(series)) { series.remove(); }
-
-    for (const img of document.querySelectorAll('div[class^="grid-area_"][class*="sidebar"] > div > div[data-scope="tabs"][data-part="root"] > div[data-scope="tabs"][data-part="content"] > div > div[id^="img_"]')) {
-      img.remove();
-    }
     ncMutation = new MutationObserver(async () => {
+      await waitQuerySelector('div.PlayerPresenter video[data-name="video-content"]');
+      // 広場、チャット、シリーズ、広告エリア 削除 ※ 設定画面popup 除く
       const hiroba = document.querySelector('div.d_flex.flex-d_column:has(> * > button[data-element-name="hiroba_navigation"])');
       const ncChat = document.querySelector('div[class^="grid-area_"][class*="sidebar"] > div > div[class*="pos_relative"]:not(:has([data-scope="tabs"])):has(> section)');
-      const series = document.querySelector('div[class^="grid-area_"][class*="sidebar"] > div > section');
+      const series = document.querySelector('div[class^="grid-area_"][class*="sidebar"] > div:not([aria-label="プレーヤー設定"]) > section');
       if (!isNuN(hiroba)) { hiroba.remove(); }
       if (!isNuN(ncChat)) { ncChat.remove(); }
       if (!isNuN(series)) { series.remove(); }
@@ -199,16 +189,16 @@
       for (const img of document.querySelectorAll('div[class^="grid-area_"][class*="sidebar"] > div > div[data-scope="tabs"][data-part="root"] > div[data-scope="tabs"][data-part="content"] > div > div[id^="img_"]')) {
         img.remove();
       }
+
+      if ('scaleX(0.999)' == document.querySelector('div[aria-label="video - currentTime"]').style.transform) {
+        console.log('ended');
+        // const bottomPrev = await waitQuerySelectorCount(5, 'div[class^="grid-area_"][class*="bottom"] div.gap_base > a[data-anchor-page="watch"][data-anchor-area="series"][data-anchor-detail="prev"]');
+        const bottomNext = await waitQuerySelector('div[class^="grid-area_"][class*="bottom"] div.gap_base > a[data-anchor-page="watch"][data-anchor-area="series"][data-anchor-detail="next"]');
+        location.href = bottomNext.href;
+      }
     });
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
-    ncMutation.observe(document.querySelector('div[class^="grid-area_"][class*="sidebar"]'), config);
-
-    player.addEventListener('ended', async () => {
-      console.log('ended');
-      // const bottomPrev = await waitQuerySelectorCount(5, 'div[class^="grid-area_"][class*="bottom"] div.gap_base > a[data-anchor-page="watch"][data-anchor-area="series"][data-anchor-detail="prev"]');
-      const bottomNext = await waitQuerySelectorCount(5, 'div[class^="grid-area_"][class*="bottom"] div.gap_base > a[data-anchor-page="watch"][data-anchor-area="series"][data-anchor-detail="next"]');
-      location.href = bottomNext.href;
-    });
+    ncMutation.observe(document.querySelector('div#root'), config);
   };
   const changeUrl = async () => {
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
@@ -223,11 +213,9 @@
           dialogHide();
 
           if (new RegExp(regWatch, 'gis').test(localPath)) {
-            if ('www.nicovideo.jp' == location.hostname) {
-              console.log('pc > ');
+            if ('www.nicovideo.jp' === location.hostname) {
               playingWatchW();
             } else {
-              console.log('sp > ');
               playingWatchM();
             }
           }
