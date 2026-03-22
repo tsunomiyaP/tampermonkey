@@ -200,13 +200,12 @@
     const obsUrl = new MutationObserver(async () => {
       setTimeout(async () => { // 遅延
         if (urlBefore !== location.pathname + location.search) {
-          const localPath = location.pathname;
           // URL更新
           urlBefore = location.pathname + location.search;
 
           // youtube Area Manager
           await waitQuerySelector(manager);
-          if (new RegExp(regWatch, 'gis').test(localPath)) {
+          if (new RegExp(regWatch, 'gis').test(location.pathname)) {
             await new Promise(resolve => setTimeout(resolve, waitTime));
             await initial();
           } else {
