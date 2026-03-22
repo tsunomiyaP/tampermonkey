@@ -502,14 +502,19 @@
     });
     obsUrl.observe(document, config);
   };
-
-  document.addEventListener('DOMContentLoaded', async () => {
-    // DOM生成されたとき
-
+  const eventHandler = () => {
     if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
     if (stylusNone(stylusElemWatch.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemWatch); }
     if (stylusNone(stylusElemCh.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemCh); }
     if (stylusNone(stylusElemSettings.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemSettings); }
-    await changeUrl();
-  });
+    changeUrl();
+  };
+
+  if (document.readyState !== 'loading') {
+    // DOM解析が完了している場合は即実行
+    eventHandler();
+  } else {
+    // DOM生成されたとき
+    document.addEventListener('DOMContentLoaded', eventHandler());
+  }
 })();
