@@ -202,7 +202,7 @@
     ncMutation.observe(document.querySelector('div[aria-label="video - currentTime"]'), config);
   };
   const changeUrl = async () => {
-    const config = { 'attributes': false, 'childList': true, 'subtree': true };
+    const config = { 'attributes': true, 'childList': true, 'subtree': true };
     const obsUrl = new MutationObserver(async () => {
       setTimeout(async () => { // 遅延
         if (urlBefore !== location.pathname + location.search) {
@@ -212,14 +212,12 @@
           if (!isNuN(ncMutation)) { ncMutation.disconnect(); }
           dialogHide();
 
-          await new Promise(resolve => setTimeout(resolve, waitTime));
-
           if (new RegExp(regWatch, 'gis').test(location.pathname)) {
-            // console.log('www.nicovideo.jp' === location.hostname, location.hostname);
+            console.log(location.hostname, 'www.nicovideo.jp' === location.hostname);
             if ('www.nicovideo.jp' === location.hostname) {
-              playingWatchW();
+              await playingWatchW();
             } else {
-              playingWatchM();
+              await playingWatchM();
             }
           }
         }
@@ -227,11 +225,16 @@
     });
     obsUrl.observe(document, config);
   };
-
-  document.addEventListener('DOMContentLoaded', async () => {
-    // DOM生成されたとき
-
+  const eventHandler = () => {
     if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
-    await changeUrl();
-  });
+    changeUrl();
+  };
+
+  if (document.readyState !== "loading") {
+    // DOM解析が完了している場合は即実行
+    eventHandler();
+  } else {
+    // DOM生成されたとき
+    document.addEventListener("DOMContentLoaded", eventHandler());
+  }
 })();
