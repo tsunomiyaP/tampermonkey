@@ -150,8 +150,6 @@
     ncbtn.click();
 
     ncMutation = new MutationObserver(async () => {
-      await new Promise(resolve => setTimeout(resolve, waitTime));
-
       if (document.querySelector('div.watch-Player_Container').classList.contains('is-playing')) { // 再生開始
         if (document.querySelector('div.watch-PlayerUpperControllerDock_CommentToggle') !== null) {
           if (!document.querySelector('div.watch-PlayerUpperControllerDock_CommentToggle').classList.contains('off')) {
@@ -165,6 +163,8 @@
         }
       } else if (document.querySelector('div.watch-Player_Container').classList.contains('screen-close')) { // 次のシリーズがあれば遷移
         if (document.querySelector('div.watch-VideoDescription-Body_Series') !== null) {
+          await new Promise(resolve => setTimeout(resolve, waitTime));
+
           let series = document.querySelector('div.watch-VideoDescription-Body_Series');
           if (isNuN(series.querySelector('a.watch-VideoDescription-Body_SeriesNext'))) { return false; }
           if (!series.querySelector('a.watch-VideoDescription-Body_SeriesNext').hasAttribute('href')) { return false; }
@@ -193,10 +193,10 @@
         img.remove();
       }
 
-      await new Promise(resolve => setTimeout(resolve, waitTime));
-
       if ('scaleX(0.999)' == document.querySelector('div[aria-label="video - currentTime"]').style.transform) {
         console.log('ended');
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+
         // const bottomPrev = await waitQuerySelectorCount(5, 'div[class^="grid-area_"][class*="bottom"] div.gap_base > a[data-anchor-page="watch"][data-anchor-area="series"][data-anchor-detail="prev"]');
         const bottomNext = await waitQuerySelector('div[class^="grid-area_"][class*="bottom"] div.gap_base > a[data-anchor-page="watch"][data-anchor-area="series"][data-anchor-detail="next"]');
         location.href = bottomNext.href;
