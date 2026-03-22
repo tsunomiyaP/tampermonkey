@@ -188,10 +188,15 @@
     });
     obsUrl.observe(document, config);
   };
+  const eventHandler = () => {
+    changeUrl();
+  };
 
-  document.addEventListener('DOMContentLoaded', async () => {
+  if (document.readyState !== 'loading') {
+    // DOM解析が完了している場合は即実行
+    eventHandler();
+  } else {
     // DOM生成されたとき
-
-    await changeUrl();
-  });
+    document.addEventListener('DOMContentLoaded', eventHandler());
+  }
 })();
