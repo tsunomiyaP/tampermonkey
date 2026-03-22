@@ -384,7 +384,6 @@
     const obsUrl = new MutationObserver(async () => {
       setTimeout(async () => { // 遅延
         if (urlBefore !== location.pathname + location.search) {
-          const localPath = location.pathname;
           // URL更新
           urlBefore = location.pathname + location.search;
 
@@ -397,7 +396,7 @@
           stylusElemSettings.textContent = appendStylusSettings;
 
           // 動画エリア初期非表示 : player 以外
-          if (new RegExp(regWatch, 'gis').test(localPath)) {
+          if (new RegExp(regWatch, 'gis').test(location.pathname)) {
             let appendStylusWatch = '';
             for (const yt of itemsArray) {
               appendStylusWatch += yt.area + ' { display: none !important; } ';
@@ -412,7 +411,7 @@
           }
 
           // youtube Channel Area Manager
-          if (new RegExp(regChannel, 'gis').test(localPath)) {
+          if (new RegExp(regChannel, 'gis').test(location.pathname)) {
             let appendStylusChannel = '';
 
             const channelPc = '.ytd-browse[page-subtype="channels"i] > :is(#primary, #secondary)'; // ホームタブ
@@ -422,7 +421,7 @@
             appendStylusChannel += channelPc + ' { display: none !important; } ';
             appendStylusChannel += channelMb + ' { display: none !important; } ';
 
-            if (new RegExp('(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)(/videos|/streams|/playlists|/releases|/posts|/search|/community|/membership)', 'gis').test(localPath)) {
+            if (new RegExp('(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)(/videos|/streams|/playlists|/releases|/posts|/search|/community|/membership)', 'gis').test(location.pathname)) {
               if ('www.youtube.com' === location.hostname) {
                 // const section = await waitQuerySelector(channelPc);
                 appendStylusChannel = '';
@@ -433,7 +432,7 @@
             } else {
               const excChannel = 'tsunomiyaP|UCSsBxdA7yg523PegCT7O7Mg';
               const isOwn = new RegExp(excChannel, 'gis');
-              if (!isOwn.test(localPath)) {
+              if (!isOwn.test(location.pathname)) {
                 // console.log('fav channel');
                 if ('www.youtube.com' === location.hostname) {
                   appendStylusChannel = channelPc + ' { display: none !important; } ';
@@ -470,13 +469,13 @@
           const ytArray = itemsArray.filter((yt) => location.hostname === yt.device);
           for await (const yt of ytArray) {
             // console.log(path, localPath);
-            if (new RegExp(yt.path, 'gis').test(localPath)) {
+            if (new RegExp(yt.path, 'gis').test(location.pathname)) {
               console.log('> youtube get ...', yt.area);
               await initial(yt.area);
             }
           }
 
-          if (new RegExp(regWatch, 'gis').test(localPath)) {
+          if (new RegExp(regWatch, 'gis').test(location.pathname)) {
             if ('www.youtube.com' === location.hostname) {
               // pc
               console.log('> chat area ... remover');
@@ -495,7 +494,7 @@
           await new Promise(resolve => setTimeout(resolve, waitTime));
 
           stylusElemWatch.textContent = '';
-          if (!new RegExp(regChannel, 'gis').test(localPath)) { stylusElemCh.textContent = ''; }
+          if (!new RegExp(regChannel, 'gis').test(location.pathname)) { stylusElemCh.textContent = ''; }
           // style 無効化
           stylusElemSettings.textContent = '';
         }
