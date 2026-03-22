@@ -175,9 +175,9 @@
   };
   const playingWatchW = async () => {
     console.log('pc > ');
+    await waitQuerySelector('div.PlayerPresenter video[data-name="video-content"]');
 
     ncMutation = new MutationObserver(async () => {
-      await waitQuerySelector('div.PlayerPresenter video[data-name="video-content"]');
       // 広場、チャット、シリーズ、広告エリア 削除 ※ 設定画面popup 除く
       const hiroba = document.querySelector('div.d_flex.flex-d_column:has(> * > button[data-element-name="hiroba_navigation"])');
       const ncChat = document.querySelector('div[class^="grid-area_"][class*="sidebar"] > div > div[class*="pos_relative"]:not(:has([data-scope="tabs"])):has(> section)');
