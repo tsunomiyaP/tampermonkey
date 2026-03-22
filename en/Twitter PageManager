@@ -244,11 +244,16 @@
     });
     obsUrl.observe(document, config);
   };
-
-  document.addEventListener('DOMContentLoaded', async () => {
-    // DOM生成されたとき
-
+  const eventHandler = () => {
     if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
-    await changeUrl();
-  });
+    changeUrl();
+  };
+
+  if (document.readyState !== 'loading') {
+    // DOM解析が完了している場合は即実行
+    eventHandler();
+  } else {
+    // DOM生成されたとき
+    document.addEventListener('DOMContentLoaded', eventHandler());
+  }
 })();
