@@ -176,6 +176,7 @@
   const playingWatchW = async () => {
     console.log('pc > ');
     await waitQuerySelector('div.PlayerPresenter video[data-name="video-content"]');
+    await waitQuerySelector('div[aria-label="video - currentTime"]');
 
     ncMutation = new MutationObserver(async () => {
       // 広場、チャット、シリーズ、広告エリア 削除 ※ 設定画面popup 除く
@@ -197,8 +198,8 @@
         location.href = bottomNext.href;
       }
     });
-    const config = { 'attributes': false, 'childList': true, 'subtree': true };
-    ncMutation.observe(document.querySelector('div#root'), config);
+    const config = { 'attributes': true, 'childList': false, 'subtree': false };
+    ncMutation.observe(document.querySelector('div[aria-label="video - currentTime"]'), config);
   };
   const changeUrl = async () => {
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
@@ -211,7 +212,10 @@
           if (!isNuN(ncMutation)) { ncMutation.disconnect(); }
           dialogHide();
 
+          await new Promise(resolve => setTimeout(resolve, waitTime));
+
           if (new RegExp(regWatch, 'gis').test(location.pathname)) {
+            // console.log('www.nicovideo.jp' === location.hostname, location.hostname);
             if ('www.nicovideo.jp' === location.hostname) {
               playingWatchW();
             } else {
