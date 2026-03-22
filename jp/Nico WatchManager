@@ -205,14 +205,13 @@
     const obsUrl = new MutationObserver(async () => {
       setTimeout(async () => { // 遅延
         if (urlBefore !== location.pathname + location.search) {
-          const localPath = location.pathname;
           // URL更新
           urlBefore = location.pathname + location.search;
 
           if (!isNuN(ncMutation)) { ncMutation.disconnect(); }
           dialogHide();
 
-          if (new RegExp(regWatch, 'gis').test(localPath)) {
+          if (new RegExp(regWatch, 'gis').test(location.pathname)) {
             if ('www.nicovideo.jp' === location.hostname) {
               playingWatchW();
             } else {
