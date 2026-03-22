@@ -150,6 +150,8 @@
     ncbtn.click();
 
     ncMutation = new MutationObserver(async () => {
+      await new Promise(resolve => setTimeout(resolve, waitTime));
+
       if (document.querySelector('div.watch-Player_Container').classList.contains('is-playing')) { // 再生開始
         if (document.querySelector('div.watch-PlayerUpperControllerDock_CommentToggle') !== null) {
           if (!document.querySelector('div.watch-PlayerUpperControllerDock_CommentToggle').classList.contains('off')) {
@@ -191,6 +193,8 @@
         img.remove();
       }
 
+      await new Promise(resolve => setTimeout(resolve, waitTime));
+
       if ('scaleX(0.999)' == document.querySelector('div[aria-label="video - currentTime"]').style.transform) {
         console.log('ended');
         // const bottomPrev = await waitQuerySelectorCount(5, 'div[class^="grid-area_"][class*="bottom"] div.gap_base > a[data-anchor-page="watch"][data-anchor-area="series"][data-anchor-detail="prev"]');
@@ -230,11 +234,11 @@
     changeUrl();
   };
 
-  if (document.readyState !== "loading") {
+  if (document.readyState !== 'loading') {
     // DOM解析が完了している場合は即実行
     eventHandler();
   } else {
     // DOM生成されたとき
-    document.addEventListener("DOMContentLoaded", eventHandler());
+    document.addEventListener('DOMContentLoaded', eventHandler());
   }
 })();
