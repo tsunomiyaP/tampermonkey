@@ -193,8 +193,9 @@
     }
   };
   const polling = async () => {
-    // Mutation Observer initialize
     const nodeTimeline = await waitQuerySelector('div[aria-label^="タイムライン: "i][aria-label*="タイムライン"i] > div');
+
+    // Mutation Observer initialize
     const tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
     if (tweets.length !== 0) await removeElements(tweets);
 
@@ -209,13 +210,15 @@
   };
   const initial = async () => {
     await waitQuerySelector(twColumns + ':not(.' + quoBColumn + ')');
+    twMutationManager.disconnect();
     await polling();
   };
-  const twPath = async (nodeMain) => {
+  const twPath = async () => {
+    const nodeMain = await waitQuerySelector(twMain);
+
     // Mutation Observer
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
     twMutationManager = new MutationObserver(async () => {
-      twMutationManager.disconnect();
       await initial();
       twMutationManager.observe(nodeMain, config);
     });
@@ -237,8 +240,7 @@
           if (!isNuN(twMutationManager)) { twMutationManager.disconnect(); }
           if (!isNuN(twMutationTimeline)) { twMutationTimeline.disconnect(); }
 
-          const nodeMain = await waitQuerySelector(twMain);
-          await twPath(nodeMain);
+          await twPath();
         }
       }, 50);
     });
