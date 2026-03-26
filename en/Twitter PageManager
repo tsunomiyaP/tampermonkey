@@ -193,7 +193,7 @@
     }
   };
   const polling = async () => {
-    const nodeTimeline = await waitQuerySelector('div[aria-label^="タイムライン: "i][aria-label*="タイムライン"i] > div');
+    const nodeTimeline = await waitQuerySelector('div[aria-label^="タイムライン: "i]:is([aria-label*="タイムライン"i], [aria-label*="会話"i], [aria-label*="話題"i]) > div');
 
     // Mutation Observer initialize
     const tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
