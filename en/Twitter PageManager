@@ -187,6 +187,7 @@
           console.log([word, tweet.textContent]);
           // tweet.style.setProperty('display', 'none', 'important');
           tweet.classList.add(quoAColumn);
+          break;
         }
       }
       await new Promise(resolve => setTimeout(resolve, 50));
@@ -206,7 +207,7 @@
         tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
         if (tweets.length !== 0) await removeElements(tweets);
         twMutationTimeline.observe(nodeTimeline, config);
-      }, 500);
+      }, waitTime);
     });
     twMutationTimeline.observe(nodeTimeline, config);
   };
