@@ -10,7 +10,7 @@
 // @grant        none
 // @license      GNU GPLv3
 // @icon         https://www.google.com/s2/favicons?domain=youtube.com
-// @run-at       document-body
+// @run-at       document-start
 // @noframes
 // ==/UserScript==
 
@@ -98,6 +98,10 @@
   appendStylus += 'ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-time-status-renderer.ytd-thumbnail { display: flex !important; } ';
   if (!isChatMode) { appendStylus += 'div#chat-container { display: none !important; } '; }
 
+  let appendStylusCh = '';
+  appendStylusCh += '.ytd-browse[page-subtype="channels"i] > :is(#primary, #secondary):not(.show) { display: none !important; } ';
+  appendStylusCh += 'ytm-browse > .modern-tabs > div[is-channel="true"i] > div.tab-content[tab-title="ホーム"i]:not(.show) { display: none !important; } ';
+
   const stylusElem = document.createElement('style');
   stylusElem.id = 'stylusElemPage';
   stylusElem.textContent = appendStylus;
@@ -107,6 +111,8 @@
   stylusElemWatch.id = 'stylusElemWatch';
   const stylusElemCh = document.createElement('style');
   stylusElemCh.id = 'stylusElemCh';
+  stylusElemCh.textContent = appendStylusCh;
+  document.head.insertAdjacentElement('afterbegin', stylusElemCh);
   // ==========================================================
 
   // eslint-disable-next-line no-unused-vars
@@ -410,24 +416,22 @@
             stylusElemWatch.textContent = appendStylusWatch;
           }
 
+          // youtube Area Manager
+          await waitQuerySelector(manager);
+
           // youtube Channel Area Manager
           if (new RegExp(regChannel, 'gis').test(location.pathname)) {
-            let appendStylusChannel = '';
-
-            const channelPc = '.ytd-browse[page-subtype="channels"i] > :is(#primary, #secondary)'; // ホームタブ
-            const channelPcItem = 'ytd-section-list-renderer[page-subtype="channels"]';
-            const channelMb = 'ytm-browse > .modern-tabs > div > div.tab-content[tab-title="ホーム"i]'; // ホームタブ
-
-            appendStylusChannel += channelPc + ' { display: none !important; } ';
-            appendStylusChannel += channelMb + ' { display: none !important; } ';
+            const channelPc = '.ytd-browse[page-subtype="channels"i] > #primary'; // ホームタブ
+            const channelPcItem = 'ytd-section-list-renderer[page-subtype="channels"i]';
+            const channelMb = 'ytm-browse > .modern-tabs > div[is-channel="true"i] > div.tab-content[tab-title="ホーム"i]'; // ホームタブ
 
             if (new RegExp('(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)(/videos|/streams|/playlists|/releases|/posts|/search|/community|/membership)', 'gis').test(location.pathname)) {
               if ('www.youtube.com' === location.hostname) {
-                // const section = await waitQuerySelector(channelPc);
-                appendStylusChannel = '';
+                const section = await waitQuerySelector(channelPc);
+                section.classList.add('show');
               } else if ('m.youtube.com' === location.hostname) {
-                // const section = await waitQuerySelector(channelMb);
-                appendStylusChannel = '';
+                const section = await waitQuerySelector(channelMb);
+                section.classList.add('show');
               }
             } else {
               const excChannel = 'tsunomiyaP|UCSsBxdA7yg523PegCT7O7Mg';
@@ -435,29 +439,23 @@
               if (!isOwn.test(location.pathname)) {
                 // console.log('fav channel');
                 if ('www.youtube.com' === location.hostname) {
-                  appendStylusChannel = channelPc + ' { display: none !important; } ';
                   const section = await waitQuerySelector(channelPc);
                   section.querySelector(channelPcItem).remove();
                 } else if ('m.youtube.com' === location.hostname) {
-                  appendStylusChannel = channelMb + ' { display: none !important; } ';
-                  // const section = await waitQuerySelector(channelMb);
+                  console.log('hidden channel area');
                 }
               } else {
                 // console.log('own channel');
                 if ('www.youtube.com' === location.hostname) {
-                  // const section = await waitQuerySelector(channelPc);
-                  appendStylusChannel = '';
+                  const section = await waitQuerySelector(channelPc);
+                  section.classList.add('show');
                 } else if ('m.youtube.com' === location.hostname) {
-                  // const section = await waitQuerySelector(channelMb);
-                  appendStylusChannel = '';
+                  const section = await waitQuerySelector(channelMb);
+                  section.classList.add('show');
                 }
               }
             }
-            stylusElemCh.textContent = appendStylusChannel;
           }
-
-          // youtube Area Manager
-          await waitQuerySelector(manager);
 
           // 動画URLから「t=」パラメータを排除
           if (new RegExp('&t=.+', 'gis').test(location.href)) {
@@ -494,7 +492,6 @@
           await new Promise(resolve => setTimeout(resolve, waitTime));
 
           stylusElemWatch.textContent = '';
-          if (!new RegExp(regChannel, 'gis').test(location.pathname)) { stylusElemCh.textContent = ''; }
           // style 無効化
           stylusElemSettings.textContent = '';
         }
@@ -505,7 +502,6 @@
   const eventHandler = () => {
     if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
     if (stylusNone(stylusElemWatch.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemWatch); }
-    if (stylusNone(stylusElemCh.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemCh); }
     if (stylusNone(stylusElemSettings.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemSettings); }
     changeUrl();
   };
