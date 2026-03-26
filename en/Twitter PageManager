@@ -193,24 +193,25 @@
     }
   };
   const polling = async () => {
-    const nodeTimeline = await waitQuerySelector('div[aria-label^="タイムライン: "i]:is([aria-label*="タイムライン"i], [aria-label*="会話"i], [aria-label*="話題"i]) > div');
+    const nodeTimeline = await waitQuerySelector('div[aria-label^="タイムライン: "i] > div');
 
     // Mutation Observer initialize
-    const tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
+    let tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
     if (tweets.length !== 0) await removeElements(tweets);
 
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
     twMutationTimeline = new MutationObserver(async () => {
       setTimeout(async () => {
-        const tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
+        if (!isNuN(twMutationTimeline)) { twMutationTimeline.disconnect(); }
+        tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
         if (tweets.length !== 0) await removeElements(tweets);
-      }, waitTime);
+        twMutationTimeline.observe(nodeTimeline, config);
+      }, 500);
     });
     twMutationTimeline.observe(nodeTimeline, config);
   };
   const initial = async () => {
     await waitQuerySelector(twColumns + ':not(.' + quoBColumn + ')');
-    twMutationManager.disconnect();
     await polling();
   };
   const twPath = async () => {
