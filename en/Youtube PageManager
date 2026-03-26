@@ -99,8 +99,8 @@
   if (!isChatMode) { appendStylus += 'div#chat-container { display: none !important; } '; }
 
   let appendStylusCh = '';
-  appendStylusCh += '.ytd-browse[page-subtype="channels"i] > :is(#primary, #secondary):not(.show) { display: none !important; } ';
-  appendStylusCh += 'ytm-browse > .modern-tabs > div[is-channel="true"i] ~ div:not(.show) { display: none !important; } ';
+  appendStylusCh += '.ytd-browse[page-subtype="channels"i] > :is(#primary, #secondary):not(.show) { visibility: hidden !important; } ';
+  appendStylusCh += 'ytm-browse > .modern-tabs > div[is-channel="true"i] ~ div:not(.show) { visibility: hidden !important; } ';
 
   const stylusElem = document.createElement('style');
   stylusElem.id = 'stylusElemPage';
