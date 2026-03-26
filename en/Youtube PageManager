@@ -10,7 +10,7 @@
 // @grant        none
 // @license      GNU GPLv3
 // @icon         https://www.google.com/s2/favicons?domain=youtube.com
-// @run-at       document-start
+// @run-at       document-body
 // @noframes
 // ==/UserScript==
 
@@ -100,7 +100,7 @@
 
   let appendStylusCh = '';
   appendStylusCh += '.ytd-browse[page-subtype="channels"i] > :is(#primary, #secondary):not(.show) { display: none !important; } ';
-  appendStylusCh += 'ytm-browse > .modern-tabs > div[is-channel="true"i] > div.tab-content[tab-title="ホーム"i]:not(.show) { display: none !important; } ';
+  appendStylusCh += 'ytm-browse > .modern-tabs > div[is-channel="true"i] ~ div:not(.show) { display: none !important; } ';
 
   const stylusElem = document.createElement('style');
   stylusElem.id = 'stylusElemPage';
@@ -421,9 +421,9 @@
 
           // youtube Channel Area Manager
           if (new RegExp(regChannel, 'gis').test(location.pathname)) {
-            const channelPc = '.ytd-browse[page-subtype="channels"i] > #primary'; // ホームタブ
+            const channelPc = '.ytd-browse[page-subtype="channels"i] > #primary'; // channel タブ
             const channelPcItem = 'ytd-section-list-renderer[page-subtype="channels"i]';
-            const channelMb = 'ytm-browse > .modern-tabs > div[is-channel="true"i] > div.tab-content[tab-title="ホーム"i]'; // ホームタブ
+            const channelMb = 'ytm-browse > .modern-tabs > div[is-channel="true"i] ~ div'; // channel タブ
 
             if (new RegExp('(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)(/videos|/streams|/playlists|/releases|/posts|/search|/community|/membership)', 'gis').test(location.pathname)) {
               if ('www.youtube.com' === location.hostname) {
@@ -440,9 +440,12 @@
                 // console.log('fav channel');
                 if ('www.youtube.com' === location.hostname) {
                   const section = await waitQuerySelector(channelPc);
+                  section.classList.remove('show');
                   section.querySelector(channelPcItem).remove();
                 } else if ('m.youtube.com' === location.hostname) {
                   console.log('hidden channel area');
+                  const section = await waitQuerySelector(channelMb);
+                  section.classList.remove('show');
                 }
               } else {
                 // console.log('own channel');
