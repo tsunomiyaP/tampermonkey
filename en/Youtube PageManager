@@ -99,8 +99,8 @@
   if (!isChatMode) { appendStylus += 'div#chat-container { display: none !important; } '; }
 
   let appendStylusCh = '';
-  appendStylusCh += '.ytd-browse[page-subtype="channels"i] > :is(#primary, #secondary):not(.show) { visibility: hidden !important; } ';
-  appendStylusCh += 'ytm-browse > .modern-tabs > div[is-channel="true"i] ~ div:not(.show) { visibility: hidden !important; } ';
+  appendStylusCh += '.ytd-browse[page-subtype="channels"i] > #primary:not(.ytAreaShow) { visibility: hidden !important; } ';
+  appendStylusCh += 'ytm-browse > .modern-tabs > div[is-channel="true"i] ~ div:not(.ytAreaShow) { visibility: hidden !important; } ';
 
   const stylusElem = document.createElement('style');
   stylusElem.id = 'stylusElemPage';
@@ -301,7 +301,6 @@
     const words = isNuN(abc) ? '' : abc.hideword;
     const excludes = isNuN(abc) ? '' : abc.execludeWords;
 
-    if (isNuN(words)) { return false; }
     const txt = youtubeItem.userNam + youtubeItem.ytTitle;
     for (const word of words) {
       if (new RegExp(word, 'gis').test(txt)) {
@@ -312,7 +311,6 @@
       }
     }
 
-    if (isNuN(excludes)) { return false; }
     for (const word of excludes) {
       if (new RegExp(word, 'gis').test(txt)) {
         item.classList.remove('remove_item');
@@ -428,10 +426,10 @@
             if (new RegExp('(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)(/videos|/streams|/playlists|/releases|/posts|/search|/community|/membership)', 'gis').test(location.pathname)) {
               if ('www.youtube.com' === location.hostname) {
                 const section = await waitQuerySelector(channelPc);
-                section.classList.add('show');
+                section.classList.add('ytAreaShow');
               } else if ('m.youtube.com' === location.hostname) {
                 const section = await waitQuerySelector(channelMb);
-                section.classList.add('show');
+                section.classList.add('ytAreaShow');
               }
             } else {
               const excChannel = 'tsunomiyaP|UCSsBxdA7yg523PegCT7O7Mg';
@@ -440,12 +438,12 @@
                 // console.log('fav channel');
                 if ('www.youtube.com' === location.hostname) {
                   const section = await waitQuerySelector(channelPc);
-                  section.classList.remove('show');
+                  section.classList.remove('ytAreaShow');
                   section.querySelector(channelPcItem).remove();
                 } else if ('m.youtube.com' === location.hostname) {
                   console.log('hidden channel area');
                   const section = await waitQuerySelector(channelMb);
-                  section.classList.remove('show');
+                  section.classList.remove('ytAreaShow');
                 }
               } else {
                 // console.log('own channel');
@@ -454,7 +452,7 @@
                   section.classList.add('show');
                 } else if ('m.youtube.com' === location.hostname) {
                   const section = await waitQuerySelector(channelMb);
-                  section.classList.add('show');
+                  section.classList.add('ytAreaShow');
                 }
               }
             }
