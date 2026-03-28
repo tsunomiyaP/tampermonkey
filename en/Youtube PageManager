@@ -449,7 +449,7 @@
                 // console.log('own channel');
                 if ('www.youtube.com' === location.hostname) {
                   const section = await waitQuerySelector(channelPc);
-                  section.classList.add('show');
+                  section.classList.add('ytAreaShow');
                 } else if ('m.youtube.com' === location.hostname) {
                   const section = await waitQuerySelector(channelMb);
                   section.classList.add('ytAreaShow');
