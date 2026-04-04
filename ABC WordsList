@@ -147,7 +147,7 @@
 
       // other groups nijisanji
       '^にじさんじ|nijisanji|nijisanji_en|nijisanji(\\s)*en',
-      '#(にじ|NIJI|NJ)',
+      '#.+(にじ(さんじ)*|NIJI(SANJI)*)',
       'oriens|dytica|3skm|メイフ|SMC|チューリップ組|エデン組',
       'chronoir|くろのわ|くろなん',
       'rof(\\s)*[-]*mao|ろふまお',
