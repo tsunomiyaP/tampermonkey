@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube PageManager
 // @namespace    http://tampermonkey.net/
-// @version      5.0
+// @version      5.1
 // @description  try to take over the world!
 // @author       You
 // @match        https://*.youtube.com/*
@@ -245,8 +245,8 @@
       let YtChannel = '';
       await waitQuerySelector('div#owner ytd-video-owner-renderer ytd-channel-name#channel-name #text-container > yt-formatted-string#text[title], ytm-slim-owner-renderer h3.slim-owner-channel-name span');
       // pc 動画
-      mode.pc.ytTitle = isNuN(item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container span')) ? '' : item.querySelector('yt-lockup-view-model div.yt-lockup-metadata-view-model__text-container span').textContent;
-      mode.pc.userNam = isNuN(item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span')) ? '' : item.querySelector('yt-lockup-view-model div.yt-content-metadata-view-model__metadata-row span').textContent;
+      mode.pc.ytTitle = isNuN(item.querySelector('div.yt-lockup-view-model__metadata div.yt-lockup-metadata-view-model__text-container > h3')) ? '' : item.querySelector('div.yt-lockup-view-model__metadata div.yt-lockup-metadata-view-model__text-container > h3').textContent;
+      mode.pc.userNam = isNuN(item.querySelector('div.yt-lockup-view-model__metadata div.yt-lockup-metadata-view-model__text-container > div.yt-lockup-metadata-view-model__metadata span.yt-core-attributed-string')) ? '' : item.querySelector('div.yt-lockup-view-model__metadata div.yt-lockup-metadata-view-model__text-container > div.yt-lockup-metadata-view-model__metadata span.yt-core-attributed-string').textContent;
       // mobile
       mode.mobile.ytTitle = isNuN(item.querySelector('div.details div.media-item-info div.media-item-metadata h3.media-item-headline')) ? '' : item.querySelector('div.details div.media-item-info div.media-item-metadata h3.media-item-headline').textContent;
       mode.mobile.userNam = isNuN(item.querySelector('div.details div.media-item-info div.media-item-metadata ytm-badge-and-byline-renderer span.yt-core-attributed-string')) ? '' : item.querySelector('div.details div.media-item-info div.media-item-metadata ytm-badge-and-byline-renderer span.yt-core-attributed-string').textContent;
