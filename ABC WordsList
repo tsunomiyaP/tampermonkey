@@ -62,12 +62,12 @@
       'ギルザレンⅢ世|gilzaren_iii|GilzarenIII',
       '剣持(\\s)*刀也|rei_Toya_rei|KenmochiToya',
       '伏見(\\s)*ガク|gaku_fushimi|FushimiGaku',
-      '(?=.*(niji|にじ))(?=.*(叶).*)|kanae_2434|Kanae',
+      '(?=.*(niji|にじ))(?=.*(叶).*)|kanae_2434|@Kanae',
       '卯月(\\s)*コウ|udukikohh|UzukiKou',
       '花畑(\\s)*チャイカ|zulmihp1nlmot5y|HanabatakeChaika',
       '社(\\s)*築|846kizuq|YashiroKizuku',
       '春崎(\\s)*エアル|harusakiair2434|HarusakiAir',
-      '葛葉|vamp_kuzu|Kuzuha',
+      '葛葉|vamp_kuzu|@Kuzuha',
       '神田(\\s)*笑一|kanda_shoichi|KandaShoichi',
       '舞元(\\s)*啓介|maimoto_k|MaimotoKeisuke',
       'ジョー(\\s)*[・]*力一|joerikiichi|JoeRikiichi',
@@ -140,7 +140,7 @@
       'ライ(\\s)*ガリレイ|Rai_Galilei|RaiGalilei',
 
       // 敬称略
-      '甲斐田|不破|加賀美|舞元|力一|剣持|シェリン|叶(?!.*え)',
+      '甲斐田|不破|加賀美|舞元|力一|剣持|シェリン|レオス|叶(?!.*え)',
       '月ノ美兎',
       // 愛称
       '(?=.*(niji|にじ))(?=.*(社長|委員長|教授|ズハ).*)|アッキーナ|エビオ|かなかな|やしきず|ベルさん|ふわっち',
