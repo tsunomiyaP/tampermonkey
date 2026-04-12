@@ -42,6 +42,7 @@
   // 可変数
   let ytMutation;
   let urlBefore = ''; // URLの記憶用
+  let appendStylusCh = '';
   // ==========================================================
   // 静的style適用エリア
   // stylus: beforebegin, afterbegin, beforeend, afterend
@@ -98,10 +99,6 @@
   appendStylus += 'ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-time-status-renderer.ytd-thumbnail { display: flex !important; } ';
   if (!isChatMode) { appendStylus += 'div#chat-container { display: none !important; } '; }
 
-  let appendStylusCh = '';
-  appendStylusCh += '.ytd-browse[page-subtype="channels"i] > #primary:not(.ytAreaShow) { visibility: hidden !important; } ';
-  appendStylusCh += 'ytm-browse > .modern-tabs > div[is-channel="true"i] ~ div:not(.ytAreaShow) { visibility: hidden !important; } ';
-
   const stylusElem = document.createElement('style');
   stylusElem.id = 'stylusElemPage';
   stylusElem.textContent = appendStylus;
@@ -111,8 +108,6 @@
   stylusElemWatch.id = 'stylusElemWatch';
   const stylusElemCh = document.createElement('style');
   stylusElemCh.id = 'stylusElemCh';
-  stylusElemCh.textContent = appendStylusCh;
-  document.head.insertAdjacentElement('afterbegin', stylusElemCh);
   // ==========================================================
 
   // eslint-disable-next-line no-unused-vars
@@ -396,6 +391,7 @@
     }
   };
   const changeUrl = async () => {
+
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
     const obsUrl = new MutationObserver(async () => {
       setTimeout(async () => { // 遅延
@@ -426,11 +422,13 @@
             stylusElemWatch.textContent = appendStylusWatch;
           }
 
-          // youtube Area Manager
-          await waitQuerySelector(manager);
-
           // youtube Channel Area Manager
           if (new RegExp(regChannel, 'gis').test(location.pathname)) {
+            appendStylusCh = 'body { visibility: hidden !important; } ';
+            // appendStylusCh += '.ytd-browse[page-subtype="channels"i] > #primary:not(.ytAreaShow) { visibility: hidden !important; } ';
+            // appendStylusCh += 'ytm-browse > .modern-tabs > div[is-channel="true"i] ~ div:not(.ytAreaShow) { visibility: hidden !important; } ';
+            stylusElemCh.textContent = appendStylusCh;
+
             const channelPc = '.ytd-browse[page-subtype="channels"i] > #primary'; // channel タブ
             const channelPcItem = 'ytd-section-list-renderer[page-subtype="channels"i]';
             const channelMb = 'ytm-browse > .modern-tabs > div[is-channel="true"i] ~ div'; // channel タブ
@@ -445,8 +443,7 @@
               }
             } else {
               const excChannel = 'tsunomiyaP|UCSsBxdA7yg523PegCT7O7Mg';
-              const isOwn = new RegExp(excChannel, 'gis');
-              if (!isOwn.test(location.pathname)) {
+              if (!new RegExp(excChannel, 'gis').test(location.pathname)) {
                 // console.log('fav channel');
                 if ('www.youtube.com' === location.hostname) {
                   const section = await waitQuerySelector(channelPc);
@@ -468,7 +465,12 @@
                 }
               }
             }
-          }
+            // style 可変値
+            await waitQuerySelector('body:has(:is(.ytd-browse[page-subtype="channels"i], ytm-browse > .modern-tabs > div[is-channel="true"i])) :is(#primary, div[is-channel="true"i])');
+            await new Promise(resolve => setTimeout(resolve, waitTime * 5));
+            appendStylusCh = 'body:has(:is(.ytd-browse[page-subtype="channels"i], ytm-browse > .modern-tabs > div[is-channel="true"i])) :is(#primary:not(.ytAreaShow), div[is-channel="true"i] ~ div:not(.ytAreaShow)) { display: none !important; } ';
+            stylusElemCh.textContent = appendStylusCh;
+         }
 
           // 動画URLから「t=」パラメータを排除
           if (new RegExp('&t=.+', 'gis').test(location.href)) {
@@ -476,6 +478,8 @@
             location.replace(replaceURL);
           }
 
+          // youtube Area Manager
+          await waitQuerySelector(manager);
           // movie contents
           const ytArray = itemsArray.filter((yt) => location.hostname === yt.device);
           for await (const yt of ytArray) {
@@ -502,13 +506,12 @@
             }
           }
 
-          await new Promise(resolve => setTimeout(resolve, waitTime));
-
-          stylusElemWatch.textContent = '';
           // style 無効化
+          await new Promise(resolve => setTimeout(resolve, waitTime));
+          stylusElemWatch.textContent = '';
           stylusElemSettings.textContent = '';
         }
-      }, 50);
+      }, 0);
     });
     obsUrl.observe(document, config);
   };
@@ -516,6 +519,8 @@
     if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
     if (stylusNone(stylusElemWatch.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemWatch); }
     if (stylusNone(stylusElemSettings.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemSettings); }
+    if (stylusNone(stylusElemCh.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemCh); }
+
     changeUrl();
   };
 
