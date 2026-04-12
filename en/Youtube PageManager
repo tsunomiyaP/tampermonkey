@@ -511,7 +511,7 @@
           stylusElemWatch.textContent = '';
           stylusElemSettings.textContent = '';
         }
-      }, 0);
+      }, 50);
     });
     obsUrl.observe(document, config);
   };
