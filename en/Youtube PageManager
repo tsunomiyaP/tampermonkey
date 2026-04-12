@@ -42,7 +42,6 @@
   // 可変数
   let ytMutation;
   let urlBefore = ''; // URLの記憶用
-  let appendStylusCh = '';
   // ==========================================================
   // 静的style適用エリア
   // stylus: beforebegin, afterbegin, beforeend, afterend
@@ -401,6 +400,12 @@
 
           if (!isNuN(ytMutation)) { ytMutation.disconnect(); }
 
+          // 動画URLから「t=」パラメータを排除
+          if (new RegExp('&t=.+', 'gis').test(location.href)) {
+            const replaceURL = deleteParam(location.href, 't').href;
+            location.replace(replaceURL);
+          }
+
           // 設定ポップアップ初期非表示
           let appendStylusSettings = '';
           appendStylusSettings += 'div.ytp-popup.ytp-settings-menu { display: none !important; } ';
@@ -411,7 +416,7 @@
           if (new RegExp(regWatch, 'gis').test(location.pathname)) {
             let appendStylusWatch = '';
             for (const yt of itemsArray) {
-              appendStylusWatch += yt.area + ' { display: none !important; } ';
+              appendStylusWatch += yt.area + ' { visibility: hidden !important; } ';
             }
             stylusElemWatch.textContent = appendStylusWatch;
           } else {
@@ -422,8 +427,12 @@
             stylusElemWatch.textContent = appendStylusWatch;
           }
 
+          // youtube Area Manager
+          await waitQuerySelector(manager);
+
           // youtube Channel Area Manager
           if (new RegExp(regChannel, 'gis').test(location.pathname)) {
+            let appendStylusCh = '';
             appendStylusCh = 'body { visibility: hidden !important; } ';
             // appendStylusCh += '.ytd-browse[page-subtype="channels"i] > #primary:not(.ytAreaShow) { visibility: hidden !important; } ';
             // appendStylusCh += 'ytm-browse > .modern-tabs > div[is-channel="true"i] ~ div:not(.ytAreaShow) { visibility: hidden !important; } ';
@@ -470,16 +479,10 @@
             await new Promise(resolve => setTimeout(resolve, waitTime * 5));
             appendStylusCh = 'body:has(:is(.ytd-browse[page-subtype="channels"i], ytm-browse > .modern-tabs > div[is-channel="true"i])) :is(#primary:not(.ytAreaShow), div[is-channel="true"i] ~ div:not(.ytAreaShow)) { display: none !important; } ';
             stylusElemCh.textContent = appendStylusCh;
+         } else {
+            stylusElemCh.textContent = '';
          }
 
-          // 動画URLから「t=」パラメータを排除
-          if (new RegExp('&t=.+', 'gis').test(location.href)) {
-            const replaceURL = deleteParam(location.href, 't').href;
-            location.replace(replaceURL);
-          }
-
-          // youtube Area Manager
-          await waitQuerySelector(manager);
           // movie contents
           const ytArray = itemsArray.filter((yt) => location.hostname === yt.device);
           for await (const yt of ytArray) {
