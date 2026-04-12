@@ -477,7 +477,7 @@
             // style 可変値
             await waitQuerySelector('body:has(:is(.ytd-browse[page-subtype="channels"i], ytm-browse > .modern-tabs > div[is-channel="true"i])) :is(#primary, div[is-channel="true"i])');
             await new Promise(resolve => setTimeout(resolve, waitTime * 5));
-            appendStylusCh = 'body:has(:is(.ytd-browse[page-subtype="channels"i], ytm-browse > .modern-tabs > div[is-channel="true"i])) :is(#primary:not(.ytAreaShow), div[is-channel="true"i] ~ div:not(.ytAreaShow)) { display: none !important; } ';
+            appendStylusCh = 'body:has(:is(.ytd-browse[page-subtype="channels"i], ytm-browse > .modern-tabs > div[is-channel="true"i])) :is(#primary:not(.ytAreaShow), div[is-channel="true"i] ~ div:not(.ytAreaShow)) { visibility: hidden !important; } ';
             stylusElemCh.textContent = appendStylusCh;
          } else {
             stylusElemCh.textContent = '';
