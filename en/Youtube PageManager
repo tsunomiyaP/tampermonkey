@@ -483,16 +483,6 @@
             stylusElemCh.textContent = '';
           }
 
-          // movie contents
-          const ytArray = itemsArray.filter((yt) => location.hostname === yt.device);
-          for await (const yt of ytArray) {
-            // console.log(path, localPath);
-            if (new RegExp(yt.path, 'gis').test(location.pathname)) {
-              console.log('> youtube get ...', yt.area);
-              await initial(yt.area);
-            }
-          }
-
           if (new RegExp(regWatch, 'gis').test(location.pathname)) {
             if ('www.youtube.com' === location.hostname) {
               // pc
@@ -506,6 +496,16 @@
               // mobile
               console.log('> stable volume 一定音量 setting...');
               await ytStableVolume('button.player-settings-icon[aria-label="再生設定"i]', 'player-settings-menu > stable-volume-toggle yt-list-item-view-model > div > div > switch-button-view-model > button[aria-checked="true"i]', 'ytm-app > bottom-sheet-container[role="dialog"i]:not([hidden="true"i]) > ytw-scrim');
+            }
+          }
+
+          // movie contents
+          const ytArray = itemsArray.filter((yt) => location.hostname === yt.device);
+          for await (const yt of ytArray) {
+            // console.log(path, localPath);
+            if (new RegExp(yt.path, 'gis').test(location.pathname)) {
+              console.log('> youtube get ...', yt.area);
+              await initial(yt.area);
             }
           }
 
