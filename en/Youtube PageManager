@@ -326,6 +326,7 @@
     }
   };
   const scaleShowMovie = async (ytArea, item) => {
+
     if (!item.classList.contains('target')) {
       item.classList.add('target');
       // console.log('test2 1件ずつ', item);
@@ -355,6 +356,7 @@
     }
   };
   const ytMovieList = async (area) => {
+
     if (new RegExp(regSearch, 'gis').test(location.pathname)) {
       // console.log('> ytMovie search result');
       for await (const result of area.querySelectorAll('ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list')) {
@@ -370,6 +372,7 @@
     }
   };
   const initial = async (area) => {
+
     const yt = await waitQuerySelector(area);
     const ytMovies = yt.querySelectorAll('.target');
     for (const ytTarget of ytMovies) {
@@ -383,7 +386,9 @@
       await ytMovieList(ytArea);
 
       ytMutation = new MutationObserver(async () => {
+        stylusElemWatch.textContent = area + ' { visibility: hidden !important; } ';;
         await ytMovieList(ytArea);
+        stylusElemWatch.textContent = '';
       });
       const config = { 'attributes': false, 'childList': true, 'subtree': true };
       ytMutation.observe(ytArea, config);
@@ -406,26 +411,16 @@
             location.replace(replaceURL);
           }
 
-          // 設定ポップアップ初期非表示
-          let appendStylusSettings = '';
-          appendStylusSettings += 'div.ytp-popup.ytp-settings-menu { display: none !important; } ';
-          appendStylusSettings += 'ytm-app > bottom-sheet-container[role="dialog"i] { display: none !important; } ';
-          stylusElemSettings.textContent = appendStylusSettings;
-
-          // 動画エリア初期非表示 : player 以外
-          if (new RegExp(regWatch, 'gis').test(location.pathname)) {
-            let appendStylusWatch = '';
-            for (const yt of itemsArray) {
-              appendStylusWatch += yt.area + ' { visibility: hidden !important; } ';
+          const ytArray = itemsArray.filter((yt) => location.hostname === yt.device);
+          for (const yt of ytArray) {
+            // console.log(path, localPath);
+            if (new RegExp(yt.path, 'gis').test(location.pathname)) {
+              stylusElemWatch.textContent = yt.area + ' { visibility: hidden !important; } ';;
             }
-            stylusElemWatch.textContent = appendStylusWatch;
-          } else {
-            let appendStylusWatch = '';
-            // pc, mobile
-            appendStylusWatch = manager + ' { visibility: hidden !important; } ';
-            // ytManager.style.setProperty('visibility', 'hidden', 'important');
-            stylusElemWatch.textContent = appendStylusWatch;
           }
+          // 設定ポップアップ初期非表示
+          stylusElemSettings.textContent += 'div.ytp-popup.ytp-settings-menu { display: none !important; } ';
+          stylusElemSettings.textContent += 'ytm-app > bottom-sheet-container[role="dialog"i] { display: none !important; } ';
 
           // youtube Area Manager
           await waitQuerySelector(manager);
@@ -500,7 +495,6 @@
           }
 
           // movie contents
-          const ytArray = itemsArray.filter((yt) => location.hostname === yt.device);
           for await (const yt of ytArray) {
             // console.log(path, localPath);
             if (new RegExp(yt.path, 'gis').test(location.pathname)) {
