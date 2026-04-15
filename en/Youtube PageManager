@@ -386,7 +386,7 @@
       await ytMovieList(ytArea);
 
       ytMutation = new MutationObserver(async () => {
-        stylusElemWatch.textContent = area + ' { visibility: hidden !important; } ';;
+        stylusElemWatch.textContent = area + ' { visibility: hidden !important; } ';
         await ytMovieList(ytArea);
         stylusElemWatch.textContent = '';
       });
@@ -415,7 +415,7 @@
           for (const yt of ytArray) {
             // console.log(path, localPath);
             if (new RegExp(yt.path, 'gis').test(location.pathname)) {
-              stylusElemWatch.textContent = yt.area + ' { visibility: hidden !important; } ';;
+              stylusElemWatch.textContent = yt.area + ' { visibility: hidden !important; } ';
             }
           }
           // 設定ポップアップ初期非表示
