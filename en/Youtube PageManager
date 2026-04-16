@@ -386,7 +386,7 @@
       await ytMovieList(ytArea);
 
       ytMutation = new MutationObserver(async () => {
-        stylusElemWatch.textContent = area + ' { visibility: hidden !important; } ';
+        stylusElemWatch.textContent = area + ' { visibility: hidden !important; } ';;
         await ytMovieList(ytArea);
         stylusElemWatch.textContent = '';
       });
@@ -415,15 +415,12 @@
           for (const yt of ytArray) {
             // console.log(path, localPath);
             if (new RegExp(yt.path, 'gis').test(location.pathname)) {
-              stylusElemWatch.textContent = yt.area + ' { visibility: hidden !important; } ';
+              stylusElemWatch.textContent = yt.area + ' { visibility: hidden !important; } ';;
             }
           }
           // 設定ポップアップ初期非表示
           stylusElemSettings.textContent += 'div.ytp-popup.ytp-settings-menu { display: none !important; } ';
           stylusElemSettings.textContent += 'ytm-app > bottom-sheet-container[role="dialog"i] { display: none !important; } ';
-
-          // youtube Area Manager
-          await waitQuerySelector(manager);
 
           // youtube Channel Area Manager
           if (new RegExp(regChannel, 'gis').test(location.pathname)) {
@@ -477,6 +474,9 @@
           } else {
             stylusElemCh.textContent = '';
           }
+
+          // youtube Area Manager
+          await waitQuerySelector(manager);
 
           if (new RegExp(regWatch, 'gis').test(location.pathname)) {
             if ('www.youtube.com' === location.hostname) {
