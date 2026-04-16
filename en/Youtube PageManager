@@ -375,27 +375,24 @@
     if (ytMovieLen !== items.length) { ytMovieLen = items.length; return ytMovieShowCase(ytMovieLen, area); }
     else { return items; }
   };
+  const ytMovieRemover = async (area) => {
+    stylusElemWatch.textContent = area + ' { visibility: hidden !important; } ';
+    let items = await ytMovieShowCase(0, area);
+    await ytMovieList(area, items);
+    await new Promise(resolve => setTimeout(resolve, waitTime * 4));
+    let counts = await ytMovieShowCase(0, area);
+    if (items.length !== counts.length) { return ytMovieRemover(); }
+    else { stylusElemWatch.textContent = ''; }
+  };
   const initial = async (area) => {
     const yt = await waitQuerySelector(area);
     const ytMovies = yt.querySelectorAll('.target');
     for (const ytTarget of ytMovies) {
       ytTarget.classList.remove('target', 'show');
     }
-
-    stylusElemWatch.textContent = area + ' { visibility: hidden !important; } ';
-    let items = await ytMovieShowCase(0, area);
-    await ytMovieList(area, items);
-    let counts = await ytMovieShowCase(0, area);
-    await new Promise(resolve => setTimeout(resolve, waitTime * 4));
-    if (items.length === counts.length) { stylusElemWatch.textContent = ''; }
-
+    await ytMovieRemover(area);
     ytMutation = new MutationObserver(async () => {
-      stylusElemWatch.textContent = area + ' { visibility: hidden !important; } ';
-      items = await ytMovieShowCase(0, area);
-      await ytMovieList(area, items);
-      let counts = await ytMovieShowCase(0, area);
-      await new Promise(resolve => setTimeout(resolve, waitTime * 4));
-      if (items.length === counts.length) { stylusElemWatch.textContent = ''; }
+      await ytMovieRemover(area);
     });
     const config = { 'attributes': false, 'childList': true, 'subtree': false };
     ytMutation.observe(document.querySelector(area), config);
