@@ -325,7 +325,7 @@
       }
     }
   };
-  const scaleShowMovie = async (ytArea, item) => {
+  const scaleShowMovie = async (area, item) => {
 
     if (!item.classList.contains('target')) {
       item.classList.add('target');
@@ -334,6 +334,8 @@
 
       item.classList.add('show');
       item.classList.add('minScale');
+
+      const ytArea = document.querySelector(area);
 
       document.addEventListener('click', async (e) => {
         if (e.target.classList.contains('target')) {
@@ -356,10 +358,22 @@
     }
   };
   const ytMovieList = async (area, items) => {
-
-    for await (const item of items.children) {
+    for await (const item of items) {
       await scaleShowMovie(area, item);
     }
+  };
+  const ytMovieShowCase = async (ytMovieLen, area) => {
+    let items = null;
+    if (new RegExp(regSearch, 'gis').test(location.pathname)) {
+      // console.log('> ytMovie search result');
+      items = [...document.querySelector(area).querySelectorAll('ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list')].children;
+    } else {
+      items = document.querySelector(area).children;
+    }
+    await new Promise(resolve => setTimeout(resolve, waitTime));
+    console.log('ytMovie Length...', items.length, ytMovieLen);
+    if (ytMovieLen !== items.length) { ytMovieLen = items.length; return ytMovieShowCase(ytMovieLen, area); }
+    else { return items; }
   };
   const initial = async (area) => {
     const yt = await waitQuerySelector(area);
@@ -369,36 +383,21 @@
     }
     await new Promise(resolve => setTimeout(resolve, waitTime));
 
-    const ytAreas = document.querySelectorAll(area);
-    for await (const ytArea of ytAreas) {
-      // initial
-      let ytMovieLen = 0;
-      let items = null;
-      if (new RegExp(regSearch, 'gis').test(location.pathname)) {
-        // console.log('> ytMovie search result');
-        items = [...ytArea.querySelectorAll('ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list')];
-      } else {
-        items = ytArea;
-      }
-      await ytMovieList(ytArea, items);
+    stylusElemWatch.textContent = area + ' { visibility: hidden !important; } ';
+    let items = await ytMovieShowCase(0, area);
+    await ytMovieList(area, items);
+    let counts = await ytMovieShowCase(0, area);
+    if (items.length === counts.length) { stylusElemWatch.textContent = ''; }
 
-      ytMutation = new MutationObserver(async () => {
-        stylusElemWatch.textContent = area + ' { visibility: hidden !important; } ';;
-        let items = null;
-        if (new RegExp(regSearch, 'gis').test(location.pathname)) {
-          // console.log('> ytMovie search result');
-          items = [...ytArea.querySelectorAll('ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list')];
-        } else {
-          items = ytArea;
-        }
-        await ytMovieList(ytArea, items);
-        if (ytMovieLen === items.length) { stylusElemWatch.textContent = ''; }
-        await new Promise(resolve => setTimeout(resolve, waitTime));
-        ytMovieLen = items.length;
-      });
-      const config = { 'attributes': false, 'childList': true, 'subtree': true };
-      ytMutation.observe(ytArea, config);
-    }
+    ytMutation = new MutationObserver(async () => {
+      stylusElemWatch.textContent = area + ' { visibility: hidden !important; } ';
+      items = await ytMovieShowCase(0, area);
+      await ytMovieList(area, items);
+      let counts = await ytMovieShowCase(0, area);
+      if (items.length === counts.length) { stylusElemWatch.textContent = ''; }
+    });
+    const config = { 'attributes': false, 'childList': true, 'subtree': false };
+    ytMutation.observe(document.querySelector(area), config);
   };
   const changeUrl = async () => {
 
