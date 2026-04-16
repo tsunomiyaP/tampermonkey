@@ -46,7 +46,7 @@
   // 静的style適用エリア
   // stylus: beforebegin, afterbegin, beforeend, afterend
   let appendStylus = '';
-  appendStylus += '.remove_item { display: none !important; } ';
+  appendStylus += '.remove_item, .own_ch_NuN { display: none !important; } ';
   // ヘッダー
   appendStylus += ':is(yt-tab-shape[tab-title="ホーム"i][role="tab"i], yt-tab-shape[tab-title="ショート"i][role="tab"i], div.tabGroupShapeSlider) { display: none !important; } ';
   // pc
@@ -80,11 +80,11 @@
   // 初期表示
   for (const yt of itemsArray) {
     // 非表示
-    appendStylus += yt.area + ' .target:not(.show) { display: none !important; /* visibility: hidden !important; **/ } ';
+    appendStylus += yt.area + ' > :not(.show) { display: none !important; /* visibility: hidden !important; **/ } ';
     // 拡大縮小
-    appendStylus += yt.area + ' .target.minScale:not(:has(div[class*="subheader"i])) > * { ' + yt.stylus + ' } ';
+    appendStylus += yt.area + ' > .minScale:not(:has(div[class*="subheader"i])) > * { ' + yt.stylus + ' } ';
     // [ショート]動画 削除
-    appendStylus += yt.area + ' .target:has(a[href*="/shorts"i]) { display: none; } ';
+    appendStylus += yt.area + ' > :has(a[href*="/shorts"i]) { display: none; } ';
     // [Mix & playlist] [他(headline)]動画 削除
     appendStylus += yt.area + ' .target:has(a[href*="&list="i], #rich-shelf-header-container, .rich-shelf-header, chips-shelf-with-video-shelf-renderer, ytd-brand-video-singleton-renderer) { display: none; } ';
   }
@@ -235,6 +235,8 @@
     const device = 'www.youtube.com' === location.hostname ? mode.pc : mode.mobile;
     const youtubeItem = {};
 
+    let flg = false;
+
     if (new RegExp(regWatch, 'gis').test(location.pathname)) { // 動画エリア
       let YtChannel = '';
       await waitQuerySelector('div#owner ytd-video-owner-renderer ytd-channel-name#channel-name #text-container > yt-formatted-string#text[title], ytm-slim-owner-renderer h3.slim-owner-channel-name span');
@@ -275,7 +277,7 @@
       }
 
       console.log(user, YtChannel);
-      if (user !== YtChannel) { item.classList.add('remove_item'); }
+      if (user !== YtChannel) { item.classList.add('own_ch_NuN'); }
     } else if (new RegExp(regChannel, 'gis').test(location.pathname)) { // チャンネルエリア
       // pc 動画
       mode.pc.ytTitle = isNuN(item.querySelector('div#dismissible div#details div#meta > h3')) ? '' : item.querySelector('div#dismissible div#details div#meta > h3').textContent;
@@ -310,29 +312,29 @@
     const txt = youtubeItem.userNam + youtubeItem.ytTitle;
     for (const word of words) {
       if (new RegExp(word, 'gis').test(txt)) {
-        item.classList.add('remove_item');
         youtubeItem.word = word;
         console.log('> hide all words : ', youtubeItem);
+        flg = true;
         break;
       }
     }
 
     for (const word of excludes) {
       if (new RegExp(word, 'gis').test(txt)) {
-        item.classList.remove('remove_item');
         // console.log('> un hide words : ', youtubeItem);
         break;
       }
     }
+
+    return flg;
   };
   const scaleShowMovie = async (area, item) => {
 
     if (!item.classList.contains('target')) {
       item.classList.add('target');
       // console.log('test2 1件ずつ', item);
-      await removeMovieInformation(item);
-
-      item.classList.add('show');
+      const flg = await removeMovieInformation(item);
+      if (!flg) { item.classList.add('show'); } else { item.classList.add('remove_item'); }
       item.classList.add('minScale');
 
       const ytArea = document.querySelector(area);
@@ -370,19 +372,15 @@
     } else {
       items = document.querySelector(area).children;
     }
-    await new Promise(resolve => setTimeout(resolve, waitTime));
     if (ytMovieLen !== items.length) { ytMovieLen = items.length; return ytMovieShowCase(ytMovieLen, area); }
     else { return items; }
   };
-  const ytMovieRemover = async (area, flg) => {
-    if (!flg) { stylusElemWatch.textContent = area + ' { visibility: hidden !important; } '; }
+  const ytMovieRemover = async (area) => {
     let items = await ytMovieShowCase(0, area);
     await ytMovieList(area, items);
-    await new Promise(resolve => setTimeout(resolve, waitTime * 4));
     let counts = await ytMovieShowCase(0, area);
     console.log(items.length, counts.length, items.length !== counts.length)
-    if (items.length !== counts.length) { return ytMovieRemover(area, true); }
-    else { stylusElemWatch.textContent = ''; }
+    if (items.length !== counts.length) { return ytMovieRemover(area); }
   };
   const initial = async (area) => {
     const yt = await waitQuerySelector(area);
@@ -390,9 +388,9 @@
     for (const ytTarget of ytMovies) {
       ytTarget.classList.remove('target', 'show');
     }
-    await ytMovieRemover(area, false);
+    await ytMovieRemover(area);
     ytMutation = new MutationObserver(async () => {
-      await ytMovieRemover(area, false);
+      await ytMovieRemover(area);
     });
     const config = { 'attributes': false, 'childList': true, 'subtree': false };
     ytMutation.observe(document.querySelector(area), config);
@@ -414,13 +412,6 @@
             location.replace(replaceURL);
           }
 
-          const ytArray = itemsArray.filter((yt) => location.hostname === yt.device);
-          for (const yt of ytArray) {
-            // console.log(path, localPath);
-            if (new RegExp(yt.path, 'gis').test(location.pathname)) {
-              stylusElemWatch.textContent = yt.area + ' { visibility: hidden !important; } ';;
-            }
-          }
           // 設定ポップアップ初期非表示
           stylusElemSettings.textContent += 'div.ytp-popup.ytp-settings-menu { display: none !important; } ';
           stylusElemSettings.textContent += 'ytm-app > bottom-sheet-container[role="dialog"i] { display: none !important; } ';
@@ -498,6 +489,7 @@
           }
 
           // movie contents
+          const ytArray = itemsArray.filter((yt) => location.hostname === yt.device);
           for await (const yt of ytArray) {
             // console.log(path, localPath);
             if (new RegExp(yt.path, 'gis').test(location.pathname)) {
