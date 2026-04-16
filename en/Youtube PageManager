@@ -371,17 +371,17 @@
       items = document.querySelector(area).children;
     }
     await new Promise(resolve => setTimeout(resolve, waitTime));
-    console.log('ytMovie Length...', items.length, ytMovieLen);
     if (ytMovieLen !== items.length) { ytMovieLen = items.length; return ytMovieShowCase(ytMovieLen, area); }
     else { return items; }
   };
-  const ytMovieRemover = async (area) => {
-    stylusElemWatch.textContent = area + ' { visibility: hidden !important; } ';
+  const ytMovieRemover = async (area, flg) => {
+    if (!flg) { stylusElemWatch.textContent = area + ' { visibility: hidden !important; } '; }
     let items = await ytMovieShowCase(0, area);
     await ytMovieList(area, items);
     await new Promise(resolve => setTimeout(resolve, waitTime * 4));
     let counts = await ytMovieShowCase(0, area);
-    if (items.length !== counts.length) { return ytMovieRemover(); }
+    console.log(items.length, counts.length, items.length !== counts.length)
+    if (items.length !== counts.length) { return ytMovieRemover(area, true); }
     else { stylusElemWatch.textContent = ''; }
   };
   const initial = async (area) => {
@@ -390,9 +390,9 @@
     for (const ytTarget of ytMovies) {
       ytTarget.classList.remove('target', 'show');
     }
-    await ytMovieRemover(area);
+    await ytMovieRemover(area, false);
     ytMutation = new MutationObserver(async () => {
-      await ytMovieRemover(area);
+      await ytMovieRemover(area, false);
     });
     const config = { 'attributes': false, 'childList': true, 'subtree': false };
     ytMutation.observe(document.querySelector(area), config);
