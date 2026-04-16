@@ -381,12 +381,12 @@
     for (const ytTarget of ytMovies) {
       ytTarget.classList.remove('target', 'show');
     }
-    await new Promise(resolve => setTimeout(resolve, waitTime));
 
     stylusElemWatch.textContent = area + ' { visibility: hidden !important; } ';
     let items = await ytMovieShowCase(0, area);
     await ytMovieList(area, items);
     let counts = await ytMovieShowCase(0, area);
+    await new Promise(resolve => setTimeout(resolve, waitTime * 4));
     if (items.length === counts.length) { stylusElemWatch.textContent = ''; }
 
     ytMutation = new MutationObserver(async () => {
@@ -394,6 +394,7 @@
       items = await ytMovieShowCase(0, area);
       await ytMovieList(area, items);
       let counts = await ytMovieShowCase(0, area);
+      await new Promise(resolve => setTimeout(resolve, waitTime * 4));
       if (items.length === counts.length) { stylusElemWatch.textContent = ''; }
     });
     const config = { 'attributes': false, 'childList': true, 'subtree': false };
