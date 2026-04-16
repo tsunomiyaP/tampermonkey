@@ -103,8 +103,6 @@
   stylusElem.textContent = appendStylus;
   const stylusElemSettings = document.createElement('style');
   stylusElemSettings.id = 'stylusElemSettings';
-  const stylusElemWatch = document.createElement('style');
-  stylusElemWatch.id = 'stylusElemWatch';
   const stylusElemCh = document.createElement('style');
   stylusElemCh.id = 'stylusElemCh';
   // ==========================================================
@@ -372,14 +370,13 @@
     } else {
       items = document.querySelector(area).children;
     }
-    if (ytMovieLen !== items.length) { ytMovieLen = items.length; return ytMovieShowCase(ytMovieLen, area); }
-    else { return items; }
+    if (ytMovieLen !== items.length) { ytMovieLen = items.length; return ytMovieShowCase(ytMovieLen, area); } else { return items; }
   };
   const ytMovieRemover = async (area) => {
     let items = await ytMovieShowCase(0, area);
     await ytMovieList(area, items);
     let counts = await ytMovieShowCase(0, area);
-    console.log(items.length, counts.length, items.length !== counts.length)
+    console.log(items.length, counts.length, items.length !== counts.length);
     if (items.length !== counts.length) { return ytMovieRemover(area); }
   };
   const initial = async (area) => {
@@ -508,7 +505,6 @@
   };
   const eventHandler = () => {
     if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
-    if (stylusNone(stylusElemWatch.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemWatch); }
     if (stylusNone(stylusElemSettings.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemSettings); }
     if (stylusNone(stylusElemCh.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemCh); }
 
