@@ -355,24 +355,13 @@
       });
     }
   };
-  const ytMovieList = async (area) => {
+  const ytMovieList = async (area, items) => {
 
-    if (new RegExp(regSearch, 'gis').test(location.pathname)) {
-      // console.log('> ytMovie search result');
-      for await (const result of area.querySelectorAll('ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list')) {
-        for await (const item of result.children) {
-          await scaleShowMovie(area, item);
-        }
-      }
-    } else {
-      // console.log('> ytMovie check result...');
-      for await (const item of area.children) {
-        await scaleShowMovie(area, item);
-      }
+    for await (const item of items.children) {
+      await scaleShowMovie(area, item);
     }
   };
   const initial = async (area) => {
-
     const yt = await waitQuerySelector(area);
     const ytMovies = yt.querySelectorAll('.target');
     for (const ytTarget of ytMovies) {
@@ -383,12 +372,29 @@
     const ytAreas = document.querySelectorAll(area);
     for await (const ytArea of ytAreas) {
       // initial
-      await ytMovieList(ytArea);
+      let ytMovieLen = 0;
+      let items = null;
+      if (new RegExp(regSearch, 'gis').test(location.pathname)) {
+        // console.log('> ytMovie search result');
+        items = [...ytArea.querySelectorAll('ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list')];
+      } else {
+        items = ytArea;
+      }
+      await ytMovieList(ytArea, items);
 
       ytMutation = new MutationObserver(async () => {
-        stylusElemWatch.textContent = area + ' { visibility: hidden !important; } ';
-        await ytMovieList(ytArea);
-        stylusElemWatch.textContent = '';
+        stylusElemWatch.textContent = area + ' { visibility: hidden !important; } ';;
+        let items = null;
+        if (new RegExp(regSearch, 'gis').test(location.pathname)) {
+          // console.log('> ytMovie search result');
+          items = [...ytArea.querySelectorAll('ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list')];
+        } else {
+          items = ytArea;
+        }
+        await ytMovieList(ytArea, items);
+        if (ytMovieLen === items.length) { stylusElemWatch.textContent = ''; }
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+        ytMovieLen = items.length;
       });
       const config = { 'attributes': false, 'childList': true, 'subtree': true };
       ytMutation.observe(ytArea, config);
@@ -415,7 +421,7 @@
           for (const yt of ytArray) {
             // console.log(path, localPath);
             if (new RegExp(yt.path, 'gis').test(location.pathname)) {
-              stylusElemWatch.textContent = yt.area + ' { visibility: hidden !important; } ';
+              stylusElemWatch.textContent = yt.area + ' { visibility: hidden !important; } ';;
             }
           }
           // 設定ポップアップ初期非表示
@@ -505,7 +511,6 @@
 
           // style 無効化
           await new Promise(resolve => setTimeout(resolve, waitTime));
-          stylusElemWatch.textContent = '';
           stylusElemSettings.textContent = '';
         }
       }, 50);
