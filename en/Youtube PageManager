@@ -415,11 +415,9 @@
 
           // youtube Channel Area Manager
           if (new RegExp(regChannel, 'gis').test(location.pathname)) {
-            let appendStylusCh = '';
-            appendStylusCh = 'body { visibility: hidden !important; } ';
+            stylusElemCh.textContent = 'body { visibility: hidden !important; } ';
             // appendStylusCh += '.ytd-browse[page-subtype="channels"i] > #primary:not(.ytAreaShow) { visibility: hidden !important; } ';
             // appendStylusCh += 'ytm-browse > .modern-tabs > div[is-channel="true"i] ~ div:not(.ytAreaShow) { visibility: hidden !important; } ';
-            stylusElemCh.textContent = appendStylusCh;
 
             const channelPc = '.ytd-browse[page-subtype="channels"i] > #primary'; // channel タブ
             const channelPcItem = 'ytd-section-list-renderer[page-subtype="channels"i]';
@@ -460,8 +458,7 @@
             // style 可変値
             await waitQuerySelector('body:has(:is(.ytd-browse[page-subtype="channels"i], ytm-browse > .modern-tabs > div[is-channel="true"i])) :is(#primary, div[is-channel="true"i])');
             await new Promise(resolve => setTimeout(resolve, waitTime * 5));
-            appendStylusCh = 'body:has(:is(.ytd-browse[page-subtype="channels"i], ytm-browse > .modern-tabs > div[is-channel="true"i])) :is(#primary:not(.ytAreaShow), div[is-channel="true"i] ~ div:not(.ytAreaShow)) { visibility: hidden !important; } ';
-            stylusElemCh.textContent = appendStylusCh;
+            stylusElemCh.textContent = 'body:has(:is(.ytd-browse[page-subtype="channels"i], ytm-browse > .modern-tabs > div[is-channel="true"i])) :is(#primary:not(.ytAreaShow), div[is-channel="true"i] ~ div:not(.ytAreaShow)) { visibility: hidden !important; } ';
           } else {
             stylusElemCh.textContent = '';
           }
