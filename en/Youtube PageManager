@@ -389,6 +389,12 @@
     ytMutation = new MutationObserver(async () => {
       await ytMovieRemover(area);
     });
+    const resizeObserver = new ResizeObserver(async () => {
+      console.log("ytArea size changed");
+      await ytMovieRemover(area);
+    });
+    resizeObserver.observe(document.querySelector(area));
+
     const config = { 'attributes': false, 'childList': true, 'subtree': false };
     ytMutation.observe(document.querySelector(area), config);
   };
