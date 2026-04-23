@@ -21,7 +21,7 @@
   'use script';
 
   const words = {
-    hideword: [
+    hideword: [ // 名称|youtube|twitter(x)
 
       // holostars jp
       '花咲(\\s)*みやび|miyabihanasaki|@HanasakiMiyabi',
@@ -110,6 +110,10 @@
       '城瀬(\\s)*いすみ|Shiro_Isumyan|@ShiroseIsumi',
       '皇(\\s)*れお|sumeragi_0o|@SumeragiReo',
       '花籠(\\s)*つばさ|Hanakago_2434rr|@HanakagoTsubasa',
+      '男(\\s)*虎|Onotora_Y4T4|@OnoTora333',
+      '九里(\\s)*詠太|KuriEita_Y4T4|@Eita_2434',
+      '塚原(\\s)*大地|TsukaharaDaichi_Y4T4|@BIG_Tsukahara',
+      'レヨン|Rayon_Y4T4|@Rayon_2434',
 
       // en
       'ルカ(\\s)*[・]*カネシロ|Luca_Kaneshiro|@LucaKaneshiro',
