@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube QualityFix
 // @namespace    http://tampermonkey.net/
-// @version      5.0
+// @version      5.1
 // @description  try to take over the world!
 // @author       You
 // @match        https://*.youtube.com/*
@@ -31,7 +31,7 @@
   ];
   const regWatch = '/watch|/live';
   // 可変数
-  let urlBefore = ''; // URLの記憶用
+  let oldUrl = '';
   // ==========================================================
 
   // eslint-disable-next-line no-unused-vars
@@ -167,27 +167,28 @@
       }
     }
   };
-  const changeUrl = async () => {
-    const config = { 'attributes': false, 'childList': true, 'subtree': true };
-    const obsUrl = new MutationObserver(async () => {
-      setTimeout(async () => { // 遅延
-        if (urlBefore !== location.pathname + location.search) {
-          // URL更新
-          urlBefore = location.pathname + location.search;
-
-          // youtube Area Manager
-          await waitQuerySelector(manager);
-          if (new RegExp(regWatch, 'gis').test(location.pathname)) {
-            const ytArray = itemsArray.filter((yt) => location.hostname === yt.device);
-
-            await new Promise(resolve => setTimeout(resolve, waitTime));
-            initial(ytArray);
-          }
+  const changeUrl = () => {
+    const observer = new MutationObserver(() => {
+      setTimeout(() => { // 遅延
+        if (oldUrl !== location.href) {
+          window.dispatchEvent(new CustomEvent('urlChange')); // イベントを発火
+          oldUrl = location.href; // oldUrlを更新
         }
       }, 50);
     });
-    obsUrl.observe(document, config);
+    observer.observe(document.body, { subtree: true, childList: true, attributes: true, characterData: true });
   };
+  // URL検知
+  window.addEventListener('urlChange', async () => {
+    // youtube Area Manager
+    await waitQuerySelector(manager);
+    if (new RegExp(regWatch, 'gis').test(location.pathname)) {
+      const ytArray = itemsArray.filter((yt) => location.hostname === yt.device);
+
+      await new Promise(resolve => setTimeout(resolve, waitTime));
+      initial(ytArray);
+    }
+  });
   const eventHandler = () => {
     changeUrl();
   };
