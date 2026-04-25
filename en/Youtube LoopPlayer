@@ -220,7 +220,7 @@
       loopBtnArea();
 
       // youtube Area Manager
-      if (new RegExp(regWatch, 'gis').test(location.pathname)) {
+      if (new RegExp(regWatch, 'gis').test(e.detail.path)) {
         await initial();
       } else {
         if (!isNuN(document.querySelector('[id^="loop_off"]'))) { document.querySelector('[id^="loop_off"]').style.display = 'none'; }
