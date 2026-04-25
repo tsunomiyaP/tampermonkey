@@ -214,8 +214,8 @@
   };
   // URL検知
   window.addEventListener('urlChange', async (e) => {
-    if (oldUrl !== e.detail.path) {
-      oldUrl = e.detail.path; // oldUrlを更新
+    if (oldUrl !== e.detail.path + e.detail.search) {
+      oldUrl = e.detail.path + e.detail.search; // oldUrlを更新
 
       loopBtnArea();
 
