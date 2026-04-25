@@ -177,34 +177,19 @@
       //
       document.querySelector('[id^="loop_off"]').style.display = 'none';
       document.querySelector('[id^="loop_on"]').style.display = 'none';
-    } else {
-      if (!isNuN(document.querySelector('#loop_on'))) { return false; }
-      console.log('> youtube movie create loop button');
-
-      // loop Btn 絶対配置 : 初期 OFF
-      const elemLoopOn = document.createElement('input');
-      elemLoopOn.id = 'loop_on';
-      elemLoopOn.type = 'button';
-      elemLoopOn.value = 'loop on';
-      document.body.insertAdjacentElement('beforeend', elemLoopOn);
-      // loop Btn 絶対配置 : 初期 ON
-      const elemLoopOff = document.createElement('input');
-      elemLoopOff.id = 'loop_off';
-      elemLoopOff.type = 'button';
-      elemLoopOff.value = 'loop off';
-      document.body.insertAdjacentElement('beforeend', elemLoopOff);
     }
   };
   const changeUrl = () => {
     const observer = new MutationObserver(() => {
       setTimeout(() => { // 遅延
-        if (oldUrl !== location.href) {
+        if (oldUrl !== location.pathname) {
+          oldUrl = location.pathname; // oldUrlを更新
           window.dispatchEvent(new CustomEvent('urlChange')); // イベントを発火
-          oldUrl = location.href; // oldUrlを更新
         }
       }, 50);
     });
-    observer.observe(document.body, { subtree: true, childList: true, attributes: true, characterData: true });
+    const config = { 'subtree': true, 'childList': true, 'attributes': false, 'characterData': false };
+    observer.observe(document.body, config);
   };
   // URL検知
   window.addEventListener('urlChange', async () => {
@@ -220,6 +205,22 @@
   });
   const eventHandler = () => {
     if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
+    if (!isNuN(document.querySelector('#loop_on'))) { return false; }
+    console.log('> youtube movie create loop button');
+
+    // loop Btn 絶対配置 : 初期 OFF
+    const elemLoopOn = document.createElement('input');
+    elemLoopOn.id = 'loop_on';
+    elemLoopOn.type = 'button';
+    elemLoopOn.value = 'loop on';
+    document.body.insertAdjacentElement('beforeend', elemLoopOn);
+    // loop Btn 絶対配置 : 初期 ON
+    const elemLoopOff = document.createElement('input');
+    elemLoopOff.id = 'loop_off';
+    elemLoopOff.type = 'button';
+    elemLoopOff.value = 'loop off';
+    document.body.insertAdjacentElement('beforeend', elemLoopOff);
+
     changeUrl();
   };
 
