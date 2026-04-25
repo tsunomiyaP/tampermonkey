@@ -396,7 +396,7 @@
       });
       resizeObserver.observe(document.querySelector(area));
     }
-    const config = { 'attributes': false, 'childList': true, 'subtree': false };
+    const config = { 'subtree': true, 'childList': true, 'attributes': false, 'characterData': false };
     ytMutation.observe(document.querySelector(area), config);
   };
   const changeUrl = () => {
@@ -408,7 +408,8 @@
         }
       }, 50);
     });
-    observer.observe(document.body, { subtree: true, childList: true, attributes: true, characterData: true });
+    const config = { 'subtree': true, 'childList': true, 'attributes': false, 'characterData': false };
+    observer.observe(document.body, config);
   };
   // URL検知
   window.addEventListener('urlChange', async () => {
