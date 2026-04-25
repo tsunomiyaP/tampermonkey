@@ -401,7 +401,7 @@
   const changeUrl = () => {
     const observer = new MutationObserver(() => {
       setTimeout(() => { // 遅延
-        window.dispatchEvent(new CustomEvent('urlChange', {'detail': { 'path': window.location.pathname }})); // イベントを発火
+        window.dispatchEvent(new CustomEvent('urlChange', {'detail': { 'href': window.location.href, 'path': window.location.pathname, 'host': window.location.hostname }})); // イベントを発火
       }, 50);
     });
     const config = { 'subtree': true, 'childList': true, 'attributes': false, 'characterData': false };
@@ -409,12 +409,12 @@
   };
   // URL検知
   window.addEventListener('urlChange', async (e) => {
-    if (oldUrl !== e.detail.path) {
-      oldUrl = e.detail.path; // oldUrlを更新
+    if (oldUrl !== e.detail.href) {
+      oldUrl = e.detail.href; // oldUrlを更新
 
       // 動画URLから「t=」パラメータを排除
-      if (new RegExp('&t=.+', 'gis').test(location.href)) {
-        const replaceURL = deleteParam(location.href, 't').href;
+      if (new RegExp('&t=.+', 'gis').test(e.detail.href)) {
+        const replaceURL = deleteParam(e.detail.href, 't').href;
         location.replace(replaceURL);
       }
 
@@ -426,7 +426,7 @@
       stylusElemSettings.textContent += 'ytm-app > bottom-sheet-container[role="dialog"i] { display: none !important; } ';
 
       // youtube Channel Area Manager
-      if (new RegExp(regChannel, 'gis').test(location.pathname)) {
+      if (new RegExp(regChannel, 'gis').test(e.detail.path)) {
         stylusElemCh.textContent = 'body { visibility: hidden !important; } ';
         // appendStylusCh += '.ytd-browse[page-subtype="channels"i] > #primary:not(.ytAreaShow) { visibility: hidden !important; } ';
         // appendStylusCh += 'ytm-browse > .modern-tabs > div[is-channel="true"i] ~ div:not(.ytAreaShow) { visibility: hidden !important; } ';
@@ -435,33 +435,33 @@
         const channelPcItem = 'ytd-section-list-renderer[page-subtype="channels"i]';
         const channelMb = 'ytm-browse > .modern-tabs > div[is-channel="true"i] ~ div'; // channel タブ
 
-        if (new RegExp('(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)(/videos|/streams|/playlists|/releases|/posts|/search|/community|/membership)', 'gis').test(location.pathname)) {
-          if ('www.youtube.com' === location.hostname) {
+        if (new RegExp('(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)(/videos|/streams|/playlists|/releases|/posts|/search|/community|/membership)', 'gis').test(e.detail.path)) {
+          if ('www.youtube.com' === e.detail.host) {
             const section = await waitQuerySelector(channelPc);
             section.classList.add('ytAreaShow');
-          } else if ('m.youtube.com' === location.hostname) {
+          } else if ('m.youtube.com' === e.detail.host) {
             const section = await waitQuerySelector(channelMb);
             section.classList.add('ytAreaShow');
           }
         } else {
           const excChannel = 'tsunomiyaP|UCSsBxdA7yg523PegCT7O7Mg';
-          if (!new RegExp(excChannel, 'gis').test(location.pathname)) {
-          // console.log('fav channel');
-            if ('www.youtube.com' === location.hostname) {
+          if (!new RegExp(excChannel, 'gis').test(e.detail.path)) {
+            // console.log('fav channel');
+            if ('www.youtube.com' === e.detail.host) {
               const section = await waitQuerySelector(channelPc);
               section.classList.remove('ytAreaShow');
               section.querySelector(channelPcItem).remove();
-            } else if ('m.youtube.com' === location.hostname) {
+            } else if ('m.youtube.com' === e.detail.host) {
               console.log('hidden channel area');
               const section = await waitQuerySelector(channelMb);
               section.classList.remove('ytAreaShow');
             }
           } else {
             // console.log('own channel');
-            if ('www.youtube.com' === location.hostname) {
+            if ('www.youtube.com' === e.detail.host) {
               const section = await waitQuerySelector(channelPc);
               section.classList.add('ytAreaShow');
-            } else if ('m.youtube.com' === location.hostname) {
+            } else if ('m.youtube.com' === e.detail.host) {
               const section = await waitQuerySelector(channelMb);
               section.classList.add('ytAreaShow');
             }
@@ -478,8 +478,8 @@
       // youtube Area Manager
       await waitQuerySelector(manager);
 
-      if (new RegExp(regWatch, 'gis').test(location.pathname)) {
-        if ('www.youtube.com' === location.hostname) {
+      if (new RegExp(regWatch, 'gis').test(e.detail.path)) {
+        if ('www.youtube.com' === e.detail.host) {
           // pc
           console.log('> chat area ... remover');
           await ytChatArea();
@@ -487,7 +487,7 @@
           await ytStableVolume('button.ytp-settings-button[aria-label="設定"i]', 'div.ytp-drc-menu-item[role="menuitemcheckbox"i]', manager);
           console.log('> auto nav next movies setting...');
           await ytNavBtn();
-        } else if ('m.youtube.com' === location.hostname) {
+        } else if ('m.youtube.com' === e.detail.host) {
           // mobile
           console.log('> stable volume 一定音量 setting...');
           await ytStableVolume('button.player-settings-icon[aria-label="再生設定"i]', 'player-settings-menu > stable-volume-toggle yt-list-item-view-model > div > div > switch-button-view-model > button[aria-checked="true"i]', 'ytm-app > bottom-sheet-container[role="dialog"i]:not([hidden="true"i]) > ytw-scrim');
@@ -495,10 +495,10 @@
       }
 
       // movie contents
-      const ytArray = itemsArray.filter((yt) => location.hostname === yt.device);
+      const ytArray = itemsArray.filter((yt) => e.detail.host === yt.device);
       for await (const yt of ytArray) {
-      // console.log(path, localPath);
-        if (new RegExp(yt.path, 'gis').test(location.pathname)) {
+        // console.log(path, localPath);
+        if (new RegExp(yt.path, 'gis').test(e.detail.path)) {
           console.log('> youtube get ...', yt.area);
           await initial(yt.area);
         }
