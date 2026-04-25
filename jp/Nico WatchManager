@@ -210,26 +210,27 @@
   const changeUrl = () => {
     const observer = new MutationObserver(() => {
       setTimeout(() => { // 遅延
-        if (oldUrl !== location.pathname) {
-          oldUrl = location.pathname; // oldUrlを更新
-          window.dispatchEvent(new CustomEvent('urlChange')); // イベントを発火
-        }
+        window.dispatchEvent(new CustomEvent('urlChange', {'detail': { 'path': window.location.pathname }})); // イベントを発火
       }, 50);
     });
     const config = { 'subtree': true, 'childList': true, 'attributes': false, 'characterData': false };
     observer.observe(document.body, config);
   };
   // URL検知
-  window.addEventListener('urlChange', async () => {
-    if (!isNuN(ncMutation)) { ncMutation.disconnect(); }
-    dialogHide();
+  window.addEventListener('urlChange', async (e) => {
+    if (oldUrl !== e.detail.path) {
+      oldUrl = e.detail.path; // oldUrlを更新
 
-    if (new RegExp(regWatch, 'gis').test(location.pathname)) {
-      console.log(location.hostname, 'www.nicovideo.jp' === location.hostname);
-      if ('www.nicovideo.jp' === location.hostname) {
-        await playingWatchW();
-      } else {
-        await playingWatchM();
+      if (!isNuN(ncMutation)) { ncMutation.disconnect(); }
+      dialogHide();
+
+      if (new RegExp(regWatch, 'gis').test(location.pathname)) {
+        console.log(location.hostname, 'www.nicovideo.jp' === location.hostname);
+        if ('www.nicovideo.jp' === location.hostname) {
+          await playingWatchW();
+        } else {
+          await playingWatchM();
+        }
       }
     }
   });
