@@ -389,12 +389,13 @@
     ytMutation = new MutationObserver(async () => {
       await ytMovieRemover(area);
     });
-    const resizeObserver = new ResizeObserver(async () => {
-      console.log('ytArea size changed');
-      await ytMovieRemover(area);
-    });
-    resizeObserver.observe(document.querySelector(area));
-
+    if (new RegExp(regWatch, 'gis').test(location.pathname)) {
+      const resizeObserver = new ResizeObserver(async () => {
+        console.log('ytArea size changed');
+        await ytMovieRemover(area);
+      });
+      resizeObserver.observe(document.querySelector(area));
+    }
     const config = { 'attributes': false, 'childList': true, 'subtree': false };
     ytMutation.observe(document.querySelector(area), config);
   };
