@@ -159,67 +159,77 @@
     if (isLoop) {
       console.log('> youtube ytPlayer isPlayer loop...');
       document.querySelector(player + ' video').loop = true;
-      document.querySelector('#loop_on').style.display = 'block';
-      document.querySelector('#loop_off').style.display = 'none';
+      document.querySelector('[id^="loop_on"]').style.display = 'block';
+      document.querySelector('[id^="loop_off"]').style.display = 'none';
     } else {
       console.log('> youtube ytPlayer isPlayer un loop...');
       document.querySelector(player + ' video').loop = false;
-      document.querySelector('#loop_on').style.display = 'none';
-      document.querySelector('#loop_off').style.display = 'block';
+      document.querySelector('[id^="loop_on"]').style.display = 'none';
+      document.querySelector('[id^="loop_off"]').style.display = 'block';
     }
   };
   const initial = async () => {
+    await new Promise(resolve => setTimeout(resolve, waitTime));
+
     await waitQuerySelector(manager);
     const ytPlayer = await waitQuerySelector(player);
     const stats = ytPlayer.getVideoStats() || {};
     console.log('> youtube Live status : ' + stats.live);
     if (stats.live === 'live' || stats.live === 'dvr' || stats.live === 'lp') {
-      //
+      // ライブ
       document.querySelector('[id^="loop_off"]').style.display = 'none';
       document.querySelector('[id^="loop_on"]').style.display = 'none';
+    } else {
+      document.querySelector('[id^="loop_off"]').style.display = 'block';
+      document.querySelector('[id^="loop_on"]').style.display = 'none';
+    }
+  };
+  const loopBtnArea = () => {
+    if (isNuN(document.querySelector('[id^="loop_on"]'))) {
+      console.log('> youtube movie create loop button');
+      // loop Btn 絶対配置 : 初期 OFF
+      const elemLoopOn = document.createElement('input');
+      elemLoopOn.id = 'loop_on';
+      elemLoopOn.type = 'button';
+      elemLoopOn.value = 'loop on';
+      elemLoopOn.style.display = 'none';
+      document.body.insertAdjacentElement('beforeend', elemLoopOn);
+      // loop Btn 絶対配置 : 初期 ON
+      const elemLoopOff = document.createElement('input');
+      elemLoopOff.id = 'loop_off';
+      elemLoopOff.type = 'button';
+      elemLoopOff.value = 'loop off';
+      elemLoopOff.style.display = 'none';
+      document.body.insertAdjacentElement('beforeend', elemLoopOff);
     }
   };
   const changeUrl = () => {
     const observer = new MutationObserver(() => {
       setTimeout(() => { // 遅延
-        if (oldUrl !== location.pathname) {
-          oldUrl = location.pathname; // oldUrlを更新
-          window.dispatchEvent(new CustomEvent('urlChange')); // イベントを発火
-        }
+        window.dispatchEvent(new CustomEvent('urlChange', {'detail': { 'path': window.location.pathname }})); // イベントを発火
       }, 50);
     });
     const config = { 'subtree': true, 'childList': true, 'attributes': false, 'characterData': false };
     observer.observe(document.body, config);
   };
   // URL検知
-  window.addEventListener('urlChange', async () => {
-    // youtube Area Manager
-    await waitQuerySelector(manager);
-    if (new RegExp(regWatch, 'gis').test(location.pathname)) {
-      await new Promise(resolve => setTimeout(resolve, waitTime));
-      await initial();
-    } else {
-      if (!isNuN(document.querySelector('#loop_on'))) { document.querySelector('#loop_on').remove(); }
-      if (!isNuN(document.querySelector('#loop_off'))) { document.querySelector('#loop_off').remove(); }
+  window.addEventListener('urlChange', async (e) => {
+    if (oldUrl !== e.detail.path) {
+      oldUrl = e.detail.path; // oldUrlを更新
+
+      loopBtnArea();
+
+      // youtube Area Manager
+      if (new RegExp(regWatch, 'gis').test(location.pathname)) {
+        await initial();
+      } else {
+        if (!isNuN(document.querySelector('[id^="loop_off"]'))) { document.querySelector('[id^="loop_off"]').style.display = 'none'; }
+        if (!isNuN(document.querySelector('[id^="loop_on"]'))) { document.querySelector('[id^="loop_on"]').style.display = 'none'; }
+      }
     }
   });
   const eventHandler = () => {
     if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
-    if (!isNuN(document.querySelector('#loop_on'))) { return false; }
-    console.log('> youtube movie create loop button');
-
-    // loop Btn 絶対配置 : 初期 OFF
-    const elemLoopOn = document.createElement('input');
-    elemLoopOn.id = 'loop_on';
-    elemLoopOn.type = 'button';
-    elemLoopOn.value = 'loop on';
-    document.body.insertAdjacentElement('beforeend', elemLoopOn);
-    // loop Btn 絶対配置 : 初期 ON
-    const elemLoopOff = document.createElement('input');
-    elemLoopOff.id = 'loop_off';
-    elemLoopOff.type = 'button';
-    elemLoopOff.value = 'loop off';
-    document.body.insertAdjacentElement('beforeend', elemLoopOff);
 
     changeUrl();
   };
