@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Nico WatchManager
 // @namespace    http://tampermonkey.net/
-// @version      5.0
+// @version      5.1
 // @description  サイト設定 自動再生オンにすること > 自動遷移後の再生のため
 // @author       You
 // @match        https://*.nicovideo.jp/*
@@ -21,7 +21,7 @@
   const regWatch = '/watch';
   // 可変数
   let ncMutation;
-  let urlBefore = ''; // URLの記憶用
+  let oldUrl = '';
   // ==========================================================
   // 静的style適用エリア
   // stylus: beforebegin, afterbegin, beforeend, afterend
@@ -207,30 +207,31 @@
     const config = { 'attributes': true, 'childList': false, 'subtree': false };
     ncMutation.observe(document.querySelector('div[aria-label="video - currentTime"]'), config);
   };
-  const changeUrl = async () => {
-    const config = { 'attributes': true, 'childList': true, 'subtree': true };
-    const obsUrl = new MutationObserver(async () => {
-      setTimeout(async () => { // 遅延
-        if (urlBefore !== location.pathname + location.search) {
-          // URL更新
-          urlBefore = location.pathname + location.search;
-
-          if (!isNuN(ncMutation)) { ncMutation.disconnect(); }
-          dialogHide();
-
-          if (new RegExp(regWatch, 'gis').test(location.pathname)) {
-            console.log(location.hostname, 'www.nicovideo.jp' === location.hostname);
-            if ('www.nicovideo.jp' === location.hostname) {
-              await playingWatchW();
-            } else {
-              await playingWatchM();
-            }
-          }
+  const changeUrl = () => {
+    const observer = new MutationObserver(() => {
+      setTimeout(() => { // 遅延
+        if (oldUrl !== location.href) {
+          window.dispatchEvent(new CustomEvent('urlChange')); // イベントを発火
+          oldUrl = location.href; // oldUrlを更新
         }
       }, 50);
     });
-    obsUrl.observe(document, config);
+    observer.observe(document.body, { subtree: true, childList: true, attributes: true, characterData: true });
   };
+  // URL検知
+  window.addEventListener('urlChange', async () => {
+    if (!isNuN(ncMutation)) { ncMutation.disconnect(); }
+    dialogHide();
+
+    if (new RegExp(regWatch, 'gis').test(location.pathname)) {
+      console.log(location.hostname, 'www.nicovideo.jp' === location.hostname);
+      if ('www.nicovideo.jp' === location.hostname) {
+        await playingWatchW();
+      } else {
+        await playingWatchM();
+      }
+    }
+  });
   const eventHandler = () => {
     if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
     changeUrl();
