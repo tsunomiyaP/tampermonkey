@@ -224,9 +224,11 @@
     }
   };
   const ytNavBtn = async () => {
-    const toggleBtn = 'button.ytp-autonav-toggle:has(> div > div.ytp-autonav-toggle-button[aria-checked="true"i])';
+    const toggleBtn = 'button.ytp-autonav-toggle';
     const area = await waitQuerySelectorCount(10, toggleBtn);
-    if (!isNuN(area)) { area.click(); }
+    if (!isNuN(area) && area.querySelector('div > div.ytp-autonav-toggle-button').getAttribute('aria-checked') === 'true') {
+      area.click();
+    }
   };
   const removeMovieInformation = async (item) => {
     const mode = {'pc': {}, 'mobile': {}};
