@@ -28,7 +28,7 @@
   const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
   // 可変数
   let twMutationManager, twMutationTimeline;
-  let urlBefore = ''; // URLの記憶用
+  let oldUrl = '';
   let label = ''; // 現在のタブ
   // ==========================================================
   // stylus: beforebegin, afterbegin, beforeend, afterend
@@ -226,28 +226,31 @@
     });
     twMutationManager.observe(nodeMain, config);
   };
-  const changeUrl = async () => {
-    const config = { 'attributes': false, 'childList': true, 'subtree': true };
-    const obsUrl = new MutationObserver(async () => {
-      setTimeout(async () => { // 遅延
-        const tab = await waitQuerySelectorCount(4, 'div[role="presentation"i] *[role="tab"i][aria-selected="true"i]');
-        const tabLabel = isNuN(tab) ? '' : tab.textContent;
-        if (urlBefore !== location.pathname + location.search || label !== tabLabel) {
-          // console.log('A : ', label, 'B : ', tab, 'C : ', tabLabel);
-          // URL更新
-          urlBefore = location.pathname + location.search;
-          label = tabLabel;
-          console.log('tab : ', label, '、URL : ', urlBefore);
-
-          if (!isNuN(twMutationManager)) { twMutationManager.disconnect(); }
-          if (!isNuN(twMutationTimeline)) { twMutationTimeline.disconnect(); }
-
-          await twPath();
+  const changeUrl = () => {
+    const observer = new MutationObserver(() => {
+      setTimeout(() => { // 遅延
+        if (oldUrl !== location.href) {
+          window.dispatchEvent(new CustomEvent('urlChange')); // イベントを発火
+          oldUrl = location.href; // oldUrlを更新
         }
       }, 50);
     });
-    obsUrl.observe(document, config);
+    observer.observe(document.body, { subtree: true, childList: true, attributes: true, characterData: true });
   };
+  // URL検知
+  window.addEventListener('urlChange', async () => {
+    const tab = await waitQuerySelectorCount(4, 'div[role="presentation"i] *[role="tab"i][aria-selected="true"i]');
+    const tabLabel = isNuN(tab) ? '' : tab.textContent;
+    if (label !== tabLabel) {
+      label = tabLabel;
+      console.log('tab : ', label, '、URL : ', oldUrl);
+
+      if (!isNuN(twMutationManager)) { twMutationManager.disconnect(); }
+      if (!isNuN(twMutationTimeline)) { twMutationTimeline.disconnect(); }
+
+      await twPath();
+    }
+  });
   const eventHandler = () => {
     if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
     changeUrl();
