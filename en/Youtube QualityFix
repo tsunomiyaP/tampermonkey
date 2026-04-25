@@ -170,13 +170,14 @@
   const changeUrl = () => {
     const observer = new MutationObserver(() => {
       setTimeout(() => { // 遅延
-        if (oldUrl !== location.href) {
+        if (oldUrl !== location.pathname) {
+          oldUrl = location.pathname; // oldUrlを更新
           window.dispatchEvent(new CustomEvent('urlChange')); // イベントを発火
-          oldUrl = location.href; // oldUrlを更新
         }
       }, 50);
     });
-    observer.observe(document.body, { subtree: true, childList: true, attributes: true, characterData: true });
+    const config = { 'subtree': true, 'childList': true, 'attributes': false, 'characterData': false };
+    observer.observe(document.body, config);
   };
   // URL検知
   window.addEventListener('urlChange', async () => {
