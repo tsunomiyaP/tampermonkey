@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube LoopPlayer
 // @namespace    http://tampermonkey.net/
-// @version      5.0
+// @version      5.1
 // @description  try to take over the world!
 // @author       You
 // @match        https://*.youtube.com/*
@@ -27,7 +27,7 @@
   const ytBottom = ['20px', '80px'];
   // 可変数
   let isLoop = false;
-  let urlBefore = ''; // URLの記憶用
+  let oldUrl = '';
   // ==========================================================
   // 静的style適用エリア
   // stylus: beforebegin, afterbegin, beforeend, afterend
@@ -195,28 +195,29 @@
       document.body.insertAdjacentElement('beforeend', elemLoopOff);
     }
   };
-  const changeUrl = async () => {
-    const config = { 'attributes': false, 'childList': true, 'subtree': true };
-    const obsUrl = new MutationObserver(async () => {
-      setTimeout(async () => { // 遅延
-        if (urlBefore !== location.pathname + location.search) {
-          // URL更新
-          urlBefore = location.pathname + location.search;
-
-          // youtube Area Manager
-          await waitQuerySelector(manager);
-          if (new RegExp(regWatch, 'gis').test(location.pathname)) {
-            await new Promise(resolve => setTimeout(resolve, waitTime));
-            await initial();
-          } else {
-            if (!isNuN(document.querySelector('#loop_on'))) { document.querySelector('#loop_on').remove(); }
-            if (!isNuN(document.querySelector('#loop_off'))) { document.querySelector('#loop_off').remove(); }
-          }
+  const changeUrl = () => {
+    const observer = new MutationObserver(() => {
+      setTimeout(() => { // 遅延
+        if (oldUrl !== location.href) {
+          window.dispatchEvent(new CustomEvent('urlChange')); // イベントを発火
+          oldUrl = location.href; // oldUrlを更新
         }
       }, 50);
     });
-    obsUrl.observe(document, config);
+    observer.observe(document.body, { subtree: true, childList: true, attributes: true, characterData: true });
   };
+  // URL検知
+  window.addEventListener('urlChange', async () => {
+    // youtube Area Manager
+    await waitQuerySelector(manager);
+    if (new RegExp(regWatch, 'gis').test(location.pathname)) {
+      await new Promise(resolve => setTimeout(resolve, waitTime));
+      await initial();
+    } else {
+      if (!isNuN(document.querySelector('#loop_on'))) { document.querySelector('#loop_on').remove(); }
+      if (!isNuN(document.querySelector('#loop_off'))) { document.querySelector('#loop_off').remove(); }
+    }
+  });
   const eventHandler = () => {
     if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
     changeUrl();
