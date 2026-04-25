@@ -211,8 +211,8 @@
     const observer = new MutationObserver(() => {
       setTimeout(() => { // 遅延
         if (oldUrl !== location.href) {
-          window.dispatchEvent(new CustomEvent('urlChange')); // イベントを発火
           oldUrl = location.href; // oldUrlを更新
+          window.dispatchEvent(new CustomEvent('urlChange')); // イベントを発火
         }
       }, 50);
     });
