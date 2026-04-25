@@ -170,7 +170,7 @@
   const changeUrl = () => {
     const observer = new MutationObserver(() => {
       setTimeout(() => { // 遅延
-        window.dispatchEvent(new CustomEvent('urlChange', {'detail': { 'path': window.location.pathname }})); // イベントを発火
+        window.dispatchEvent(new CustomEvent('urlChange', {'detail': { 'href': window.location.href, 'path': window.location.pathname, 'host': window.location.hostname }})); // イベントを発火
       }, 50);
     });
     const config = { 'subtree': true, 'childList': true, 'attributes': false, 'characterData': false };
@@ -178,13 +178,13 @@
   };
   // URL検知
   window.addEventListener('urlChange', async (e) => {
-    if (oldUrl !== e.detail.path) {
-      oldUrl = e.detail.path; // oldUrlを更新
+    if (oldUrl !== e.detail.href) {
+      oldUrl = e.detail.href; // oldUrlを更新
 
       // youtube Area Manager
       await waitQuerySelector(manager);
-      if (new RegExp(regWatch, 'gis').test(location.pathname)) {
-        const ytArray = itemsArray.filter((yt) => location.hostname === yt.device);
+      if (new RegExp(regWatch, 'gis').test(e.detail.path)) {
+        const ytArray = itemsArray.filter((yt) => e.detail.host === yt.device);
 
         await new Promise(resolve => setTimeout(resolve, waitTime));
         initial(ytArray);
