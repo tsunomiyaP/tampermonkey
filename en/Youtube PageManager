@@ -507,7 +507,6 @@
     await new Promise(resolve => setTimeout(resolve, waitTime));
     stylusElemSettings.textContent = '';
   });
-
   const eventHandler = () => {
     if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
     if (stylusNone(stylusElemSettings.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemSettings); }
