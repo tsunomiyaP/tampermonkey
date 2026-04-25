@@ -210,7 +210,7 @@
   const changeUrl = () => {
     const observer = new MutationObserver(() => {
       setTimeout(() => { // 遅延
-        window.dispatchEvent(new CustomEvent('urlChange', {'detail': { 'href': window.location.href, 'path': window.location.pathname, 'host': window.location.hostname }})); // イベントを発火
+        window.dispatchEvent(new CustomEvent('urlChange', {'detail': { 'href': window.location.href, 'path': window.location.pathname, 'host': window.location.hostname, 'search': window.location.search }})); // イベントを発火
       }, 50);
     });
     const config = { 'subtree': true, 'childList': true, 'attributes': false, 'characterData': false };
@@ -218,8 +218,8 @@
   };
   // URL検知
   window.addEventListener('urlChange', async (e) => {
-    if (oldUrl !== e.detail.href) {
-      oldUrl = e.detail.href; // oldUrlを更新
+    if (oldUrl !== e.detail.path) {
+      oldUrl = e.detail.path; // oldUrlを更新
 
       if (!isNuN(ncMutation)) { ncMutation.disconnect(); }
       dialogHide();
