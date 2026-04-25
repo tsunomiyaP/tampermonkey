@@ -41,7 +41,7 @@
   const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
   // 可変数
   let ytMutation;
-  let urlBefore = ''; // URLの記憶用
+  let oldUrl = '';
   // ==========================================================
   // 静的style適用エリア
   // stylus: beforebegin, afterbegin, beforeend, afterend
@@ -398,15 +398,20 @@
     const config = { 'attributes': false, 'childList': true, 'subtree': false };
     ytMutation.observe(document.querySelector(area), config);
   };
-  const changeUrl = async () => {
-
-    const config = { 'attributes': false, 'childList': true, 'subtree': true };
-    const obsUrl = new MutationObserver(async () => {
-      setTimeout(async () => { // 遅延
-        if (urlBefore !== location.pathname + location.search) {
-          // URL更新
-          urlBefore = location.pathname + location.search;
-
+  const changeUrl = () => {
+    const observer = new MutationObserver(() => {
+      setTimeout(() => { // 遅延
+        if (oldUrl !== location.href) {
+            window.dispatchEvent(new CustomEvent('urlChange'));　// イベントを発火
+            oldUrl = location.href; // oldUrlを更新
+        }
+      }, 50);
+    });
+    observer.observe(document.body, { subtree: true, childList: true, attributes: true, characterData: true });
+  };
+  // URL検知
+  window.addEventListener('urlChange', async () => {
+    console.log('イベントの発火を検知');
           if (!isNuN(ytMutation)) { ytMutation.disconnect(); }
 
           // 動画URLから「t=」パラメータを排除
@@ -416,6 +421,7 @@
           }
 
           // 設定ポップアップ初期非表示
+          stylusElemSettings.textContent = '';
           stylusElemSettings.textContent += 'div.ytp-popup.ytp-settings-menu { display: none !important; } ';
           stylusElemSettings.textContent += 'ytm-app > bottom-sheet-container[role="dialog"i] { display: none !important; } ';
 
@@ -501,11 +507,8 @@
           // style 無効化
           await new Promise(resolve => setTimeout(resolve, waitTime));
           stylusElemSettings.textContent = '';
-        }
-      }, 50);
-    });
-    obsUrl.observe(document, config);
-  };
+  });
+
   const eventHandler = () => {
     if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
     if (stylusNone(stylusElemSettings.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemSettings); }
