@@ -402,9 +402,9 @@
   const changeUrl = () => {
     const observer = new MutationObserver(() => {
       setTimeout(() => { // 遅延
-        if (oldUrl !== location.href) {
+        if (oldUrl !== location.pathname) {
+          oldUrl = location.pathname; // oldUrlを更新
           window.dispatchEvent(new CustomEvent('urlChange')); // イベントを発火
-          oldUrl = location.href; // oldUrlを更新
         }
       }, 50);
     });
@@ -413,13 +413,13 @@
   };
   // URL検知
   window.addEventListener('urlChange', async () => {
-    if (!isNuN(ytMutation)) { ytMutation.disconnect(); }
-
     // 動画URLから「t=」パラメータを排除
     if (new RegExp('&t=.+', 'gis').test(location.href)) {
       const replaceURL = deleteParam(location.href, 't').href;
       location.replace(replaceURL);
     }
+
+    if (!isNuN(ytMutation)) { ytMutation.disconnect(); }
 
     // 設定ポップアップ初期非表示
     stylusElemSettings.textContent = '';
