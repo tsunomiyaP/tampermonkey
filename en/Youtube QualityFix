@@ -178,8 +178,8 @@
   };
   // URL検知
   window.addEventListener('urlChange', async (e) => {
-    if (oldUrl !== e.detail.href) {
-      oldUrl = e.detail.href; // oldUrlを更新
+    if (oldUrl !== e.detail.path + e.detail.search) {
+      oldUrl = e.detail.path + e.detail.search; // oldUrlを更新
 
       // youtube Area Manager
       await waitQuerySelector(manager);
