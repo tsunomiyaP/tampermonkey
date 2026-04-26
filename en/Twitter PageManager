@@ -237,21 +237,17 @@
   };
   // URL検知
   window.addEventListener('urlChange', async (e) => {
-    if (oldUrl !== e.detail.path) {
+    const tab = await waitQuerySelector('div[role="presentation"i] div[role="tab"i][aria-selected="true"i] span');
+    const tabLabel = isNuN(tab) ? '' : tab.textContent;
+    if (oldUrl !== e.detail.path || label !== tabLabel) {
       oldUrl = e.detail.path; // oldUrlを更新
+      label = tabLabel;
+      console.log('tab : ', label, '、URL : ', oldUrl);
 
-      const tab = await waitQuerySelector('div[role="presentation"i] div[role="tab"i][aria-selected="true"i] span');
-      const tabLabel = isNuN(tab) ? '' : tab.textContent;
-      console.log('tw change  URL ...', e.detail.path, tabLabel);
-      if (label !== tabLabel) {
-        label = tabLabel;
-        console.log('tab : ', label, '、URL : ', oldUrl);
+      if (!isNuN(twMutationManager)) { twMutationManager.disconnect(); }
+      if (!isNuN(twMutationTimeline)) { twMutationTimeline.disconnect(); }
 
-        if (!isNuN(twMutationManager)) { twMutationManager.disconnect(); }
-        if (!isNuN(twMutationTimeline)) { twMutationTimeline.disconnect(); }
-
-        await twPath();
-      }
+      await twPath();
     }
   });
   const eventHandler = () => {
