@@ -240,8 +240,9 @@
     if (oldUrl !== e.detail.path) {
       oldUrl = e.detail.path; // oldUrlを更新
 
-      const tab = await waitQuerySelectorCount(4, 'div[role="presentation"i] *[role="tab"i][aria-selected="true"i]');
+      const tab = await waitQuerySelector('div[role="presentation"i] div[role="tab"i][aria-selected="true"i] span');
       const tabLabel = isNuN(tab) ? '' : tab.textContent;
+      console.log('tw change  URL ...', e.detail.path, tabLabel);
       if (label !== tabLabel) {
         label = tabLabel;
         console.log('tab : ', label, '、URL : ', oldUrl);
@@ -255,6 +256,7 @@
   });
   const eventHandler = () => {
     if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
+
     changeUrl();
   };
 
