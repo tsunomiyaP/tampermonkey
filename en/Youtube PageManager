@@ -24,11 +24,11 @@
   const scale = 'scale(0.8)';
   const manager = 'ytd-app, ytm-app[id="app"i]';
   const itemsArray = [
-    { device: 'www.youtube.com', path: '^/$|^/index', area: 'div#primary > ytd-rich-grid-renderer > div#contents', stylus: 'transform: ' + scale + ' !important; pointer-events: none !important;' },
+    { device: 'www.youtube.com', path: '^/$|^/index', area: '[page-subtype="home"i] div#primary > ytd-rich-grid-renderer > div#contents', stylus: 'transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'www.youtube.com', path: '^/feed/subscriptions', area: '[page-subtype="subscriptions"i] div#primary > ytd-rich-grid-renderer > div#contents', stylus: 'transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'www.youtube.com', path: '^/watch|^/live', area: 'ytd-watch-flexy div#related div#items :is(> :not(:has(ytd-item-section-renderer > div#contents)), ytd-item-section-renderer > div#contents)', stylus: 'transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'www.youtube.com', path: '^/@.+/(videos|streams)|^/channel/.+/(videos|streams)|^/c/.+/(videos|streams)|^/user/.+/(videos|streams)|^/u/.+/(videos|streams)', area: '[page-subtype="channels"i] div#primary > ytd-rich-grid-renderer > div#contents', stylus: 'transform: ' + scale + ' !important; pointer-events: none !important;' },
-    { device: 'www.youtube.com', path: '^/results', area: 'ytd-two-column-search-results-renderer > div#primary > ytd-section-list-renderer > div#contents', stylus: 'transform: ' + scale + ' !important; pointer-events: none !important;' },
+    { device: 'www.youtube.com', path: '^/results', area: 'ytd-search div#primary > ytd-section-list-renderer > div#contents', stylus: 'transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'm.youtube.com', path: '^/$|^/index', area: 'div.tab-content[tab-identifier="FEwhat_to_watch"i] div.rich-grid-renderer-contents', stylus: 'display: block; transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'm.youtube.com', path: '^/feed/subscriptions', area: 'div.tab-content[tab-identifier="FEsubscriptions"i] > ytm-tab-renderer > * > lazy-list', stylus: 'display: block; transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'm.youtube.com', path: '^/watch|^/live', area: ':is([section-identifier="related-items"] > lazy-list, div.related-items-container lazy-list)', stylus: 'display: block; transform: ' + scale + ' !important; pointer-events: none !important;' },
@@ -80,11 +80,11 @@
   // 初期表示
   for (const yt of itemsArray) {
     // 非表示
-    appendStylus += yt.area + ' > :not(.show) { display: none !important; /* visibility: hidden !important; **/ } ';
+    appendStylus += yt.area + ' .target:not(.show) { display: none !important; /* visibility: hidden !important; **/ } ';
     // 拡大縮小
-    appendStylus += yt.area + ' > .minScale:not(:has(div[class*="subheader"i])) > * { ' + yt.stylus + ' } ';
+    appendStylus += yt.area + ' .target.minScale:not(:has(div[class*="subheader"i])) > * { ' + yt.stylus + ' } ';
     // [ショート]動画 削除
-    appendStylus += yt.area + ' > :has(a[href*="/shorts"i]) { display: none; } ';
+    appendStylus += yt.area + ' .target:has(a[href*="/shorts"i]) { display: none; } ';
     // [Mix & playlist] [他(headline)]動画 削除
     appendStylus += yt.area + ' .target:has(a[href*="&list="i], #rich-shelf-header-container, .rich-shelf-header, chips-shelf-with-video-shelf-renderer, ytd-brand-video-singleton-renderer) { display: none; } ';
   }
@@ -230,14 +230,14 @@
       area.click();
     }
   };
-  const removeMovieInformation = async (item) => {
+  const removeMovieInformation = async (item, detail) => {
     const mode = {'pc': {}, 'mobile': {}};
-    const device = 'www.youtube.com' === location.hostname ? mode.pc : mode.mobile;
+    const device = 'www.youtube.com' === detail.host ? mode.pc : mode.mobile;
     const youtubeItem = {};
 
     let flg = false;
 
-    if (new RegExp(regWatch, 'gis').test(location.pathname)) { // 動画エリア
+    if (new RegExp(regWatch, 'gis').test(detail.path)) { // 動画エリア
       let YtChannel = '';
       await waitQuerySelector('div#owner ytd-video-owner-renderer ytd-channel-name#channel-name #text-container > yt-formatted-string#text[title], ytm-slim-owner-renderer h3.slim-owner-channel-name span');
       // pc 動画
@@ -255,9 +255,9 @@
       mode.mobile.ytTitle = isNuN(item.querySelector('div.details > div.media-item-info > div.media-item-metadata > a > ' + ytTitle3)) ? '' : item.querySelector('div.details > div.media-item-info > div.media-item-metadata > a > ' + ytTitle3).textContent;
       mode.mobile.userNam = isNuN(item.querySelector('div.details > div.media-item-info > div.media-item-metadata > a > ' + ytUserN3)) ? '' : item.querySelector('div.details > div.media-item-info > div.media-item-metadata > a > ' + ytUserN3).textContent;
 
-      if ('www.youtube.com' === location.hostname) {
+      if ('www.youtube.com' === detail.host) {
         YtChannel = mode.pc.userNam;
-      } else if ('m.youtube.com' === location.hostname) {
+      } else if ('m.youtube.com' === detail.host) {
         YtChannel = mode.mobile.userNam;
       }
 
@@ -267,18 +267,18 @@
 
       let user = '';
       // 閲覧チャンネルのみ表示
-      if ('www.youtube.com' === location.hostname) {
+      if ('www.youtube.com' === detail.host) {
         const channel = document.querySelector('div#owner ytd-video-owner-renderer ytd-channel-name#channel-name #text-container > yt-formatted-string#text[title]');
         user = channel.title;
       }
-      if ('m.youtube.com' === location.hostname) {
+      if ('m.youtube.com' === detail.host) {
         const channel = document.querySelector('ytm-slim-owner-renderer h3.slim-owner-channel-name span');
         user = channel.textContent;
       }
 
       console.log(user, YtChannel);
       if (user !== YtChannel) { item.classList.add('own_ch_NuN'); }
-    } else if (new RegExp(regChannel, 'gis').test(location.pathname)) { // チャンネルエリア
+    } else if (new RegExp(regChannel, 'gis').test(detail.path)) { // チャンネルエリア
       // pc 動画
       mode.pc.ytTitle = isNuN(item.querySelector('div#dismissible div#details div#meta > h3')) ? '' : item.querySelector('div#dismissible div#details div#meta > h3').textContent;
       mode.pc.userNam = isNuN(item.querySelector('div#dismissible div#details div#meta > h3')) ? '' : item.querySelector('div#dismissible div#details div#meta > h3').textContent;
@@ -305,7 +305,6 @@
       youtubeItem.ytTitle = strData.ytTitle;
       youtubeItem.userNam = strData.userNam;
     }
-
     const words = isNuN(abc) ? '' : abc.hideword;
     const excludes = isNuN(abc) ? '' : abc.execludeWords;
 
@@ -326,12 +325,11 @@
     }
     return flg;
   };
-  const scaleShowMovie = async (area, item) => {
-
+  const scaleShowMovie = async (area, item, detail) => {
     if (!item.classList.contains('target')) {
       item.classList.add('target');
       // console.log('test2 1件ずつ', item);
-      const flg = await removeMovieInformation(item);
+      const flg = await removeMovieInformation(item, detail);
       if (!flg) { item.classList.add('show'); } else { item.classList.add('remove_item'); }
       item.classList.add('minScale');
 
@@ -339,16 +337,14 @@
 
       document.addEventListener('click', async (e) => {
         if (e.target.classList.contains('target')) {
-
-          const device = 'www.youtube.com' === location.hostname || 'm.youtube.com' === location.hostname ? true : false;
-          if (device && new RegExp(regSearch, 'gis').test(location.pathname)) {
-            for (const result of ytArea.querySelectorAll('ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list')) {
-              for (const ytItem of result.children) {
-                ytItem.classList.add('minScale');
-              }
-            }
+          let items = null;
+          if (new RegExp(regSearch, 'gis').test(detail.path)) {
+            items = Array.from(document.querySelector(area).querySelectorAll('ytd-item-section-renderer > div#contents > *, ytm-item-section-renderer > lazy-list *'));
+          } else {
+            items = Array.from(document.querySelector(area).children);
           }
-          for (const ytItem of ytArea.children) {
+
+          for (const ytItem of items) {
             ytItem.classList.add('minScale');
           }
           e.target.classList.remove('minScale');
@@ -356,42 +352,40 @@
       });
     }
   };
-  const ytMovieList = async (area, items) => {
+  const ytMovieList = async (area, items, detail) => {
     for await (const item of items) {
-      await scaleShowMovie(area, item);
+      await scaleShowMovie(area, item, detail);
     }
   };
-  const ytMovieShowCase = async (ytMovieLen, area) => {
+  const ytMovieShowCase = async (ytMovieLen, area, detail) => {
     let items = null;
-    if (new RegExp(regSearch, 'gis').test(location.pathname)) {
-      // console.log('> ytMovie search result');
-      items = [...document.querySelector(area).querySelectorAll('ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list')].children;
+    if (new RegExp(regSearch, 'gis').test(detail.path)) {
+      items = Array.from(document.querySelector(area).querySelectorAll('ytd-item-section-renderer > div#contents > *, ytm-item-section-renderer > lazy-list *'));
     } else {
-      items = document.querySelector(area).children;
+      items = Array.from(document.querySelector(area).children);
     }
-    if (ytMovieLen !== items.length) { ytMovieLen = items.length; return ytMovieShowCase(ytMovieLen, area); } else { return items; }
+    const activeElements = items.filter(el => el.classList.contains('target'));
+    if (activeElements.length === items.length) { return items; }
+    console.log('yt movie list ... ', items.length, ytMovieLen);
+    if (ytMovieLen !== items.length) { ytMovieLen = items.length; return await ytMovieShowCase(ytMovieLen, area, detail); } else { return items; }
   };
-  const ytMovieRemover = async (area) => {
-    let items = await ytMovieShowCase(0, area);
-    await ytMovieList(area, items);
-    let counts = await ytMovieShowCase(0, area);
-    console.log(items.length, counts.length, items.length !== counts.length);
-    if (items.length !== counts.length) { return ytMovieRemover(area); }
+  const ytMovieRemover = async (area, detail) => {
+    let items = await ytMovieShowCase(0, area, detail);
+    await ytMovieList(area, items, detail);
   };
-  const initial = async (area) => {
+  const initial = async (area, detail) => {
     const yt = await waitQuerySelector(area);
     const ytMovies = yt.querySelectorAll('.target');
     for (const ytTarget of ytMovies) {
       ytTarget.classList.remove('target', 'show');
     }
-    await ytMovieRemover(area);
     ytMutation = new MutationObserver(async () => {
-      await ytMovieRemover(area);
+      await ytMovieRemover(area, detail);
     });
-    if (new RegExp(regWatch, 'gis').test(location.pathname)) {
+    if (new RegExp(regWatch, 'gis').test(detail.path)) {
       const resizeObserver = new ResizeObserver(async () => {
         console.log('ytArea size changed');
-        await ytMovieRemover(area);
+        await ytMovieRemover(area, detail);
       });
       resizeObserver.observe(document.querySelector(area));
     }
@@ -428,10 +422,7 @@
       // youtube Channel Area Manager
       if (new RegExp(regChannel, 'gis').test(e.detail.path)) {
         stylusElemCh.textContent = 'body { visibility: hidden !important; } ';
-        // appendStylusCh += '.ytd-browse[page-subtype="channels"i] > #primary:not(.ytAreaShow) { visibility: hidden !important; } ';
-        // appendStylusCh += 'ytm-browse > .modern-tabs > div[is-channel="true"i] ~ div:not(.ytAreaShow) { visibility: hidden !important; } ';
-
-        const channelPc = '.ytd-browse[page-subtype="channels"i] > #primary'; // channel タブ
+        const channelPc = 'ytd-browse[page-subtype="channels"i] #primary'; // channel タブ
         const channelPcItem = 'ytd-section-list-renderer[page-subtype="channels"i]';
         const channelMb = 'ytm-browse > .modern-tabs > div[is-channel="true"i] ~ div'; // channel タブ
 
@@ -468,9 +459,9 @@
           }
         }
         // style 可変値
-        await waitQuerySelector('body:has(:is(.ytd-browse[page-subtype="channels"i], ytm-browse > .modern-tabs > div[is-channel="true"i])) :is(#primary, div[is-channel="true"i])');
-        await new Promise(resolve => setTimeout(resolve, waitTime * 5));
-        stylusElemCh.textContent = 'body:has(:is(.ytd-browse[page-subtype="channels"i], ytm-browse > .modern-tabs > div[is-channel="true"i])) :is(#primary:not(.ytAreaShow), div[is-channel="true"i] ~ div:not(.ytAreaShow)) { visibility: hidden !important; } ';
+        await waitQuerySelector('body:has(:is(ytd-browse[page-subtype="channels"i], ytm-browse > .modern-tabs > div)) :is(#primary, div[is-channel="true"i])');
+        await new Promise(resolve => setTimeout(resolve, waitTime * 4));
+        stylusElemCh.textContent = 'body:has(:is(ytd-browse[page-subtype="channels"i], ytm-browse > .modern-tabs > div)) :is(#primary:not(.ytAreaShow), div[is-channel="true"i] ~ div:not(.ytAreaShow)) { visibility: hidden !important; } ';
       } else {
         stylusElemCh.textContent = '';
       }
@@ -500,7 +491,7 @@
         // console.log(path, localPath);
         if (new RegExp(yt.path, 'gis').test(e.detail.path)) {
           console.log('> youtube get ...', yt.area);
-          await initial(yt.area);
+          await initial(yt.area, e.detail);
         }
       }
 
