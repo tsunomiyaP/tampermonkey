@@ -338,11 +338,11 @@
         if (isDevice && new RegExp(regSearch, 'gis').test(detail.path)) {
           const itemArea = area + ' ytd-item-section-renderer > div#contents';
           await waitQuerySelector(itemArea); // 子要素存在チェック
-          items = document.querySelectorAll(itemArea + ' > *:not(.target)');
+          items = document.querySelectorAll(itemArea + ' > .target');
         } else {
           const itemArea = area;
           await waitQuerySelector(itemArea); // 子要素存在チェック
-          items = document.querySelectorAll(itemArea + ' > *:not(.target)');
+          items = document.querySelectorAll(itemArea + ' > .target');
         }
         Array.from(items).forEach((el) => el.classList.add('minScale'));
 
