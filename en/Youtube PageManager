@@ -326,53 +326,48 @@
     return flg;
   };
   const scaleShowMovie = async (area, item, detail) => {
-    if (!item.classList.contains('target')) {
-      item.classList.add('target');
-      // console.log('test2 1件ずつ', item);
-      const flg = await removeMovieInformation(item, detail);
-      if (!flg) { item.classList.add('show'); } else { item.classList.add('remove_item'); }
-      item.classList.add('minScale');
+    // console.log('test2 1件ずつ', item);
+    const flg = await removeMovieInformation(item, detail);
+    if (!flg) { item.classList.add('show'); } else { item.classList.add('remove_item'); }
+    item.classList.add('minScale');
 
-      const ytArea = document.querySelector(area);
-
-      document.addEventListener('click', async (e) => {
-        if (e.target.classList.contains('target')) {
-          let items = null;
-          const isDevice = 'www.youtube.com' === detail.host ? true : false;
-          if (isDevice && new RegExp(regSearch, 'gis').test(detail.path)) {
-            items = Array.from(document.querySelector(area).querySelectorAll('ytd-item-section-renderer > div#contents > *'));
-          } else {
-            items = Array.from(document.querySelector(area).children);
-          }
-
-          for (const ytItem of items) {
-            ytItem.classList.add('minScale');
-          }
-          e.target.classList.remove('minScale');
+    document.addEventListener('click', async (e) => {
+      if (e.target.classList.contains('target')) {
+        let items = null;
+        const isDevice = 'www.youtube.com' === detail.host ? true : false;
+        if (isDevice && new RegExp(regSearch, 'gis').test(detail.path)) {
+          items = Array.from(document.querySelector(area).querySelectorAll('ytd-item-section-renderer > div#contents > *'));
+        } else {
+          items = Array.from(document.querySelector(area).children);
         }
-      });
-    }
+
+        for (const ytItem of items) {
+          ytItem.classList.add('minScale');
+        }
+        e.target.classList.remove('minScale');
+      }
+    });
   };
   const ytMovieList = async (area, items, detail) => {
     for await (const item of items) {
       await scaleShowMovie(area, item, detail);
     }
   };
-  const ytMovieShowCase = async (ytMovieLen, area, detail) => {
+  const ytMovieShowCase = async (area, detail) => {
     let items = null;
     const isDevice = 'www.youtube.com' === detail.host ? true : false;
     if (isDevice && new RegExp(regSearch, 'gis').test(detail.path)) {
-      items = Array.from(document.querySelector(area).querySelectorAll('ytd-item-section-renderer > div#contents > *'));
+      items = Array.from(document.querySelector(area).querySelectorAll('ytd-item-section-renderer > div#contents > *:not(.target)'));
     } else {
-      items = Array.from(document.querySelector(area).children);
+      items = Array.from(document.querySelector(area).querySelectorAll('> *:not(.target)'));
     }
-    const activeElements = items.filter(el => el.classList.contains('target'));
-    if (activeElements.length === items.length) { return items; }
-    console.log('yt movie list ... ', items.length, ytMovieLen);
-    if (ytMovieLen !== items.length) { ytMovieLen = items.length; return await ytMovieShowCase(ytMovieLen, area, detail); } else { return items; }
+
+    const ytItems = items.filter(el => el.classList.add('target'));
+    console.log('yt movie list ... ', ytItems.length);
+    return ytItems;
   };
   const ytMovieRemover = async (area, detail) => {
-    let items = await ytMovieShowCase(0, area, detail);
+    const items = await ytMovieShowCase(area, detail);
     await ytMovieList(area, items, detail);
   };
   const initial = async (area, detail) => {
@@ -381,14 +376,15 @@
     for (const ytTarget of ytMovies) {
       ytTarget.classList.remove('target', 'show');
     }
+    // 初期処理
     await ytMovieRemover(area, detail);
-
     ytMutation = new MutationObserver(async () => {
+      console.log('ytArea Mutation changed ...');
       await ytMovieRemover(area, detail);
     });
     if (new RegExp(regWatch, 'gis').test(detail.path)) {
       const resizeObserver = new ResizeObserver(async () => {
-        console.log('ytArea size changed');
+        console.log('ytArea size changed ...');
         await ytMovieRemover(area, detail);
       });
       resizeObserver.observe(document.querySelector(area));
