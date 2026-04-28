@@ -327,23 +327,25 @@
   };
   const scaleShowMovie = async (area, item, detail) => {
     // console.log('test2 1件ずつ', item);
+    item.classList.add('minScale');
     const flg = await removeMovieInformation(item, detail);
     if (!flg) { item.classList.add('show'); } else { item.classList.add('remove_item'); }
-    item.classList.add('minScale');
 
     document.addEventListener('click', async (e) => {
       if (e.target.classList.contains('target')) {
         let items = null;
         const isDevice = 'www.youtube.com' === detail.host ? true : false;
         if (isDevice && new RegExp(regSearch, 'gis').test(detail.path)) {
-          items = Array.from(document.querySelector(area).querySelectorAll('ytd-item-section-renderer > div#contents > *'));
+          const itemArea = area + ' ytd-item-section-renderer > div#contents';
+          await waitQuerySelector(itemArea); // 子要素存在チェック
+          items = document.querySelectorAll(itemArea + ' > *:not(.target)');
         } else {
-          items = Array.from(document.querySelector(area).children);
+          const itemArea = area;
+          await waitQuerySelector(itemArea); // 子要素存在チェック
+          items = document.querySelectorAll(itemArea + ' > *:not(.target)');
         }
+        Array.from(items).forEach((el) => el.classList.add('minScale'));
 
-        for (const ytItem of items) {
-          ytItem.classList.add('minScale');
-        }
         e.target.classList.remove('minScale');
       }
     });
@@ -357,25 +359,27 @@
     let items = null;
     const isDevice = 'www.youtube.com' === detail.host ? true : false;
     if (isDevice && new RegExp(regSearch, 'gis').test(detail.path)) {
-      items = Array.from(document.querySelector(area).querySelectorAll('ytd-item-section-renderer > div#contents > *:not(.target)'));
+      const itemArea = area + ' ytd-item-section-renderer > div#contents';
+      await waitQuerySelector(itemArea); // 子要素存在チェック
+      items = document.querySelectorAll(itemArea + ' > *:not(.target)');
     } else {
-      items = Array.from(document.querySelector(area).querySelectorAll('> *:not(.target)'));
+      const itemArea = area;
+      await waitQuerySelector(itemArea); // 子要素存在チェック
+      items = document.querySelectorAll(itemArea + ' > *:not(.target)');
     }
-
-    const ytItems = items.filter(el => el.classList.add('target'));
-    console.log('yt movie list ... ', ytItems.length);
-    return ytItems;
+    console.log('yt movie list ... ', items.length);
+    Array.from(items).forEach((el) => el.classList.add('target'));
+    return items;
   };
   const ytMovieRemover = async (area, detail) => {
     const items = await ytMovieShowCase(area, detail);
     await ytMovieList(area, items, detail);
   };
   const initial = async (area, detail) => {
-    const yt = await waitQuerySelector(area);
-    const ytMovies = yt.querySelectorAll('.target');
-    for (const ytTarget of ytMovies) {
-      ytTarget.classList.remove('target', 'show');
-    }
+    await waitQuerySelector(area);
+    const ytMovies = document.querySelectorAll('.target');
+    Array.from(ytMovies).forEach((el) => el.classList.remove('target', 'show'));
+
     // 初期処理
     await ytMovieRemover(area, detail);
     ytMutation = new MutationObserver(async () => {
