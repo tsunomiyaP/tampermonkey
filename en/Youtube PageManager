@@ -246,6 +246,7 @@
       const ytUserN1 = 'div.ytLockupMetadataViewModelMetadata div.ytContentMetadataViewModelMetadataRow';
       mode.pc.ytTitle = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytTitle1)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytTitle1).textContent;
       mode.pc.userNam = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserN1)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserN1).textContent;
+      mode.pc.userChN = '';
       // 非ログイン時
       // const ytTitle2 = 'h3.ytLockupMetadataViewModelHeadingReset';
       // const ytUserN2 = 'div.ytLockupMetadataViewModelMetadata div.ytContentMetadataViewModelMetadataRow';
@@ -255,6 +256,7 @@
       const ytUserN3 = 'div > ytm-badge-and-byline-renderer > span.YtmBadgeAndBylineRendererItemByline';
       mode.mobile.ytTitle = isNuN(item.querySelector('div.details > div.media-item-info > div.media-item-metadata > a > ' + ytTitle3)) ? '' : item.querySelector('div.details > div.media-item-info > div.media-item-metadata > a > ' + ytTitle3).textContent;
       mode.mobile.userNam = isNuN(item.querySelector('div.details > div.media-item-info > div.media-item-metadata > a > ' + ytUserN3)) ? '' : item.querySelector('div.details > div.media-item-info > div.media-item-metadata > a > ' + ytUserN3).textContent;
+      mode.mobile.userChN = '';
 
       if (isDevice) {
         YtChannel = mode.pc.userNam;
@@ -265,6 +267,7 @@
       const strData = device;
       youtubeItem.ytTitle = strData.ytTitle;
       youtubeItem.userNam = strData.userNam;
+      youtubeItem.userChN = strData.userChN;
 
       let user = '';
       // 閲覧チャンネルのみ表示
@@ -282,33 +285,40 @@
       // pc 動画
       mode.pc.ytTitle = isNuN(item.querySelector('div#dismissible div#details div#meta > h3')) ? '' : item.querySelector('div#dismissible div#details div#meta > h3').textContent;
       mode.pc.userNam = isNuN(item.querySelector('div#dismissible div#details div#meta > h3')) ? '' : item.querySelector('div#dismissible div#details div#meta > h3').textContent;
+      mode.pc.userChN = '';
       // mobile
       mode.mobile.ytTitle = isNuN(item.querySelector('div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline')) ? '' : item.querySelector('div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline').textContent;
       mode.mobile.userNam = isNuN(item.querySelector('div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline')) ? '' : item.querySelector('div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline').textContent;
+      mode.mobile.userChN = '';
 
       const strData = device;
       youtubeItem.ytTitle = strData.ytTitle;
       youtubeItem.userNam = strData.userNam;
+      youtubeItem.userChN = strData.userChN;
     } else { // ホームなど
       // pc 動画
       const ytTitle1 = 'h3.ytLockupMetadataViewModelHeadingReset';
-      const ytUserN1 = 'div.ytLockupMetadataViewModelMetadata div.ytContentMetadataViewModelMetadataRow';
+      const ytUserN1 = 'div.ytLockupMetadataViewModelMetadata div.ytContentMetadataViewModelMetadataRow a';
       mode.pc.ytTitle = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytTitle1)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytTitle1).textContent;
       mode.pc.userNam = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserN1)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserN1).textContent;
+      mode.pc.userChN = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserN1)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserN1).href;
       // mobile
-      const ytTitle3 = 'h3.media-item-headline';
-      const ytUserN3 = 'div > ytm-badge-and-byline-renderer > span.YtmBadgeAndBylineRendererItemByline';
-      mode.mobile.ytTitle = isNuN(item.querySelector('div.details > div.media-item-info > div.media-item-metadata > a > ' + ytTitle3)) ? '' : item.querySelector('div.details > div.media-item-info > div.media-item-metadata > a > ' + ytTitle3).textContent;
-      mode.mobile.userNam = isNuN(item.querySelector('div.details > div.media-item-info > div.media-item-metadata > a > ' + ytUserN3)) ? '' : item.querySelector('div.details > div.media-item-info > div.media-item-metadata > a > ' + ytUserN3).textContent;
+      const ytTitle3 = 'div.media-item-info > div.media-item-metadata > a > h3.media-item-headline';
+      const ytUserN3 = 'div.media-item-info > div.media-item-metadata > a > div > ytm-badge-and-byline-renderer > span.YtmBadgeAndBylineRendererItemByline';
+      const ytChName = 'div.media-channel > ytm-channel-thumbnail-with-link-renderer > a';
+      mode.mobile.ytTitle = isNuN(item.querySelector('div.details > ' + ytTitle3)) ? '' : item.querySelector('div.details > ' + ytTitle3).textContent;
+      mode.mobile.userNam = isNuN(item.querySelector('div.details > ' + ytUserN3)) ? '' : item.querySelector('div.details > ' + ytUserN3).textContent;
+      mode.mobile.userChN = isNuN(item.querySelector('div.details > ' + ytChName)) ? '' : item.querySelector('div.details > ' + ytChName).href;
 
       const strData = device;
       youtubeItem.ytTitle = strData.ytTitle;
       youtubeItem.userNam = strData.userNam;
+      youtubeItem.userChN = strData.userChN;
     }
     const words = isNuN(abc) ? '' : abc.hideword;
     const excludes = isNuN(abc) ? '' : abc.execludeWords;
 
-    const txt = youtubeItem.userNam + youtubeItem.ytTitle;
+    const txt = youtubeItem.userChN + ' : ' + youtubeItem.userNam + ' : ' + youtubeItem.ytTitle;
     for (const word of words) {
       if (new RegExp(word, 'gis').test(txt)) {
         youtubeItem.word = word;
@@ -344,7 +354,8 @@
           await waitQuerySelector(itemArea); // 子要素存在チェック
           items = document.querySelectorAll(itemArea + ' > .target');
         }
-        Array.from(items).forEach((el) => el.classList.add('minScale'));
+        // Array.from(items).forEach((el) => el.classList.add('minScale'));
+        for await (const el of items) { el.classList.add('minScale');}
 
         e.target.classList.remove('minScale');
       }
@@ -368,20 +379,33 @@
       items = document.querySelectorAll(itemArea + ' > *:not(.target)');
     }
     console.log('yt movie list ... ', items.length);
-    Array.from(items).forEach((el) => el.classList.add('target'));
+    for await (const el of items) { el.classList.add('target'); }
     return items;
   };
   const ytMovieRemover = async (area, detail) => {
+    await new Promise(resolve => setTimeout(resolve, waitTime));
     const items = await ytMovieShowCase(area, detail);
     await ytMovieList(area, items, detail);
   };
   const initial = async (area, detail) => {
     await waitQuerySelector(area);
-    const ytMovies = document.querySelectorAll('.target');
-    Array.from(ytMovies).forEach((el) => el.classList.remove('target', 'show'));
-
+    let ytMovies = null;
+    const isDevice = 'www.youtube.com' === detail.host ? true : false;
+    if (isDevice && new RegExp(regSearch, 'gis').test(detail.path)) {
+      const itemArea = area + ' ytd-item-section-renderer > div#contents';
+      await waitQuerySelector(itemArea); // 子要素存在チェック
+      ytMovies = document.querySelectorAll(itemArea + ' > *');
+    } else {
+      const itemArea = area;
+      await waitQuerySelector(itemArea); // 子要素存在チェック
+      ytMovies = document.querySelectorAll(itemArea + ' > *');
+    }
     // 初期処理
+    console.log('yt Movie 初期処理', area);
+    // Array.from(ytMovies).forEach((el) => el.classList.remove('target', 'minScale', 'show', 'remove_item'));
+    for await (const el of ytMovies) { el.classList.remove('target', 'minScale', 'show', 'remove_item'); }
     await ytMovieRemover(area, detail);
+
     ytMutation = new MutationObserver(async () => {
       console.log('ytArea Mutation changed ...');
       await ytMovieRemover(area, detail);
