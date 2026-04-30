@@ -355,7 +355,7 @@
           items = document.querySelectorAll(itemArea + ' > .target');
         }
         // Array.from(items).forEach((el) => el.classList.add('minScale'));
-        for await (const el of items) { el.classList.add('minScale');}
+        for await (const el of items) { el.classList.add('minScale'); }
 
         e.target.classList.remove('minScale');
       }
