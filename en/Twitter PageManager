@@ -237,7 +237,7 @@
   };
   // URL検知
   window.addEventListener('urlChange', async (e) => {
-    const tab = await waitQuerySelector('div[role="presentation"i] div[role="tab"i][aria-selected="true"i] span');
+    const tab = await waitQuerySelectorCount(10, 'div[role="presentation"i] div[role="tab"i][aria-selected="true"i] span');
     const tabLabel = isNuN(tab) ? '' : tab.textContent;
     if (oldUrl !== e.detail.path || label !== tabLabel) {
       oldUrl = e.detail.path; // oldUrlを更新
