@@ -217,10 +217,10 @@
     });
   };
 
-  const reWatch = async () => {
+  const reWatch = async (detail) => {
     const watch = new RegExp(regWatch, 'gis');
-    const isWatch = watch.test(location.pathname);
-
+    const isWatch = watch.test(detail.path);
+    await new Promise(resolve => setTimeout(resolve, waitTime));
     isProgressBar(isWatch);
 
     if (!isMovieMode) {
@@ -273,8 +273,7 @@
       // youtube Area Manager
       await waitQuerySelector(manager);
       if (new RegExp(regWatch, 'gis').test(e.detail.path)) {
-        await new Promise(resolve => setTimeout(resolve, waitTime));
-        reWatch();
+        await reWatch(e.detail);
       }
     }
   });
