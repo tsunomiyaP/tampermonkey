@@ -169,9 +169,9 @@
     }
   };
   const initial = async () => {
+    await waitQuerySelector(manager);
     await new Promise(resolve => setTimeout(resolve, waitTime));
 
-    await waitQuerySelector(manager);
     const ytPlayer = await waitQuerySelector(player);
     const stats = ytPlayer.getVideoStats() || {};
     console.log('> youtube Live status : ' + stats.live);
