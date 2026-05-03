@@ -160,10 +160,10 @@
       console.log('> youtube not Live... movie watch : ' + q);
     }
   };
-  const initial = async (ytArray) => {
+  const initial = async (ytArray, detail) => {
     for await (const yt of ytArray) {
-      if (new RegExp(yt.path, 'gis').test(location.pathname)) {
-        qualityFix();
+      if (new RegExp(yt.path, 'gis').test(detail.path)) {
+        await qualityFix();
       }
     }
   };
@@ -187,7 +187,7 @@
         const ytArray = itemsArray.filter((yt) => e.detail.host === yt.device);
 
         await new Promise(resolve => setTimeout(resolve, waitTime));
-        initial(ytArray);
+        initial(ytArray, e.detail);
       }
     }
   });
