@@ -450,52 +450,56 @@
       // youtube Channel Area Manager
       if (new RegExp(regChannel, 'gis').test(e.detail.path)) {
         stylusElemCh.textContent = 'body { visibility: hidden !important; } ';
-        const channelPc = 'ytd-browse[page-subtype="channels"i] #primary'; // channel タブ
-        const channelPcItem = 'ytd-section-list-renderer[page-subtype="channels"i]';
-        const channelMb = 'ytm-browse > .modern-tabs > div[is-channel="true"i] ~ div'; // channel タブ
+        const channelPC = 'ytd-browse[page-subtype="channels"i] #primary'; // channel タブ
+        const channelPCItem = 'ytd-section-list-renderer[page-subtype="channels"i]';
+        const channelMB = 'ytm-browse > .modern-tabs > div[is-channel="true"i] ~ div'; // channel タブ
 
+        // youtube Area Manager
+        await waitQuerySelector(manager);
+        await waitQuerySelectorCount(10, channelPC);
+        await waitQuerySelectorCount(10, channelMB);
         if (new RegExp('(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)(/videos|/streams|/playlists|/releases|/posts|/search|/community|/membership)', 'gis').test(e.detail.path)) {
           if ('www.youtube.com' === e.detail.host) {
-            const section = await waitQuerySelector(channelPc);
-            section.classList.add('ytAreaShow');
+            const sectionPC = document.querySelector(channelPC);
+            if (!isNuN(sectionPC)) { sectionPC.classList.add('ytAreaShow'); }
           } else if ('m.youtube.com' === e.detail.host) {
-            const section = await waitQuerySelector(channelMb);
-            section.classList.add('ytAreaShow');
+            const sectionMB = document.querySelector(channelMB);
+            if (!isNuN(sectionMB)) { sectionMB.classList.add('ytAreaShow'); }
           }
         } else {
           const excChannel = 'tsunomiyaP|UCSsBxdA7yg523PegCT7O7Mg';
+          // console.log('not fav channel');
           if (!new RegExp(excChannel, 'gis').test(e.detail.path)) {
-            // console.log('fav channel');
             if ('www.youtube.com' === e.detail.host) {
-              const section = await waitQuerySelector(channelPc);
-              section.classList.remove('ytAreaShow');
-              section.querySelector(channelPcItem).remove();
+              await waitQuerySelectorCount(10, channelPC + ' ' + channelPCItem);
+              const sectionPC = document.querySelector(channelPC);
+              const sectionPCItem = document.querySelector(channelPC + ' ' + channelPCItem);
+              if (!isNuN(sectionPC)) { if (!isNuN(sectionPCItem)) { sectionPCItem.remove(); } sectionPC.classList.remove('ytAreaShow'); }
             } else if ('m.youtube.com' === e.detail.host) {
               console.log('hidden channel area');
-              const section = await waitQuerySelector(channelMb);
-              section.classList.remove('ytAreaShow');
+              const sectionMB = document.querySelector(channelMB);
+              if (!isNuN(sectionMB)) { sectionMB.classList.remove('ytAreaShow'); }
             }
           } else {
-            // console.log('own channel');
+            // console.log('fav channel');
             if ('www.youtube.com' === e.detail.host) {
-              const section = await waitQuerySelector(channelPc);
-              section.classList.add('ytAreaShow');
+              const sectionPC = document.querySelector(channelPC);
+              if (!isNuN(sectionPC)) { sectionPC.classList.add('ytAreaShow'); }
             } else if ('m.youtube.com' === e.detail.host) {
-              const section = await waitQuerySelector(channelMb);
-              section.classList.add('ytAreaShow');
+              const sectionMB = document.querySelector(channelMB);
+              if (!isNuN(sectionMB)) { sectionMB.classList.add('ytAreaShow'); }
             }
           }
         }
         // style 可変値
-        await waitQuerySelector('body:has(:is(ytd-browse[page-subtype="channels"i], ytm-browse > .modern-tabs > div)) :is(#primary, div[is-channel="true"i])');
+        await waitQuerySelectorCount(10, ':is(' + channelPC + ', ' + channelMB + ')');
         await new Promise(resolve => setTimeout(resolve, waitTime * 4));
-        stylusElemCh.textContent = 'body:has(:is(ytd-browse[page-subtype="channels"i], ytm-browse > .modern-tabs > div)) :is(#primary:not(.ytAreaShow), div[is-channel="true"i] ~ div:not(.ytAreaShow)) { visibility: hidden !important; } ';
+        stylusElemCh.textContent = ':is(' + channelPC + ', ' + channelMB + '):not(.ytAreaShow) { visibility: hidden !important; } ';
       } else {
+        // youtube Area Manager
+        await waitQuerySelector(manager);
         stylusElemCh.textContent = '';
       }
-
-      // youtube Area Manager
-      await waitQuerySelector(manager);
 
       if (new RegExp(regWatch, 'gis').test(e.detail.path)) {
         if ('www.youtube.com' === e.detail.host) {
