@@ -283,9 +283,12 @@
       if (user !== YtChannel) { item.classList.add('own_ch_NuN'); }
     } else if (new RegExp(regChannel, 'gis').test(detail.path)) { // チャンネルエリア
       // pc 動画
-      mode.pc.ytTitle = isNuN(item.querySelector('div#dismissible div#details div#meta > h3')) ? '' : item.querySelector('div#dismissible div#details div#meta > h3').textContent;
-      mode.pc.userNam = isNuN(item.querySelector('div#dismissible div#details div#meta > h3')) ? '' : item.querySelector('div#dismissible div#details div#meta > h3').textContent;
+      const ytTitle1 = 'h3.ytLockupMetadataViewModelHeadingReset';
+      const ytUserN1 = 'div.ytLockupMetadataViewModelMetadata div.ytContentMetadataViewModelMetadataRow';
+      mode.pc.ytTitle = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytTitle1)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytTitle1).textContent;
+      mode.pc.userNam = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserN1)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserN1).textContent;
       mode.pc.userChN = '';
+
       // mobile
       mode.mobile.ytTitle = isNuN(item.querySelector('div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline')) ? '' : item.querySelector('div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline').textContent;
       mode.mobile.userNam = isNuN(item.querySelector('div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline')) ? '' : item.querySelector('div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline').textContent;
