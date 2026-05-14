@@ -80,7 +80,7 @@
   // 初期表示
   for (const yt of itemsArray) {
     // 非表示 // home, 検索結果
-    appendStylus += yt.area + ' > *:not(.show), ' + yt.area + ' :is(ytd-item-section-renderer > div#contents > *:not(.show)) { display: none !important; /* visibility: hidden !important; **/ } ';
+    appendStylus += yt.area + ' :is(> :not(:has(ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list)), ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list) > :not(.show), ' + yt.area + ' :is(ytd-item-section-renderer > div#contents > *:not(.show)) { display: none !important; /* visibility: hidden !important; **/ } ';
     // 拡大縮小
     appendStylus += yt.area + ' .target.minScale:not(:has(div[class*="subheader"i])) > * { ' + yt.stylus + ' } ';
     // [ショート]動画 削除
@@ -347,9 +347,8 @@
     document.addEventListener('click', async (e) => {
       if (e.target.classList.contains('target')) {
         let items = null;
-        const isDevice = 'www.youtube.com' === detail.host ? true : false;
-        if (isDevice && new RegExp(regSearch, 'gis').test(detail.path)) {
-          const itemArea = area + ' ytd-item-section-renderer > div#contents';
+        if (new RegExp(regSearch, 'gis').test(detail.path)) {
+          const itemArea = area + ' :is(ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list)';
           await waitQuerySelector(itemArea); // 子要素存在チェック
           items = document.querySelectorAll(itemArea + ' > .target');
         } else {
@@ -371,9 +370,8 @@
   };
   const ytMovieShowCase = async (area, detail) => {
     let items = null;
-    const isDevice = 'www.youtube.com' === detail.host ? true : false;
-    if (isDevice && new RegExp(regSearch, 'gis').test(detail.path)) {
-      const itemArea = area + ' ytd-item-section-renderer > div#contents';
+    if (new RegExp(regSearch, 'gis').test(detail.path)) {
+      const itemArea = area + ' :is(ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list)';
       await waitQuerySelector(itemArea); // 子要素存在チェック
       items = document.querySelectorAll(itemArea + ' > *:not(.target)');
     } else {
@@ -393,9 +391,8 @@
   const initial = async (area, detail) => {
     await waitQuerySelector(area);
     let ytMovies = null;
-    const isDevice = 'www.youtube.com' === detail.host ? true : false;
-    if (isDevice && new RegExp(regSearch, 'gis').test(detail.path)) {
-      const itemArea = area + ' ytd-item-section-renderer > div#contents';
+    if (new RegExp(regSearch, 'gis').test(detail.path)) {
+      const itemArea = area + ' :is(ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list)';
       await waitQuerySelector(itemArea); // 子要素存在チェック
       ytMovies = document.querySelectorAll(itemArea + ' > *');
     } else {
