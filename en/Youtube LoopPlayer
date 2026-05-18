@@ -169,12 +169,12 @@
     }
   };
   const initial = async () => {
-    await waitQuerySelector(manager);
     await new Promise(resolve => setTimeout(resolve, waitTime));
 
+    await waitQuerySelector(manager);
     const ytPlayer = await waitQuerySelector(player);
     const stats = ytPlayer.getVideoStats() || {};
-    console.log('> youtube Live status : ' + stats.live);
+    console.log('> youtube Live status : ', stats.live);
     if (stats.live === 'live' || stats.live === 'dvr' || stats.live === 'lp') {
       // ライブ
       document.querySelector('[id^="loop_off"]').style.display = 'none';
