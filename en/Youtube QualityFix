@@ -138,18 +138,23 @@
 
     if (typeof ytPlayer.getAvailableQualityLevels() === 'undefined') { return qualityFix(); }
     if (ytPlayer.getPlaybackQuality().toLowerCase() === 'unknown') { return qualityFix(); }
+
+    await new Promise(resolve => setTimeout(resolve, waitTime));
     console.log('> youtube quality list : ', ytPlayer.getAvailableQualityLevels());
     if (!ytPlayer.getAvailableQualityLevels().includes(q)) {
       q = qualitys[target + 1];
     }
     console.log('> youtube quality : ' + q);
-    await new Promise(resolve => setTimeout(resolve, waitTime));
 
     // ライブ配信か否か pc, mobile
     // const badge = await waitQuerySelectorCount(1, 'button.ytp-live-badge-is-livehead, span.ytwPlayerTimeDisplayTime');
     const stats = ytPlayer.getVideoStats() || {};
     console.log('> youtube Live status : ' + stats.live);
-    if (stats.live === 'live' || stats.live === 'dvr' || stats.live === 'lp') {
+    if (isNuN(stats.live)) {
+      console.log('> youtube not Live... movie watch : ' + q);
+      ytPlayer.setPlaybackQualityRange(q);
+      ytPlayer.setPlaybackQuality(q);
+    } else if (stats.live === 'live' || stats.live === 'dvr' || stats.live === 'lp') {
       // 最低画質
       q = qualitys[qualitys.length - 2];
       console.log('> youtube Live... change : ' + q);
