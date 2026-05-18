@@ -128,7 +128,7 @@
     return false;
   };
 
-  const qualityFix = async () => {
+  const qualityFix = async (canLevel) => {
     let q = qualitys[target];
 
     // 初期処理
@@ -136,41 +136,43 @@
     const ytPlayer = document.querySelector(player);
     await waitQuerySelector('div.ytp-left-controls, player-bottom-controls');
 
-    if (typeof ytPlayer.getAvailableQualityLevels() === 'undefined') { return qualityFix(); }
-    if (ytPlayer.getPlaybackQuality().toLowerCase() === 'unknown') { return qualityFix(); }
+    if (typeof ytPlayer.getAvailableQualityLevels() === 'undefined') { return await qualityFix(canLevel); }
+    if (ytPlayer.getPlaybackQuality().toLowerCase() === 'unknown') { return await qualityFix(canLevel); }
+
+    // 初期値[最低値: tiny]
+    q = qualitys[canLevel];
+    if (!ytPlayer.getAvailableQualityLevels().includes(q)) {
+      return await qualityFix(canLevel - 1);
+    }
+
+    console.log('> youtube quality list : ', ytPlayer.getAvailableQualityLevels());
+    ytPlayer.setPlaybackQualityRange(q);
+    ytPlayer.setPlaybackQuality(q);
+    console.log('> youtube quality low : ', q);
 
     await new Promise(resolve => setTimeout(resolve, waitTime));
-    console.log('> youtube quality list : ', ytPlayer.getAvailableQualityLevels());
-    if (!ytPlayer.getAvailableQualityLevels().includes(q)) {
-      q = qualitys[target + 1];
-    }
-    console.log('> youtube quality : ' + q);
-
     // ライブ配信か否か pc, mobile
     // const badge = await waitQuerySelectorCount(1, 'button.ytp-live-badge-is-livehead, span.ytwPlayerTimeDisplayTime');
     const stats = ytPlayer.getVideoStats() || {};
-    console.log('> youtube Live status : ' + stats.live);
-    if (isNuN(stats.live)) {
-      console.log('> youtube not Live... movie watch : ' + q);
-      ytPlayer.setPlaybackQualityRange(q);
-      ytPlayer.setPlaybackQuality(q);
-    } else if (stats.live === 'live' || stats.live === 'dvr' || stats.live === 'lp') {
+    console.log('> youtube Live status : ', stats.live);
+    if (stats.live === 'live' || stats.live === 'dvr' || stats.live === 'lp') {
       // 最低画質
-      q = qualitys[qualitys.length - 2];
-      console.log('> youtube Live... change : ' + q);
-      ytPlayer.setPlaybackQualityRange(q);
-      ytPlayer.setPlaybackQuality(q);
+      if (!ytPlayer.getAvailableQualityLevels().includes(q)) {
+        q = qualitys[canLevel];
+      }
+      console.log('> youtube can Live ... Live stream : ', q);
     } else {
-      console.log('> youtube not Live... movie watch : ' + q);
-      ytPlayer.setPlaybackQualityRange(q);
-      ytPlayer.setPlaybackQuality(q);
+      q = qualitys[target];
+      console.log('> youtube not Live ... movie watch : ', q);
     }
-    console.log('> youtube quality... movie watch is ' + ytPlayer.getPlaybackQuality());
+    ytPlayer.setPlaybackQualityRange(q);
+    ytPlayer.setPlaybackQuality(q);
+    console.log('> youtube quality ... movie is : ', ytPlayer.getPlaybackQuality());
   };
   const initial = async (ytArray, detail) => {
     for await (const yt of ytArray) {
       if (new RegExp(yt.path, 'gis').test(detail.path)) {
-        await qualityFix();
+        await qualityFix(5); // tiny 画質
       }
     }
   };
