@@ -148,6 +148,7 @@
     console.log('> youtube quality list : ', ytPlayer.getAvailableQualityLevels());
     ytPlayer.setPlaybackQualityRange(q);
     ytPlayer.setPlaybackQuality(q);
+    await new Promise(resolve => setTimeout(resolve, waitTime));
     console.log('> youtube quality low : ', q);
 
     // ライブ配信か否か pc, mobile
