@@ -150,7 +150,6 @@
     ytPlayer.setPlaybackQuality(q);
     console.log('> youtube quality low : ', q);
 
-    await new Promise(resolve => setTimeout(resolve, waitTime));
     // ライブ配信か否か pc, mobile
     // const badge = await waitQuerySelectorCount(1, 'button.ytp-live-badge-is-livehead, span.ytwPlayerTimeDisplayTime');
     const stats = ytPlayer.getVideoStats() || {};
@@ -167,7 +166,8 @@
     }
     ytPlayer.setPlaybackQualityRange(q);
     ytPlayer.setPlaybackQuality(q);
-    console.log('> youtube quality ... movie is : ', ytPlayer.getPlaybackQuality());
+    await new Promise(resolve => setTimeout(resolve, waitTime));
+    console.log('> youtube quality FIX ... is : ', ytPlayer.getPlaybackQuality());
   };
   const initial = async (ytArray, detail) => {
     for await (const yt of ytArray) {
