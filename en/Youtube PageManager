@@ -254,8 +254,8 @@
       // mobile
       const ytTitle3 = 'h3.media-item-headline';
       const ytUserN3 = 'div > ytm-badge-and-byline-renderer > span.YtmBadgeAndBylineRendererItemByline';
-      mode.mobile.ytTitle = isNuN(item.querySelector('div.details > div.media-item-info > div.media-item-metadata > a > ' + ytTitle3)) ? '' : item.querySelector('div.details > div.media-item-info > div.media-item-metadata > a > ' + ytTitle3).textContent;
-      mode.mobile.userNam = isNuN(item.querySelector('div.details > div.media-item-info > div.media-item-metadata > a > ' + ytUserN3)) ? '' : item.querySelector('div.details > div.media-item-info > div.media-item-metadata > a > ' + ytUserN3).textContent;
+      mode.mobile.ytTitle = isNuN(item.querySelector('div.media-item-details > div.media-item-info > div.media-item-metadata > a > ' + ytTitle3)) ? '' : item.querySelector('div.media-item-details > div.media-item-info > div.media-item-metadata > a > ' + ytTitle3).textContent;
+      mode.mobile.userNam = isNuN(item.querySelector('div.media-item-details > div.media-item-info > div.media-item-metadata > a > ' + ytUserN3)) ? '' : item.querySelector('div.media-item-details > div.media-item-info > div.media-item-metadata > a > ' + ytUserN3).textContent;
       mode.mobile.userChN = '';
 
       if (isDevice) {
