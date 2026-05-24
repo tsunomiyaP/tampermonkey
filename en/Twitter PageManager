@@ -34,7 +34,7 @@
   // stylus: beforebegin, afterbegin, beforeend, afterend
   let appendStylus = '';
   // area stylus
-  appendStylus += twColumns + ':has( :not(:is(div[data-testid="tweetPhoto"i], div[data-testid="card.wrapper"i]))), [data-testid="sidebarColumn"i] *, header[role="banner"i] *, nav[role="navigation"i] * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background-color: rgba(255, 255, 255, 0.9) !important; /* または背景色を調整 */ color: rgba(0, 0, 0, 1) !important; } ';
+  appendStylus += twMain + ' div[aria-label="ホームタイムライン"i] > div > div:is(:not([class="css-175oi2r r-633pao r-u8s1d r-dkhcqf r-axxi2z r-18jm5s1 r-13qz1uu"i])), ' + twColumns + ':has(:not(:is(div[data-testid="tweetPhoto"i], div[data-testid="card.wrapper"i]))), [data-testid="sidebarColumn"i] *, header[role="banner"i] *, nav[role="navigation"i] * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background-color: rgba(255, 255, 255, 1) !important; /* または背景色を調整 */ color: rgba(0, 0, 0, 1) !important; } ';
   appendStylus += twColumns + ' div[class="css-175oi2r r-18u37iz r-136ojw6"i] > div:first-child { display: none !important; } ';
   appendStylus += twColumns + ' div[class="css-175oi2r r-18u37iz r-184en5c"i] > div:first-child { display: none !important; } ';
   appendStylus += twColumns + ' div[data-testid="Tweet-User-Avatar"i] { display: none !important; } ';
