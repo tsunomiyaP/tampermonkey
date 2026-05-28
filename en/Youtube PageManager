@@ -80,8 +80,8 @@
   // 初期表示
   for (const yt of itemsArray) {
     // 非表示 // home, 検索結果
-    appendStylus += yt.area + ' > :is(:not(:has(:is(ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list))):not(.show), :is(ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list) > :not(.show)) { display: none !important; /* visibility: hidden !important; **/ } ';
-    // 拡大縮小
+    appendStylus += yt.area + ' > :not(:has(:is(ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list))):not(.target.show) { display: none !important; /* visibility: hidden !important; **/ } ';
+    appendStylus += yt.area + ' > :is(ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list) > :not(.target.show) { display: none !important; /* visibility: hidden !important; **/ } ';
     appendStylus += yt.area + ' .target.minScale:not(:has(div[class*="subheader"i])) > * { ' + yt.stylus + ' } ';
     // [ショート]動画 削除
     appendStylus += yt.area + ' .target:has(a[href*="/shorts"i]) { display: none; } ';
@@ -297,13 +297,14 @@
       // pc 動画
       const ytTitle1 = 'h3.ytLockupMetadataViewModelHeadingReset';
       const ytUserN1 = 'div.ytLockupMetadataViewModelMetadata div.ytContentMetadataViewModelMetadataRow a';
+      const ytUserN2 = 'div.ytLockupMetadataViewModelMetadata span.ytAttributedStringHost';
       mode.pc.ytTitle = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytTitle1)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytTitle1).textContent;
       mode.pc.userNam = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserN1)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserN1).textContent;
       mode.pc.userChN = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserN1)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserN1).href;
       // mobile
       mode.mobile.ytTitle = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytTitle1)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytTitle1).textContent;
-      mode.mobile.userNam = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserN1)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserN1).textContent;
-      mode.mobile.userChN = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserN1)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserN1).href;
+      mode.mobile.userNam = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserN2)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserN2).textContent;
+      mode.mobile.userChN = '';
 
       const strData = device;
       youtubeItem.ytTitle = strData.ytTitle;
@@ -331,11 +332,12 @@
     return flg;
   };
   const scaleShowMovie = async (area, item, detail) => {
-    // console.log('test2 1件ずつ', item);
-    item.classList.add('minScale');
-    const flg = await removeMovieInformation(item, detail);
-    if (!flg) { item.classList.add('show'); } else { item.classList.add('remove_item'); }
-
+    if (item.classList.contains('target') && !item.classList.contains('show')) {
+      // console.log('test2 1件ずつ', item);
+      item.classList.add('minScale');
+      const flg = await removeMovieInformation(item, detail);
+      if (!flg) { item.classList.add('show'); } else { item.classList.add('remove_item'); }
+    }
     document.addEventListener('click', async (e) => {
       if (e.target.classList.contains('target')) {
         let items = null;
@@ -396,8 +398,8 @@
     console.log('yt Movie 初期処理', area);
     // Array.from(ytMovies).forEach((el) => el.classList.remove('target', 'minScale', 'show', 'remove_item'));
     for await (const el of ytMovies) { el.classList.remove('target', 'minScale', 'show', 'remove_item'); }
-    await ytMovieRemover(area, detail);
 
+    await ytMovieRemover(area, detail);
     ytMutation = new MutationObserver(async () => {
       console.log('ytArea Mutation changed ...');
       await ytMovieRemover(area, detail);
