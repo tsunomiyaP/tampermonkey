@@ -53,7 +53,7 @@
   // pc
   appendStylus += 'div[id="masthead-ad"i]:has(ytd-ad-slot-renderer) { display: none !important; } ';
   // タブ内要素(ホーム、チャンネル、登録チャンネル)
-  appendStylus += ':is([page-subtype="home"i], [page-subtype="subscriptions"i], [page-subtype="channels"i]) :is(ytd-rich-grid-renderer, ytd-item-section-renderer) :is(:is(ytd-rich-item-renderer, ytd-rich-section-renderer):has(:is(ytd-ad-slot-renderer, a[href*="/shorts/"i], a[href*="&start_radio="i], a[href*="&list="i], ytd-rich-shelf-renderer)), ytd-statement-banner-renderer, ytd-channel-video-player-renderer, ytd-channel-featured-content-renderer) { display: none !important; } ';
+  appendStylus += ':is([page-subtype="home"i], [page-subtype="subscriptions"i], [page-subtype="channels"i]) :is(ytd-rich-grid-renderer, ytd-item-section-renderer) :is(:is(ytd-rich-item-renderer, ytd-rich-section-renderer):has(:is(ytd-ad-slot-renderer, ytd-chips-shelf-with-video-shelf-renderer, a[href*="/shorts/"i], a[href*="&start_radio="i], a[href*="&list="i], ytd-rich-shelf-renderer)), ytd-statement-banner-renderer, ytd-channel-video-player-renderer, ytd-channel-featured-content-renderer) { display: none !important; } ';
   // 動画
   appendStylus += 'ytd-watch-flexy :is(div[id="panels"i], div[id="related"i], div[id="contents"i], div[id="items"i]) > :is(ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-ads"i], div[id="player-ads"i], ytd-ad-slot-renderer, ytd-compact-video-renderer, yt-lockup-view-model:has(a[href*="/shorts/"i]), yt-lockup-view-model:has(a[href*="&start_radio="i]), yt-lockup-view-model:has(a[href*="&list="i])) { display: none !important; } ';
   appendStylus += 'ytd-watch-flexy :is(div#full-bleed-container:not(:has(div#player-container)), div[class="html5-endscreen ytp-player-content videowall-endscreen"i], div[class*="ytp-ce-element"i], div[class="ytp-endscreen-content"i], div.ytp-fullscreen-grid) { display: none !important; } ';
@@ -333,7 +333,6 @@
   const scaleShowMovie = async (area, item, detail) => {
     if (item.classList.contains('target') && !item.classList.contains('show')) {
       // console.log('test2 1件ずつ', item);
-      await new Promise(resolve => setTimeout(resolve, waitTime));
       const flg = await removeMovieInformation(item, detail);
       if (!flg) { item.classList.add('show', 'minScale'); } else { item.classList.add('remove_item', 'minScale'); }
     }
