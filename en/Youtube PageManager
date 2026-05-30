@@ -42,6 +42,7 @@
   // 可変数
   let ytMutation;
   let oldUrl = '';
+  let flg = 'waiting';
   // ==========================================================
   // 静的style適用エリア
   // stylus: beforebegin, afterbegin, beforeend, afterend
@@ -355,15 +356,10 @@
       }
     });
   };
-  const ytMovieList = async (area, items, detail) => {
-    for await (const item of items) {
-      await scaleShowMovie(area, item, detail);
-    }
-  };
   const ytMovieShowCase = async (area, detail) => {
     let items = null;
     if (new RegExp(regSearch, 'gis').test(detail.path)) {
-      const itemArea = area + ' :is(ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list)';
+      const itemArea = area + ' > :is(ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list)';
       await waitQuerySelector(itemArea); // 子要素存在チェック
       items = document.querySelectorAll(itemArea + ' > *:not(.target)');
     } else {
@@ -376,15 +372,18 @@
     return items;
   };
   const ytMovieRemover = async (area, detail) => {
-    await new Promise(resolve => setTimeout(resolve, waitTime));
     const items = await ytMovieShowCase(area, detail);
-    await ytMovieList(area, items, detail);
+    await new Promise(resolve => setTimeout(resolve, waitTime));
+    for await (const item of items) {
+      await scaleShowMovie(area, item, detail);
+    }
+    return 'success';
   };
   const initial = async (area, detail) => {
     await waitQuerySelector(area);
     let ytMovies = null;
     if (new RegExp(regSearch, 'gis').test(detail.path)) {
-      const itemArea = area + ' :is(ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list)';
+      const itemArea = area + ' > :is(ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list)';
       await waitQuerySelector(itemArea); // 子要素存在チェック
       ytMovies = document.querySelectorAll(itemArea + ' > *:has(.target)');
     } else {
@@ -397,10 +396,13 @@
     // Array.from(ytMovies).forEach((el) => el.classList.remove('target', 'minScale', 'show', 'remove_item'));
     for await (const el of ytMovies) { el.classList.remove('target', 'minScale', 'show', 'remove_item'); }
 
-    await ytMovieRemover(area, detail);
+    flg = await ytMovieRemover(area, detail);
     ytMutation = new MutationObserver(async () => {
-      console.log('ytArea Mutation changed ...');
-      await ytMovieRemover(area, detail);
+      if (flg == 'success') {
+        flg = 'waiting';
+        console.log('ytArea Mutation changed ...', flg);
+        flg = await ytMovieRemover(area, detail);
+      }
     });
     if (new RegExp(regWatch, 'gis').test(detail.path)) {
       const resizeObserver = new ResizeObserver(async () => {
