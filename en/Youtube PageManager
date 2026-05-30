@@ -243,16 +243,14 @@
       let YtChannel = '';
       await waitQuerySelector('div#owner ytd-video-owner-renderer ytd-channel-name#channel-name #text-container > yt-formatted-string#text[title], ytm-slim-owner-renderer h3.slim-owner-channel-name span');
       // pc 動画
-      const ytTitle1 = 'h3.ytLockupMetadataViewModelHeadingReset';
-      const ytUserN1 = 'div.ytLockupMetadataViewModelMetadata div.ytContentMetadataViewModelMetadataRow';
-      mode.pc.ytTitle = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytTitle1)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytTitle1).textContent;
-      mode.pc.userNam = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserN1)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserN1).textContent;
+      const ytTitleMeta = ':is(h3.ytLockupMetadataViewModelHeadingReset, h3.media-item-headline)';
+      const ytUserNMeta = ':is(div.ytLockupMetadataViewModelMetadata div.ytContentMetadataViewModelMetadataRow, div > ytm-badge-and-byline-renderer > span.YtmBadgeAndBylineRendererItemByline)';
+      mode.pc.ytTitle = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytTitleMeta)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytTitleMeta).textContent;
+      mode.pc.userNam = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserNMeta)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserNMeta).textContent;
       mode.pc.userChN = '';
       // mobile
-      const ytTitle3 = 'h3.media-item-headline';
-      const ytUserN3 = 'div > ytm-badge-and-byline-renderer > span.YtmBadgeAndBylineRendererItemByline';
-      mode.mobile.ytTitle = isNuN(item.querySelector('div.media-item-details > div.media-item-info > div.media-item-metadata > a > ' + ytTitle3)) ? '' : item.querySelector('div.media-item-details > div.media-item-info > div.media-item-metadata > a > ' + ytTitle3).textContent;
-      mode.mobile.userNam = isNuN(item.querySelector('div.media-item-details > div.media-item-info > div.media-item-metadata > a > ' + ytUserN3)) ? '' : item.querySelector('div.media-item-details > div.media-item-info > div.media-item-metadata > a > ' + ytUserN3).textContent;
+      mode.mobile.ytTitle = isNuN(item.querySelector('div.media-item-details > div.media-item-info > div.media-item-metadata > a > ' + ytTitleMeta)) ? '' : item.querySelector('div.media-item-details > div.media-item-info > div.media-item-metadata > a > ' + ytTitleMeta).textContent;
+      mode.mobile.userNam = isNuN(item.querySelector('div.media-item-details > div.media-item-info > div.media-item-metadata > a > ' + ytUserNMeta)) ? '' : item.querySelector('div.media-item-details > div.media-item-info > div.media-item-metadata > a > ' + ytUserNMeta).textContent;
       mode.mobile.userChN = '';
 
       if (isDevice) {
@@ -260,7 +258,6 @@
       } else {
         YtChannel = mode.mobile.userNam;
       }
-
       const strData = device;
       youtubeItem.ytTitle = strData.ytTitle;
       youtubeItem.userNam = strData.userNam;
@@ -280,10 +277,10 @@
       if (user !== YtChannel) { item.classList.add('own_ch_NuN'); }
     } else if (new RegExp(regChannel, 'gis').test(detail.path)) { // チャンネルエリア
       // pc 動画
-      const ytTitle1 = 'h3.ytLockupMetadataViewModelHeadingReset';
-      const ytUserN1 = 'div.ytLockupMetadataViewModelMetadata div.ytContentMetadataViewModelMetadataRow';
-      mode.pc.ytTitle = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytTitle1)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytTitle1).textContent;
-      mode.pc.userNam = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserN1)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserN1).textContent;
+      const ytTitleMeta = 'h3.ytLockupMetadataViewModelHeadingReset';
+      const ytUserNMeta = 'div.ytLockupMetadataViewModelMetadata div.ytContentMetadataViewModelMetadataRow';
+      mode.pc.ytTitle = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytTitleMeta)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytTitleMeta).textContent;
+      mode.pc.userNam = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserNMeta)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserNMeta).textContent;
       mode.pc.userChN = '';
       // mobile
       mode.mobile.ytTitle = isNuN(item.querySelector('div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline')) ? '' : item.querySelector('div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline').textContent;
@@ -296,15 +293,15 @@
       youtubeItem.userChN = strData.userChN;
     } else { // ホームなど
       // pc 動画
-      const ytTitle1 = 'h3.ytLockupMetadataViewModelHeadingReset';
-      const ytUserN1 = 'div.ytLockupMetadataViewModelMetadata div.ytContentMetadataViewModelMetadataRow a';
-      const ytUserN2 = 'div.ytLockupMetadataViewModelMetadata span.ytAttributedStringHost';
-      mode.pc.ytTitle = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytTitle1)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytTitle1).textContent;
-      mode.pc.userNam = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserN1)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserN1).textContent;
-      mode.pc.userChN = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserN1)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserN1).href;
+      const ytTitleMeta = 'h3.ytLockupMetadataViewModelHeadingReset';
+      const ytUserNMeta = ':is(div.ytLockupMetadataViewModelMetadata div.ytContentMetadataViewModelMetadataRow a, div.ytLockupMetadataViewModelMetadata span.ytAttributedStringHost)';
+      const ytChaNlMeta = 'div.ytLockupMetadataViewModelMetadata div.ytContentMetadataViewModelMetadataRow a';
+      mode.pc.ytTitle = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytTitleMeta)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytTitleMeta).textContent;
+      mode.pc.userNam = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserNMeta)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserNMeta).textContent;
+      mode.pc.userChN = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytChaNlMeta)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytChaNlMeta).href;
       // mobile
-      mode.mobile.ytTitle = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytTitle1)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytTitle1).textContent;
-      mode.mobile.userNam = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserN2)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserN2).textContent;
+      mode.mobile.ytTitle = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytTitleMeta)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytTitleMeta).textContent;
+      mode.mobile.userNam = isNuN(item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserNMeta)) ? '' : item.querySelector('div.ytLockupViewModelMetadata > yt-lockup-metadata-view-model > div.ytLockupMetadataViewModelTextContainer > ' + ytUserNMeta).textContent;
       mode.mobile.userChN = '';
 
       const strData = device;
