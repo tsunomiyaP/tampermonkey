@@ -240,11 +240,13 @@
     let flg = false;
 
     if (new RegExp(regWatch, 'gis').test(detail.path)) { // 動画エリア
-      let YtChannel = '';
-      await waitQuerySelector('div#owner ytd-video-owner-renderer ytd-channel-name#channel-name #text-container > yt-formatted-string#text[title], ytm-slim-owner-renderer h3.slim-owner-channel-name span');
+      let ytChannel = '';
+      const ownerA = 'div#owner > ytd-video-owner-renderer div#upload-info :is(ytd-channel-name#channel-name div#text-container a, yt-attributed-string span[class])';
+      const ownerB = 'yt-attributed-string, ytm-slim-owner-renderer h3.slim-owner-channel-name span';
+      await waitQuerySelector(ownerA + ', ' + ownerB);
       // pc 動画
-      const ytTitleMeta = ':is(div.ytLockupViewModelMetadata, div.media-item-details > div.media-item-info) ' + ':is(div.ytLockupMetadataViewModelTextContainer, div.media-item-metadata) ' + ':is(div.ytLockupMetadataViewModelHeadingReset > h3, a > h3)';
-      const ytUserNMeta = ':is(div.ytLockupViewModelMetadata, div.media-item-details > div.media-item-info) ' + ':is(div.ytLockupMetadataViewModelTextContainer, div.media-item-metadata) ' + ':is(div.ytLockupMetadataViewModelMetadata > div.ytContentMetadataViewModelMetadataRow > span, div[class] > ytm-badge-and-byline-renderer > span.YtmBadgeAndBylineRendererItemByline > span)';
+      const ytTitleMeta = ':is(div.ytLockupViewModelMetadata, div.media-item-details > div.media-item-info) ' + ':is(div.ytLockupMetadataViewModelTextContainer, div.media-item-metadata) ' + ':is(h3.ytLockupMetadataViewModelHeadingReset span, a > h3)';
+      const ytUserNMeta = ':is(div.ytLockupViewModelMetadata, div.media-item-details > div.media-item-info) ' + ':is(div.ytLockupMetadataViewModelTextContainer, div.media-item-metadata) ' + ':is(div.ytLockupMetadataViewModelMetadata div.ytContentMetadataViewModelMetadataRow > span, div[class] > ytm-badge-and-byline-renderer > span.YtmBadgeAndBylineRendererItemByline > span)';
       mode.pc.ytTitle = isNuN(item.querySelector(ytTitleMeta)) ? '' : item.querySelector(ytTitleMeta).textContent;
       mode.pc.userNam = isNuN(item.querySelector(ytUserNMeta)) ? '' : item.querySelector(ytUserNMeta).textContent;
       mode.pc.userChN = '';
@@ -254,9 +256,9 @@
       mode.mobile.userChN = '';
 
       if (isDevice) {
-        YtChannel = mode.pc.userNam;
+        ytChannel = mode.pc.userNam;
       } else {
-        YtChannel = mode.mobile.userNam;
+        ytChannel = mode.mobile.userNam;
       }
       const strData = device;
       youtubeItem.ytTitle = strData.ytTitle;
@@ -266,15 +268,17 @@
       let user = '';
       // 閲覧チャンネルのみ表示
       if (isDevice) {
-        const channel = document.querySelector('div#owner ytd-video-owner-renderer ytd-channel-name#channel-name #text-container > yt-formatted-string#text[title]');
-        user = channel.title;
+        // PC版
+        const channel = document.querySelector(ownerA);
+        user = channel.textContent;
       } else {
-        const channel = document.querySelector('ytm-slim-owner-renderer h3.slim-owner-channel-name span');
+        // モバイル版
+        const channel = document.querySelector(ownerB);
         user = channel.textContent;
       }
 
-      console.log(user, YtChannel);
-      if (user !== YtChannel) { item.classList.add('own_ch_NuN'); }
+      console.log(user, ytChannel);
+      if (user !== ytChannel) { item.classList.add('own_ch_NuN'); }
     } else if (new RegExp(regChannel, 'gis').test(detail.path)) { // チャンネルエリア
       // pc 動画
       const ytTitleMeta = ':is(h3.ytLockupMetadataViewModelHeadingReset, div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline)';
@@ -294,10 +298,10 @@
       // pc 動画
       const ytTitleMeta = ':is(div.ytLockupViewModelMetadata) ' + ':is(div.ytLockupMetadataViewModelTextContainer) ' + ':is(h3.ytLockupMetadataViewModelHeadingReset)';
       const ytUserNMeta = ':is(div.ytLockupViewModelMetadata) ' + ':is(div.ytLockupMetadataViewModelTextContainer) ' + ':is(div.ytLockupMetadataViewModelMetadata div.ytContentMetadataViewModelMetadataRow a, div.ytLockupMetadataViewModelMetadata span.ytAttributedStringHost)';
-      const ytChaNlMeta = ':is(div.ytLockupViewModelMetadata) ' + ':is(div.ytLockupMetadataViewModelTextContainer) ' + 'div.ytLockupMetadataViewModelMetadata div.ytContentMetadataViewModelMetadataRow a';
+      const ytChaNlMeta = ':is(div.ytLockupViewModelMetadata) ' + ':is(div.ytLockupMetadataViewModelTextContainer) ' + ':is(div.ytLockupMetadataViewModelMetadata div.ytContentMetadataViewModelMetadataRow a)';
       mode.pc.ytTitle = isNuN(item.querySelector(ytTitleMeta)) ? '' : item.querySelector(ytTitleMeta).textContent;
       mode.pc.userNam = isNuN(item.querySelector(ytUserNMeta)) ? '' : item.querySelector(ytUserNMeta).textContent;
-      mode.pc.userChN = isNuN(item.querySelector(ytChaNlMeta)) ? '' : item.querySelector(ytChaNlMeta).textContent;
+      mode.pc.userChN = isNuN(item.querySelector(ytChaNlMeta)) ? '' : item.querySelector(ytChaNlMeta).href;
       // mobile
       mode.mobile.ytTitle = isNuN(item.querySelector(ytTitleMeta)) ? '' : item.querySelector(ytTitleMeta).textContent;
       mode.mobile.userNam = isNuN(item.querySelector(ytUserNMeta)) ? '' : item.querySelector(ytUserNMeta).textContent;
@@ -370,6 +374,7 @@
     return items;
   };
   const ytMovieRemover = async (area, detail) => {
+    await new Promise(resolve => setTimeout(resolve, waitTime));
     const items = await ytMovieShowCase(area, detail);
     for await (const item of items) {
       await scaleShowMovie(area, item, detail);
