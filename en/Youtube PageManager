@@ -245,8 +245,8 @@
       const ownerB = 'yt-attributed-string, ytm-slim-owner-renderer h3.slim-owner-channel-name span';
       await waitQuerySelector(ownerA + ', ' + ownerB);
       // pc 動画
-      const ytTitleMeta = ':is(div.ytLockupViewModelMetadata, div.media-item-details > div.media-item-info) ' + ':is(div.ytLockupMetadataViewModelTextContainer, div.media-item-metadata) ' + ':is(h3.ytLockupMetadataViewModelHeadingReset span, a > h3)';
-      const ytUserNMeta = ':is(div.ytLockupViewModelMetadata, div.media-item-details > div.media-item-info) ' + ':is(div.ytLockupMetadataViewModelTextContainer, div.media-item-metadata) ' + ':is(div.ytLockupMetadataViewModelMetadata div.ytContentMetadataViewModelMetadataRow > span, div[class] > ytm-badge-and-byline-renderer > span.YtmBadgeAndBylineRendererItemByline > span)';
+      const ytTitleMeta = [':is(div.ytLockupViewModelMetadata, div.media-item-details > div.media-item-info)', ':is(div.ytLockupMetadataViewModelTextContainer, div.media-item-metadata)', ':is(h3.ytLockupMetadataViewModelHeadingReset span, a > h3)'].join(' ');
+      const ytUserNMeta = [':is(div.ytLockupViewModelMetadata, div.media-item-details > div.media-item-info)', ':is(div.ytLockupMetadataViewModelTextContainer, div.media-item-metadata)', ':is(div.ytLockupMetadataViewModelMetadata div.ytContentMetadataViewModelMetadataRow > span, div[class] > ytm-badge-and-byline-renderer > span.YtmBadgeAndBylineRendererItemByline > span)'].join(' ');
       mode.pc.ytTitle = isNuN(item.querySelector(ytTitleMeta)) ? '' : item.querySelector(ytTitleMeta).textContent;
       mode.pc.userNam = isNuN(item.querySelector(ytUserNMeta)) ? '' : item.querySelector(ytUserNMeta).textContent;
       mode.pc.userChN = '';
@@ -281,7 +281,7 @@
       if (user !== ytChannel) { item.classList.add('own_ch_NuN'); }
     } else if (new RegExp(regChannel, 'gis').test(detail.path)) { // チャンネルエリア
       // pc 動画
-      const ytTitleMeta = ':is(h3.ytLockupMetadataViewModelHeadingReset, div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline)';
+      const ytTitleMeta = [':is(h3.ytLockupMetadataViewModelHeadingReset, div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline)'].join(' ');
       mode.pc.ytTitle = isNuN(item.querySelector(ytTitleMeta)) ? '' : item.querySelector(ytTitleMeta).textContent;
       mode.pc.userNam = '';
       mode.pc.userChN = '';
@@ -296,9 +296,9 @@
       youtubeItem.userChN = strData.userChN;
     } else { // ホームなど
       // pc 動画
-      const ytTitleMeta = ':is(div.ytLockupViewModelMetadata) ' + ':is(div.ytLockupMetadataViewModelTextContainer) ' + ':is(h3.ytLockupMetadataViewModelHeadingReset)';
-      const ytUserNMeta = ':is(div.ytLockupViewModelMetadata) ' + ':is(div.ytLockupMetadataViewModelTextContainer) ' + ':is(div.ytLockupMetadataViewModelMetadata div.ytContentMetadataViewModelMetadataRow a, div.ytLockupMetadataViewModelMetadata span.ytAttributedStringHost)';
-      const ytChaNlMeta = ':is(div.ytLockupViewModelMetadata) ' + ':is(div.ytLockupMetadataViewModelTextContainer) ' + ':is(div.ytLockupMetadataViewModelMetadata div.ytContentMetadataViewModelMetadataRow a)';
+      const ytTitleMeta = [':is(div.ytLockupViewModelMetadata)', ':is(div.ytLockupMetadataViewModelTextContainer)', ':is(h3.ytLockupMetadataViewModelHeadingReset)'].join(' ');
+      const ytUserNMeta = [':is(div.ytLockupViewModelMetadata)', ':is(div.ytLockupMetadataViewModelTextContainer)', ':is(div.ytLockupMetadataViewModelMetadata div.ytContentMetadataViewModelMetadataRow a, div.ytLockupMetadataViewModelMetadata span.ytAttributedStringHost)'].join(' ');
+      const ytChaNlMeta = [':is(div.ytLockupViewModelMetadata)', ':is(div.ytLockupMetadataViewModelTextContainer)', ':is(div.ytLockupMetadataViewModelMetadata div.ytContentMetadataViewModelMetadataRow a)'].join(' ');
       mode.pc.ytTitle = isNuN(item.querySelector(ytTitleMeta)) ? '' : item.querySelector(ytTitleMeta).textContent;
       mode.pc.userNam = isNuN(item.querySelector(ytUserNMeta)) ? '' : item.querySelector(ytUserNMeta).textContent;
       mode.pc.userChN = isNuN(item.querySelector(ytChaNlMeta)) ? '' : item.querySelector(ytChaNlMeta).href;
