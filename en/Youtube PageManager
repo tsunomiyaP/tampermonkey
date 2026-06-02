@@ -66,7 +66,8 @@
   appendStylus += 'ytd-guide-section-renderer > div#items.ytd-guide-section-renderer > ytd-guide-entry-renderer > a#endpoint[title="ショート"i] { display: none !important; } ';
   appendStylus += 'ytd-mini-guide-renderer > div#items.ytd-mini-guide-renderer > ytd-mini-guide-entry-renderer > a#endpoint[title="ショート"i] { display: none !important; } ';
   // おすすめ
-  appendStylus += 'ytd-guide-renderer > div#sections > *:nth-child(n+2) { display: none !important; } ';
+  appendStylus += 'ytd-guide-renderer > div#sections > ytd-guide-section-renderer > div#items > ytd-guide-entry-renderer > a[title="ショート"] { display: none !important; } ';
+  appendStylus += 'ytd-guide-renderer > div#sections > ytd-guide-section-renderer:nth-child(n+3) { display: none !important; } ';
   appendStylus += 'ytd-guide-renderer > div#footer { display: none !important; } ';
   // mobile
   // タブ内要素(ホーム、チャンネル、登録チャンネル)
