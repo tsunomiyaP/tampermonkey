@@ -82,8 +82,12 @@
   // 初期表示
   for (const yt of itemsArray) {
     // 非表示 // home, 検索結果
-    appendStylus += yt.area + ' > :not(:has(:is(ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list))):not(.target.show) { display: none !important; /* visibility: hidden !important; **/ } ';
-    appendStylus += yt.area + ' > :is(ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list) > :not(.target.show) { display: none !important; /* visibility: hidden !important; **/ } ';
+    const device = 'www.youtube.com' === location.hostname ? true : false;
+    if (device) {
+      appendStylus += yt.area + ':not(:has(ytd-item-section-renderer > div#contents)) > :not(.target.show), ' + yt.area + ' > ytd-item-section-renderer > div#contents > :not(.target.show) { display: none !important; /* visibility: hidden !important; **/ } ';
+    } else {
+      appendStylus += yt.area + ':not(:has(ytm-item-section-renderer > lazy-list)) > :not(.target.show), ' + yt.area + ' > ytm-item-section-renderer > lazy-list > :not(.target.show) { display: none !important; /* visibility: hidden !important; **/ } ';
+    }
     appendStylus += yt.area + ' .target.minScale:not(:has(div[class*="subheader"i])) > * { ' + yt.stylus + ' } ';
     // [ショート]動画 削除
     appendStylus += yt.area + ' .target:has(a[href*="/shorts"i]) { display: none; } ';
@@ -295,6 +299,21 @@
       youtubeItem.ytTitle = strData.ytTitle;
       youtubeItem.userNam = strData.userNam;
       youtubeItem.userChN = strData.userChN;
+    } else if (new RegExp(regSearch, 'gis').test(detail.path)) { // 検索結果
+      // pc 動画
+      const ytTitleMeta = [':is(h3.ytLockupMetadataViewModelHeadingReset, div.YtmCompactMediaItemMetadata h4.YtmCompactMediaItemHeadline)'].join(' ');
+      mode.pc.ytTitle = isNuN(item.querySelector(ytTitleMeta)) ? '' : item.querySelector(ytTitleMeta).textContent;
+      mode.pc.userNam = '';
+      mode.pc.userChN = '';
+      // mobile
+      mode.mobile.ytTitle = isNuN(item.querySelector(ytTitleMeta)) ? '' : item.querySelector(ytTitleMeta).textContent;
+      mode.mobile.userNam = '';
+      mode.mobile.userChN = '';
+
+      const strData = device;
+      youtubeItem.ytTitle = strData.ytTitle;
+      youtubeItem.userNam = strData.userNam;
+      youtubeItem.userChN = strData.userChN;
     } else { // ホームなど
       // pc 動画
       const ytTitleMeta = [':is(div.ytLockupViewModelMetadata)', ':is(div.ytLockupMetadataViewModelTextContainer)', ':is(h3.ytLockupMetadataViewModelHeadingReset)'].join(' ');
@@ -345,7 +364,13 @@
       if (e.target.classList.contains('target')) {
         let items = null;
         if (new RegExp(regSearch, 'gis').test(detail.path)) {
-          const itemArea = area + ' :is(ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list)';
+          let itemArea = area;
+          const device = 'www.youtube.com' === detail.host ? true : false;
+          if (device) {
+            itemArea = area + ' > ytd-item-section-renderer > div#contents';
+          } else {
+            itemArea = area + ' > ytm-item-section-renderer > lazy-list';
+          }
           await waitQuerySelector(itemArea); // 子要素存在チェック
           items = document.querySelectorAll(itemArea + ' > .target');
         } else {
@@ -362,7 +387,13 @@
   const ytMovieShowCase = async (area, detail) => {
     let items = null;
     if (new RegExp(regSearch, 'gis').test(detail.path)) {
-      const itemArea = area + ' > :is(ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list)';
+      let itemArea = area;
+      const device = 'www.youtube.com' === detail.host ? true : false;
+      if (device) {
+        itemArea = area + ' > ytd-item-section-renderer > div#contents';
+      } else {
+        itemArea = area + ' > ytm-item-section-renderer > lazy-list';
+      }
       await waitQuerySelector(itemArea); // 子要素存在チェック
       items = document.querySelectorAll(itemArea + ' > *:not(.target)');
     } else {
@@ -375,7 +406,7 @@
     return items;
   };
   const ytMovieRemover = async (area, detail) => {
-    await new Promise(resolve => setTimeout(resolve, waitTime));
+    // await new Promise(resolve => setTimeout(resolve, waitTime));
     const items = await ytMovieShowCase(area, detail);
     for await (const item of items) {
       await scaleShowMovie(area, item, detail);
@@ -386,16 +417,24 @@
     await waitQuerySelector(area);
     let ytMovies = null;
     if (new RegExp(regSearch, 'gis').test(detail.path)) {
-      const itemArea = area + ' > :is(ytd-item-section-renderer > div#contents, ytm-item-section-renderer > lazy-list)';
+      let itemArea = area;
+      const device = 'www.youtube.com' === detail.host ? true : false;
+      if (device) {
+        itemArea = area + ' > ytd-item-section-renderer > div#contents';
+      } else {
+        itemArea = area + ' > ytm-item-section-renderer > lazy-list';
+      }
+      console.log('> youtube get ...', itemArea);
       await waitQuerySelector(itemArea); // 子要素存在チェック
-      ytMovies = document.querySelectorAll(itemArea + ' > *:has(.target)');
+      ytMovies = document.querySelectorAll(itemArea + ' > *');
     } else {
       const itemArea = area;
+      console.log('> youtube get ...', itemArea);
       await waitQuerySelector(itemArea); // 子要素存在チェック
-      ytMovies = document.querySelectorAll(itemArea + ' > *:has(.target)');
+      ytMovies = document.querySelectorAll(itemArea + ' > *');
     }
     // 初期処理
-    console.log('yt Movie 初期処理', area);
+    console.log('yt Movie 初期処理', ytMovies.length);
     // Array.from(ytMovies).forEach((el) => el.classList.remove('target', 'minScale', 'show', 'remove_item'));
     for await (const el of ytMovies) { el.classList.remove('target', 'minScale', 'show', 'remove_item'); }
 
@@ -519,7 +558,6 @@
       for await (const yt of ytArray) {
         // console.log(path, localPath);
         if (new RegExp(yt.path, 'gis').test(e.detail.path)) {
-          console.log('> youtube get ...', yt.area);
           await initial(yt.area, e.detail);
         }
       }
