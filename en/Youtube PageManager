@@ -82,12 +82,8 @@
   // 初期表示
   for (const yt of itemsArray) {
     // 非表示 // home, 検索結果
-    const device = 'www.youtube.com' === location.hostname ? true : false;
-    if (device) {
-      appendStylus += yt.area + ':not(:has(ytd-item-section-renderer > div#contents)) > :not(.target.show), ' + yt.area + ' > ytd-item-section-renderer > div#contents > :not(.target.show) { display: none !important; /* visibility: hidden !important; **/ } ';
-    } else {
-      appendStylus += yt.area + ':not(:has(ytm-item-section-renderer > lazy-list)) > :not(.target.show), ' + yt.area + ' > ytm-item-section-renderer > lazy-list > :not(.target.show) { display: none !important; /* visibility: hidden !important; **/ } ';
-    }
+    appendStylus += yt.area + ':not(:has(ytd-item-section-renderer > div#contents)) > :not(.target.show), ' + yt.area + ' > ytd-item-section-renderer > div#contents > :not(.target.show) { display: none !important; /* visibility: hidden !important; **/ } ';
+    appendStylus += yt.area + ':not(:has(ytm-item-section-renderer > lazy-list)) > :not(.target.show), ' + yt.area + ' > ytm-item-section-renderer > lazy-list > :not(.target.show) { display: none !important; /* visibility: hidden !important; **/ } ';
     appendStylus += yt.area + ' .target.minScale:not(:has(div[class*="subheader"i])) > * { ' + yt.stylus + ' } ';
     // [ショート]動画 削除
     appendStylus += yt.area + ' .target:has(a[href*="/shorts"i]) { display: none; } ';
