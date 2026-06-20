@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube PageManager
 // @namespace    http://tampermonkey.net/
-// @version      5.1
+// @version      5.3
 // @description  try to take over the world!
 // @author       You
 // @match        https://*.youtube.com/*
@@ -20,7 +20,6 @@
   // ==========================================================
   // 変数宣言
   const waitTime = 1000;
-  const isChatMode = false;
   const scale = 'scale(0.8)';
   const manager = 'ytd-app, ytm-app[id="app"i]';
   const itemsArray = [
@@ -102,13 +101,10 @@
   appendStylus += '#preview { display: none !important; } ';
   appendStylus += 'ytd-thumbnail[now-playing] ytd-thumbnail-overlay-time-status-renderer.ytd-thumbnail { display: flex !important; } ';
   appendStylus += 'ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-time-status-renderer.ytd-thumbnail { display: flex !important; } ';
-  if (!isChatMode) { appendStylus += 'div#chat-container { display: none !important; } '; }
 
   const stylusElem = document.createElement('style');
   stylusElem.id = 'stylusElemPage';
   stylusElem.textContent = appendStylus;
-  const stylusElemSettings = document.createElement('style');
-  stylusElemSettings.id = 'stylusElemSettings';
   const stylusElemCh = document.createElement('style');
   stylusElemCh.id = 'stylusElemCh';
   // ==========================================================
@@ -207,35 +203,6 @@
     return false;
   };
 
-  const ytChatArea = async () => {
-    const chat = await waitQuerySelectorCount(4, 'div#chat-container');
-    if (!isNuN(chat)) { chat.remove(); }
-  };
-  const ytStableVolume = async (settingBtn, drcBtn, closeArea) => {
-    const setting = await waitQuerySelector(settingBtn);
-    if (!isNuN(setting)) { setting.click(); }
-
-    const drcMenuItem = await waitQuerySelectorCount(4, drcBtn);
-    if (isNuN(drcMenuItem)) {
-      document.querySelector(closeArea).click();
-      console.log('DRC Audio is already disabled');
-    } else {
-      if (drcMenuItem.getAttribute('aria-checked') === 'true') {
-        drcMenuItem.click();
-        console.log('Disabled DRC Audio');
-      } else {
-        console.log('DRC Audio is already disabled');
-      }
-      document.querySelector(closeArea).click();
-    }
-  };
-  const ytNavBtn = async () => {
-    const toggleBtn = 'button.ytp-autonav-toggle';
-    const area = await waitQuerySelectorCount(10, toggleBtn);
-    if (!isNuN(area) && area.querySelector('div > div.ytp-autonav-toggle-button').getAttribute('aria-checked') === 'true') {
-      area.click();
-    }
-  };
   const removeMovieInformation = async (item, detail) => {
     const isDevice = 'www.youtube.com' === detail.host ? true : false;
     const mode = {'pc': {}, 'mobile': {}};
@@ -478,11 +445,6 @@
 
       if (!isNuN(ytMutation)) { ytMutation.disconnect(); }
 
-      // 設定ポップアップ初期非表示
-      stylusElemSettings.textContent = '';
-      stylusElemSettings.textContent += 'div.ytp-popup.ytp-settings-menu { display: none !important; } ';
-      stylusElemSettings.textContent += 'ytm-app > bottom-sheet-container[role="dialog"i] { display: none !important; } ';
-
       // youtube Channel Area Manager
       if (new RegExp(regChannel, 'gis').test(e.detail.path)) {
         stylusElemCh.textContent = 'body { visibility: hidden !important; } ';
@@ -537,22 +499,6 @@
         stylusElemCh.textContent = '';
       }
 
-      if (new RegExp(regWatch, 'gis').test(e.detail.path)) {
-        if ('www.youtube.com' === e.detail.host) {
-          // pc
-          console.log('> chat area ... remover');
-          await ytChatArea();
-          console.log('> stable volume 一定音量 setting...');
-          await ytStableVolume('button.ytp-settings-button[aria-label="設定"i]', 'div.ytp-drc-menu-item[role="menuitemcheckbox"i]', manager);
-          console.log('> auto nav next movies setting...');
-          await ytNavBtn();
-        } else if ('m.youtube.com' === e.detail.host) {
-          // mobile
-          console.log('> stable volume 一定音量 setting...');
-          await ytStableVolume('button.player-settings-icon[aria-label="再生設定"i]', 'player-settings-menu > stable-volume-toggle yt-list-item-view-model > div > div > switch-button-view-model > button[aria-checked="true"i]', 'ytm-app > bottom-sheet-container[role="dialog"i]:not([hidden="true"i]) > ytw-scrim');
-        }
-      }
-
       // movie contents
       const ytArray = itemsArray.filter((yt) => e.detail.host === yt.device);
       for await (const yt of ytArray) {
@@ -561,15 +507,10 @@
           await initial(yt.area, e.detail);
         }
       }
-
-      // style 無効化
-      await new Promise(resolve => setTimeout(resolve, waitTime));
-      stylusElemSettings.textContent = '';
     }
   });
   const eventHandler = () => {
     if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
-    if (stylusNone(stylusElemSettings.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemSettings); }
     if (stylusNone(stylusElemCh.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemCh); }
 
     changeUrl();
