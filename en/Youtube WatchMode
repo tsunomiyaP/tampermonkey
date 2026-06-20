@@ -1,0 +1,260 @@
+// ==UserScript==
+// @name         Youtube WatchMode
+// @namespace    http://tampermonkey.net/
+// @version      1.0
+// @description  try to take over the world!
+// @author       You
+// @match        https://*.youtube.com/*
+// @exclude      https://music.youtube.com/*
+// @exclude      https://studio.youtube.com/*
+// @grant        none
+// @license      GNU GPLv3
+// @icon         https://www.google.com/s2/favicons?domain=youtube.com
+// @run-at       document-body
+// @noframes
+// ==/UserScript==
+
+(function() {
+  'use strict';
+
+  // ==========================================================
+  // 変数宣言
+  const isChatMode = false;
+  const waitTime = 1000;
+  const manager = 'ytd-app, ytm-app[id="app"i]';
+  const player = 'div#movie_player.html5-video-player';
+  // youtube 画質 [0 : 1080, 1 : 720, 2 : 480, 3 : 360, 4 : 240, 5 : 144, 6 : auto]
+  const qualitys = ['hd1080', 'hd720', 'large', 'medium', 'small', 'tiny', 'auto'];
+  const target = 1;
+  const regWatch = '^/watch|^/live';
+  let oldUrl = '';
+
+  const stylusElemSettings = document.createElement('style');
+  stylusElemSettings.id = 'stylusElemSettings';
+  // ==========================================================
+
+  // eslint-disable-next-line no-unused-vars
+  const isNuN = (selector) => {
+    if (selector === null || selector === undefined || selector === '') { return true; } else { return false; }
+  };
+  // eslint-disable-next-line no-unused-vars
+  const waitQuerySelector = async (selector, node = document) => {
+    let obj = null;
+    while (!obj) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+      obj = node.querySelector(selector);
+    }
+    return obj;
+  };
+  // eslint-disable-next-line no-unused-vars
+  const waitQuerySelectorCount = async (cnt, selector, node = document) => {
+    let obj = null;
+    let num = 0;
+    while (!obj) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      if (num < cnt) {
+        obj = node.querySelector(selector);
+        num++;
+        if (!obj) { return obj; }
+      } else {
+        break;
+      }
+    }
+    while (!obj) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      obj = node.querySelector(selector);
+    }
+    return obj;
+  };
+  // eslint-disable-next-line no-unused-vars
+  const waitQuerySelectorIframe = async (selector1, selector2, node = document) => {
+    let obj = null;
+    while (!obj) {
+      // iframe.contentWindow.document === iframe.contentDocument
+      await new Promise(resolve => setTimeout(resolve, 500));
+      obj = node.querySelector(selector1).contentDocument.querySelector(selector2);
+    }
+    return obj;
+  };
+  // eslint-disable-next-line no-unused-vars
+  const deleteParam = (searchUrl, param) => {
+    const base = new URL(location.protocol + '//' + location.hostname);
+    const url = new URL(searchUrl, base);
+    // URLSearchParamsオブジェクトを取得
+    const params = url.searchParams;
+    params.delete(param);
+
+    return url;
+  };
+  // eslint-disable-next-line no-unused-vars
+  const searchParams = (searchUrl, param) => {
+    const base = new URL(location.protocol + '//' + location.hostname);
+    const url = new URL(searchUrl, base);
+    console.log('url section', url);
+    // URLSearchParamsオブジェクトを取得
+    const params = url.searchParams;
+
+    return params.get(param);
+  };
+  // eslint-disable-next-line no-unused-vars
+  const getParam = (name, url) => {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\\[\]]/g, '\\$&');
+    let regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+    let results = regex.exec(url);
+
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+  };
+  // eslint-disable-next-line no-unused-vars
+  const userAgent = () => {
+    const userDevice = navigator.userAgent;
+    if (userDevice.indexOf('iPhone') > 0 || userDevice.indexOf('iPod') > 0 || userDevice.indexOf('Android') > 0 && userDevice.indexOf('Mobile') > 0) {
+      return false;
+    } else if (userDevice.indexOf('iPad') > 0 || userDevice.indexOf('Android') > 0) {
+      return false;
+    } else {
+      // pc
+      return true;
+    }
+  };
+  // eslint-disable-next-line no-unused-vars
+  const stylusNone = (stylus) => {
+    if (isNuN(document.querySelector('style#' + stylus))) {
+      return true;
+    }
+    return false;
+  };
+
+  const ytChatArea = async () => {
+    const chat = await waitQuerySelectorCount(4, 'div#chat-container');
+    if (!isNuN(chat)) { chat.remove(); }
+  };
+  const ytStableVolume = async (settingBtn, drcBtn, closeArea) => {
+    const setting = await waitQuerySelector(settingBtn);
+    if (!isNuN(setting)) { setting.click(); }
+
+    const drcMenuItem = await waitQuerySelectorCount(4, drcBtn);
+    if (isNuN(drcMenuItem)) {
+      document.querySelector(closeArea).click();
+      console.log('DRC Audio is already disabled');
+    } else {
+      if (drcMenuItem.getAttribute('aria-checked') === 'true') {
+        drcMenuItem.click();
+        console.log('Disabled DRC Audio');
+      } else {
+        console.log('DRC Audio is already disabled');
+      }
+      document.querySelector(closeArea).click();
+    }
+  };
+  const ytNavBtn = async () => {
+    const toggleBtn = 'button.ytp-autonav-toggle';
+    const area = await waitQuerySelectorCount(10, toggleBtn);
+    if (!isNuN(area) && area.querySelector('div > div.ytp-autonav-toggle-button').getAttribute('aria-checked') === 'true') {
+      area.click();
+    }
+  };
+  const qualityFix = async (canLevel) => {
+    let q = qualitys[target];
+
+    // 初期処理
+    await waitQuerySelector(player);
+    const ytPlayer = document.querySelector(player);
+    await waitQuerySelector('div.ytp-left-controls, player-bottom-controls');
+
+    if (typeof ytPlayer.getAvailableQualityLevels() === 'undefined') { return await qualityFix(canLevel); }
+    if (ytPlayer.getPlaybackQuality().toLowerCase() === 'unknown') { return await qualityFix(canLevel); }
+
+    // 初期値[最低値: tiny]
+    q = qualitys[canLevel];
+    if (!ytPlayer.getAvailableQualityLevels().includes(q)) {
+      return await qualityFix(canLevel - 1);
+    }
+    console.log('> youtube quality list : ', ytPlayer.getAvailableQualityLevels());
+    ytPlayer.setPlaybackQualityRange(q);
+    ytPlayer.setPlaybackQuality(q);
+
+    await new Promise(resolve => setTimeout(resolve, waitTime));
+    console.log('> youtube quality low : ', q);
+
+    // ライブ配信か否か pc, mobile
+    // const badge = await waitQuerySelectorCount(1, 'button.ytp-live-badge-is-livehead, span.ytwPlayerTimeDisplayTime');
+    const stats = ytPlayer.getVideoStats() || {};
+    console.log('> youtube Live status : ', stats.live);
+    if (stats.live === 'live' || stats.live === 'dvr' || stats.live === 'lp') {
+      // 最低画質
+      if (!ytPlayer.getAvailableQualityLevels().includes(q)) {
+        q = qualitys[canLevel];
+      }
+      console.log('> youtube can Live ... Live stream : ', q);
+    } else {
+      q = qualitys[target];
+      console.log('> youtube not Live ... movie watch : ', q);
+    }
+    ytPlayer.setPlaybackQualityRange(q);
+    ytPlayer.setPlaybackQuality(q);
+
+    await new Promise(resolve => setTimeout(resolve, waitTime));
+    console.log('> youtube quality FIX ... is : ', ytPlayer.getPlaybackQuality());
+  };
+
+  const changeUrl = () => {
+    const observer = new MutationObserver(() => {
+      setTimeout(() => { // 遅延
+        window.dispatchEvent(new CustomEvent('urlChange', {'detail': { 'href': window.location.href, 'path': window.location.pathname, 'host': window.location.hostname, 'search': window.location.search }})); // イベントを発火
+      }, 50);
+    });
+    const config = { 'subtree': true, 'childList': true, 'attributes': false, 'characterData': false };
+    observer.observe(document.body, config);
+  };
+  // URL検知
+  window.addEventListener('urlChange', async (e) => {
+    if (oldUrl !== e.detail.path + e.detail.search) {
+      oldUrl = e.detail.path + e.detail.search; // oldUrlを更新
+
+      // 設定ポップアップ初期非表示
+      if (!isChatMode) { stylusElemSettings.textContent = 'div#chat-container { display: none !important; } '; } else { stylusElemSettings.textContent = ''; }
+      stylusElemSettings.textContent += 'div.ytp-popup.ytp-settings-menu { display: none !important; } '; // pc
+      stylusElemSettings.textContent += 'ytm-app > bottom-sheet-container[role="dialog"i] { display: none !important; } '; // mobile
+
+      if (new RegExp(regWatch, 'gis').test(e.detail.path)) {
+        if ('www.youtube.com' === e.detail.host) {
+          // pc
+          console.log('> yt watch quality ... changing');
+          await qualityFix(5);
+          console.log('> chat area ... remover');
+          await ytChatArea();
+          console.log('> stable volume 一定音量 setting...');
+          await ytStableVolume('button.ytp-settings-button[aria-label="設定"i]', 'div.ytp-drc-menu-item[role="menuitemcheckbox"i]', manager);
+          console.log('> auto nav next movies setting...');
+          await ytNavBtn();
+        } else if ('m.youtube.com' === e.detail.host) {
+          // mobile
+          console.log('> yt watch quality ... changing');
+          await qualityFix(5);
+          console.log('> stable volume 一定音量 setting...');
+          await ytStableVolume('button.player-settings-icon[aria-label="再生設定"i]', 'player-settings-menu > stable-volume-toggle yt-list-item-view-model > div > div > switch-button-view-model > button[aria-checked="true"i]', 'ytm-app > bottom-sheet-container[role="dialog"i]:not([hidden="true"i]) > ytw-scrim');
+        }
+      }
+      // style 無効化
+      await new Promise(resolve => setTimeout(resolve, waitTime));
+      if (!isChatMode) { stylusElemSettings.textContent = 'div#chat-container { display: none !important; } '; } else { stylusElemSettings.textContent = ''; }
+    }
+  });
+  const eventHandler = () => {
+    // DOM stylus
+    if (stylusNone(stylusElemSettings.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemSettings); }
+
+    changeUrl();
+  };
+
+  if (document.readyState !== 'loading') {
+    // DOM解析が完了している場合は即実行
+    eventHandler();
+  } else {
+    // DOM生成されたとき
+    document.addEventListener('DOMContentLoaded', eventHandler());
+  }
+})();
