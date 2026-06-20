@@ -510,6 +510,7 @@
     }
   });
   const eventHandler = () => {
+    // DOM stylus
     if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
     if (stylusNone(stylusElemCh.id)) { document.body.insertAdjacentElement('afterbegin', stylusElemCh); }
 
