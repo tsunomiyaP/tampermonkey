@@ -78,6 +78,7 @@
   // ext
   appendStylus += 'ytm-pivot-bar-item-renderer:has(div.pivot-bar-item-tab.pivot-shorts) { display: none !important; } ';
   appendStylus += 'header.mobile-topbar-header div.mobile-topbar-header-sign-in-button { display: none !important; } ';
+  appendStylus += 'button-view-model:has(button[aria-label="報告"i]) { display: none !important; } ';
   // 初期表示
   for (const yt of itemsArray) {
     // 非表示 // home, 検索結果
