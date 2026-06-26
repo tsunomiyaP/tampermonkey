@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube ProgressBar
 // @namespace    http://tampermonkey.net/
-// @version      5.1
+// @version      5.2
 // @description  try to take over the world!
 // @author       You
 // @match        https://www.youtube.com/*
@@ -45,6 +45,7 @@
   // appendStylus += 'ytd-watch-flexy:not([full-bleed-player]) div#columns div#player { z-index: 999; } ytd-watch-flexy:not([full-bleed-player]) div#columns div#below { z-index: 998; } ytd-watch-flexy:not([full-bleed-player]) div#columns div#primary-inner > div#below { padding-top: 55px !important; } ytd-watch-flexy:not([full-bleed-player]) div#columns ytd-player#ytd-player { height: calc(100% + 55px) !important; } ytd-watch-flexy:not([full-bleed-player]) div#columns div.html5-video-container > video { top: 0 !important; } ytd-watch-flexy:not([full-bleed-player]) div#movie_player.ended-mode:has(video) video { display: none !important; } ';
   appendStylus += 'ytd-watch-flexy div#full-bleed-container, ytd-watch-flexy div#player { z-index: 999/** 2147483647 */ !important; } ';
   appendStylus += 'div.ytp-chrome-bottom { position: fixed !important; inset: auto 0 0 !important; margin: auto !important; opacity: 1 !important; background: #000 !important; } ';
+  appendStylus += 'div.ytp-chrome-controls { z-index: 9997 !important; } ';
   // .ytp-scrubber-container
   appendStylus += 'div.ytp-chrome-bottom .ytp-progress-bar[role="slider"] > * { display: none !important; } ';
   appendStylus += 'div.ytp-gradient-bottom { display: none !important; } ';
@@ -278,7 +279,6 @@
     }
   });
   const eventHandler = () => {
-    // DOM stylus
     if (stylusNone(stylusElem.id)) { document.body.insertAdjacentElement('afterbegin', stylusElem); }
     changeUrl();
   };
