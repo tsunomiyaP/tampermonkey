@@ -38,14 +38,14 @@
   appendStylus += 'div.html5-video-player { background-color: #000; } ';
   appendStylus += 'div.annotation.annotation-type-custom.iv-branding { display: none; } ';
   appendStylus += 'button.ytp-suggested-action-badge-content-forward { display: none; } ';
-  appendStylus += 'div.ytp-progress-bar-container { top: 5px !important; height: 10px !important; z-index: 9999 !important; } ';
   // 常時表示
   // appendStylus += 'ytd-watch-flexy[full-bleed-player][is-vertical-video_] div#full-bleed-container { z-index: 999; } ytd-watch-flexy[full-bleed-player][is-vertical-video_] div#columns { z-index: 998; } ytd-watch-flexy[full-bleed-player][is-vertical-video_] div#columns.ytd-watch-flexy { padding-top: 55px !important; } ytd-watch-flexy[full-bleed-player][is-vertical-video_] ytd-player#ytd-player { height: calc(100% + 55px) !important; } ytd-watch-flexy[full-bleed-player][is-vertical-video_] div#container div.html5-video-container > video { top: 0 !important; } ytd-watch-flexy[full-bleed-player][is-vertical-video_] div#movie_player.ended-mode:has(video) video { display: none !important; } ';
   // appendStylus += 'ytd-watch-flexy[full-bleed-player]:not([is-vertical-video_]) div#full-bleed-container { z-index: 999; } ytd-watch-flexy[full-bleed-player]:not([is-vertical-video_]) div#columns { z-index: 998; } ytd-watch-flexy[full-bleed-player]:not([is-vertical-video_]) div#columns.ytd-watch-flexy { padding-top: 55px !important; } ytd-watch-flexy[full-bleed-player]:not([is-vertical-video_]) ytd-player#ytd-player { height: calc(100% + 55px) !important; } ytd-watch-flexy[full-bleed-player]:not([is-vertical-video_]) div#container div.html5-video-container > video { top: 0 !important; } ytd-watch-flexy[full-bleed-player]:not([is-vertical-video_]) div#movie_player.ended-mode:has(video) video { display: none !important; } ';
   // appendStylus += 'ytd-watch-flexy:not([full-bleed-player]) div#columns div#player { z-index: 999; } ytd-watch-flexy:not([full-bleed-player]) div#columns div#below { z-index: 998; } ytd-watch-flexy:not([full-bleed-player]) div#columns div#primary-inner > div#below { padding-top: 55px !important; } ytd-watch-flexy:not([full-bleed-player]) div#columns ytd-player#ytd-player { height: calc(100% + 55px) !important; } ytd-watch-flexy:not([full-bleed-player]) div#columns div.html5-video-container > video { top: 0 !important; } ytd-watch-flexy:not([full-bleed-player]) div#movie_player.ended-mode:has(video) video { display: none !important; } ';
-  appendStylus += 'ytd-watch-flexy div#full-bleed-container, ytd-watch-flexy div#player { z-index: 999/** 2147483647 */ !important; } ';
+  appendStylus += 'div.ytp-progress-bar-container { top: 5px !important; height: 10px !important; z-index: 996 !important; } ';
+  appendStylus += 'ytd-watch-flexy div#full-bleed-container, ytd-watch-flexy div#player { z-index: 995 !important; /** 2147483647 */ } ';
   appendStylus += 'div.ytp-chrome-bottom { position: fixed !important; inset: auto 0 0 !important; margin: auto !important; opacity: 1 !important; background: #000 !important; } ';
-  appendStylus += 'div.ytp-chrome-controls { z-index: 9997 !important; } ';
+  appendStylus += 'div.ytp-chrome-controls { z-index: 997 !important; } ';
   // .ytp-scrubber-container
   appendStylus += 'div.ytp-chrome-bottom .ytp-progress-bar[role="slider"] > * { display: none !important; } ';
   appendStylus += 'div.ytp-gradient-bottom { display: none !important; } ';
@@ -162,7 +162,7 @@
   if (alsoInFullscreen) {
     bar.style.position = 'absolute';
     bar.style.top = '5px';
-    bar.style.zIndex = '9998';
+    bar.style.zIndex = '998';
     // TODO align with original progress bar? hard since it has some relative margins.
   }
 
