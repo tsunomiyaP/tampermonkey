@@ -45,7 +45,7 @@
   appendStylus += 'ytd-watch-flexy div#full-bleed-container, ytd-watch-flexy div#player { z-index: 995 !important; /** 2147483647 */ } ';
   appendStylus += 'div.ytp-chrome-bottom { position: fixed !important; inset: auto 0 0 !important; margin: auto !important; opacity: 1 !important; background: #000 !important; } ';
   // 既定のスライドバーを所定の位置に移動
-  appendStylus += 'div.ytp-chrome-bottom div.ytp-progress-bar-container { top: 5px !important; !important; height: 20px !important; z-index: 998 !important; } ';
+  appendStylus += 'div.ytp-chrome-bottom div.ytp-progress-bar-container { top: 5px !important; height: 20px !important; z-index: 998 !important; } ';
   appendStylus += 'div.ytp-chrome-bottom div.ytp-chrome-controls { z-index: 996 !important; } ';
   // .ytp-scrubber-container
   appendStylus += 'div.ytp-chrome-bottom .ytp-progress-bar[role="slider"] > * { display: none !important; } ';
