@@ -232,7 +232,7 @@
       // tips
       '中国|朝鮮|韓国|考察|(?<!.*英語)解説|反応|REACTION|女性向|神回',
       '(?=.*(にじ(さんじ)*|cr|valo|apex|pubg|(STREET(\\s)*FIGHTER|ストリートファイター|スト\\d)|(ow|over(\\s)*watch)|(?<!ho)(lol)(?!ive)|League(\\s)*of(\\s)*Legends|スプラ|ストリーマー|獅白|kzh))(?=.*((cup|カップ|かっぷ)|(custom|カスタム|かすたむ)|(プラベ|ぷらべ|マッチ)|杯|(交流|個人|団体)戦|祭|大会|選手権|チーム|運動会|切り抜き|企画|まとめ).*)',
-      '(v(tuber)*最(協)*|v(tuber)*祭(協)*|#Vの|(mad|new)(\\s)*town|(天下統一)RUST|ストグラ|スト鯖|VCR|V1GP|TRPG|コーチング|スクリム|交流戦|講座|顔合わせ)',
+      '(v(tuber)*最(協)*|v(tuber)*祭(協)*|#Vの|(mad|new)(\\s)*town|(天下統一)RUST|ストグラ|スト鯖|VCR|V1GP|TRPG|コーチング|漢気|漢義|スクリム|交流戦|講座|顔合わせ)',
     ],
     execludeWords: []
   };
