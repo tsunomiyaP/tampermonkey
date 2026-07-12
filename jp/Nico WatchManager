@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Nico WatchManager
 // @namespace    http://tampermonkey.net/
-// @version      5.1
+// @version      6.0
 // @description  サイト設定 自動再生オンにすること > 自動遷移後の再生のため
 // @author       You
 // @match        https://*.nicovideo.jp/*
@@ -19,6 +19,17 @@
   // 変数宣言
   const waitTime = 1000;
   const regWatch = '/watch';
+  // attributes
+  // ロード完了後再生
+  const cssMain = 'div[class="_4wqbwn0"i] > main[class="_4wqbwn1"i] > div';
+  // 再生：comment area not open, comment area open
+  const cssPlayer = cssMain + ' > :is(div[class="_1vg5ukp0"i], div[class="_1vg5ukp0 _1vg5ukp1"i])';
+  const cssMovies = cssMain + ' > div[class="_16d7kub0"i]';
+  const cssControls = cssPlayer + ' > div[class="_1vg5ukp3"i] > div[class="_8b6mzk0"i] > div[class="vjj3re0"i]';
+  const cssCommentArea = cssPlayer + ' > div[class="_1ti8yhz0"i]';
+  const cssVideo = cssControls + ' > div[class="_1v8d96a0"i] video[data-name="video-content"i]';
+  const cssMoreTxt = cssMain + ' > div[class="_16d7kub0"i] > div[class="d8iohg0"i] > div[class="d8iohg1"i] > button[class="d8iohg8"i]';
+
   let oldUrl = '';
   // ==========================================================
   // 静的style適用エリア
@@ -127,15 +138,30 @@
   const dialogHide = () => {
     // 動画読み込みに失敗
   };
-  const playingWatch = async () => {
-    // ブラウザ設定 > サイト設定 自動再生オンにすること 必須
-    // ロード完了後再生
-    const cssMain = 'div[class="_4wqbwn0"i] > main[class="_4wqbwn1"i] > div';
-    const cssPlayer = cssMain + ' > :is(div[class="_1vg5ukp0"i], div[class="_1vg5ukp0 _1vg5ukp1"i])';
-    const cssMovies = cssMain + ' > div[class="_16d7kub0"i]';
-    const cssControls = cssPlayer + ' > div[class="_1vg5ukp3"i] > div[class="_8b6mzk0"i] > div[class="vjj3re0"i]';
-    const cssCommentArea = cssPlayer + ' > div[class="_1ti8yhz0"i]';
+  const playNextWatch = async () => {
+    const btnCommentOpen = await waitQuerySelector(cssCommentArea + ' > div[class="_1ti8yhz2"i] > button[class="_5jwikj0"i]');
+    const videoElem = await waitQuerySelector(cssVideo);
 
+    console.log('video loading...');
+    videoElem.addEventListener('ended', async () => {
+      console.log('next movie waiting...');
+      // コメントエリア開いていた場合、閉じる
+      if (!isNuN(document.querySelector(cssMain + ' > div[class="_1vg5ukp0 _1vg5ukp1"i]'))) { btnCommentOpen.click(); }
+      // もっとみる
+      const txt = await waitQuerySelector(cssMoreTxt);
+      txt.click();
+      const cssNextInfo = cssPlayer + ' > div[class="_18bno200 _18bno202"i] > div[class="wjwcbt0"i][aria-label="動画情報"i] > div[class="m03n2n0"i] > div[class="_1hfvdw30"i] > div:not([class="m03n2n1"i]):has(> div[class="_1xtfb7p1 _1xtfb7p0"i] > h3[class="_1xtfb7p5 _1xtfb7p3"i])';
+      const cssNextTitle = cssNextInfo + ' > div[class="_1xtfb7p1 _1xtfb7p0"i] > h3[class="_1xtfb7p5 _1xtfb7p3"i]';
+      const cssNextMovie = cssNextInfo + ' > ol[class="_11xc2et0"i] a[href^="/watch/sm"i]';
+      const nextMovieNuN = await waitQuerySelector(cssNextTitle);
+      console.log('next ...', nextMovieNuN);
+      if (nextMovieNuN.textContent == '次の動画') {
+        const movieNext = await waitQuerySelector(cssNextMovie);
+        movieNext.click();
+      }
+    });
+  };
+  const playingWatch = async () => {
     const main = await waitQuerySelector(cssMain);
     const player = await waitQuerySelector(cssPlayer);
     const movies = await waitQuerySelector(cssMovies);
@@ -175,10 +201,12 @@
         console.log(location.hostname, 'www.nicovideo.jp' === location.hostname);
         if ('www.nicovideo.jp' === location.hostname) {
           console.log('pc > ');
-          await playingWatch();
+          playingWatch();
+          playNextWatch();
         } else {
           console.log('sp > ');
-          await playingWatch();
+          playingWatch();
+          playNextWatch();
         }
       }
     }
