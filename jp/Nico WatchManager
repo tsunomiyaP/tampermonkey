@@ -19,8 +19,6 @@
   // 変数宣言
   const waitTime = 1000;
   const regWatch = '/watch';
-  // 可変数
-  let ncMutation;
   let oldUrl = '';
   // ==========================================================
   // 静的style適用エリア
@@ -128,84 +126,34 @@
 
   const dialogHide = () => {
     // 動画読み込みに失敗
-    if (document.querySelector('div#jsModalDialogContainer') !== null) {
-      document.querySelector('div#jsModalDialogContainer').style.display = 'none';
-    }
-    if (document.querySelector('div#jsMarqueeContainer') !== null) {
-      document.querySelector('div#jsMarqueeContainer').style.display = 'none';
-    }
-    if (document.querySelector('div#jsSmartAppBanner') !== null) {
-      document.querySelector('div#jsSmartAppBanner').style.display = 'none';
-    }
-    if (document.querySelector('a.common-header-oidyxs') !== null) {
-      document.querySelector('a.common-header-oidyxs').style.display = 'none';
-    }
   };
-  const playingWatchM = async () => {
-    console.log('sp > ');
+  const playingWatch = async () => {
     // ブラウザ設定 > サイト設定 自動再生オンにすること 必須
     // ロード完了後再生
-    await waitQuerySelector('div.watch-Player_Loading[aria-hidden="true"i]');
-    await waitQuerySelector('div.watch-Player_Container');
-    // const ncvid = await waitQuerySelector('div#watchVideoContainer.watch-Video_Container > video');
-    const ncbtn = await waitQuerySelector('div.watch-OpeningPlayerInfo_Container > button#jsWatchThisPage.watch-OpeningPlayerInfo_PlayButton');
-    ncbtn.click();
+    const cssMain = 'div[class="_4wqbwn0"i] > main[class="_4wqbwn1"i] > div';
+    const cssPlayer = cssMain + ' > :is(div[class="_1vg5ukp0"i], div[class="_1vg5ukp0 _1vg5ukp1"i])';
+    const cssMovies = cssMain + ' > div[class="_16d7kub0"i]';
+    const cssControls = cssPlayer + ' > div[class="_1vg5ukp3"i] > div[class="_8b6mzk0"i] > div[class="vjj3re0"i]';
+    const cssCommentArea = cssPlayer + ' > div[class="_1ti8yhz0"i]';
 
-    ncMutation = new MutationObserver(async () => {
-      if (document.querySelector('div.watch-Player_Container').classList.contains('is-playing')) { // 再生開始
-        if (document.querySelector('div.watch-PlayerUpperControllerDock_CommentToggle') !== null) {
-          if (!document.querySelector('div.watch-PlayerUpperControllerDock_CommentToggle').classList.contains('off')) {
-            document.querySelector('div.watch-PlayerUpperControllerDock_CommentToggle').click();
-          }
-        }
-        if (document.querySelector('button.watch-OpenCommentListButton') !== null) {
-          if (document.querySelector('div.watch-OpenCommentListButton_Count').textContent != '閉じる') {
-            document.querySelector('button.watch-OpenCommentListButton').click();
-          }
-        }
-      } else if (document.querySelector('div.watch-Player_Container').classList.contains('screen-close')) { // 次のシリーズがあれば遷移
-        if (document.querySelector('div.watch-VideoDescription-Body_Series') !== null) {
-          await new Promise(resolve => setTimeout(resolve, waitTime));
+    const main = await waitQuerySelector(cssMain);
+    const player = await waitQuerySelector(cssPlayer);
+    const movies = await waitQuerySelector(cssMovies);
+    const controls = await waitQuerySelector(cssControls);
 
-          let series = document.querySelector('div.watch-VideoDescription-Body_Series');
-          if (isNuN(series.querySelector('a.watch-VideoDescription-Body_SeriesNext'))) { return false; }
-          if (!series.querySelector('a.watch-VideoDescription-Body_SeriesNext').hasAttribute('href')) { return false; }
-          location.href = series.querySelector('a.watch-VideoDescription-Body_SeriesNext').href;
-        }
-      }
-    });
-    const config = { 'attributes': true, 'childList': false, 'subtree': false };
-    ncMutation.observe(document.querySelector('div.watch-Player_Container'), config);
-  };
-  const playingWatchW = async () => {
-    console.log('pc > ');
-    await waitQuerySelector('div.PlayerPresenter video[data-name="video-content"i]');
-    await waitQuerySelector('div[aria-label="video - currentTime"i]');
+    // プレイヤー再生
+    console.log('player click'); // 自動再生オンの場合不要
+//    const btnControlPlayer = await waitQuerySelector(cssControls + ' > div[class="_10qpu4i0"i] > button[aria-label="再生"i]');
+//    console.log(btnControlPlayer);
+//    btnControlPlayer.click();
 
-    ncMutation = new MutationObserver(async () => {
-      // 広場、チャット、シリーズ、広告エリア 削除 ※ 設定画面popup 除く
-      const hiroba = document.querySelector('div.d_flex.flex-d_column:has(> * > button[data-element-name="hiroba_navigation"i])');
-      const ncChat = document.querySelector('div[class^="grid-area_"i][class*="sidebar"i] > div > div[class*="pos_relative"i]:not(:has([data-scope="tabs"i])):has(> section)');
-      const series = document.querySelector('div[class^="grid-area_"i][class*="sidebar"i] > div:not([aria-label="プレーヤー設定"i]) > section');
-      if (!isNuN(hiroba)) { hiroba.remove(); }
-      if (!isNuN(ncChat)) { ncChat.remove(); }
-      if (!isNuN(series)) { series.remove(); }
-
-      for (const img of document.querySelectorAll('div[class^="grid-area_"i][class*="sidebar"i] > div > div[data-scope="tabs"i][data-part="root"i] > div[data-scope="tabs"i][data-part="content"i] > div > div[id^="img_"i]')) {
-        img.remove();
-      }
-
-      if ('scaleX(0.999)' == document.querySelector('div[aria-label="video - currentTime"i]').style.transform) {
-        console.log('ended');
-        await new Promise(resolve => setTimeout(resolve, waitTime));
-
-        // const bottomPrev = await waitQuerySelectorCount(5, 'div[class^="grid-area_"i][class*="bottom"i] div.gap_base > a[data-anchor-page="watch"i][data-anchor-area="series"i][data-anchor-detail="prev"i]');
-        const bottomNext = await waitQuerySelector('div[class^="grid-area_"i][class*="bottom"i] div.gap_base > a[data-anchor-page="watch"i][data-anchor-area="series"i][data-anchor-detail="next"i]');
-        location.href = bottomNext.href;
-      }
-    });
-    const config = { 'attributes': true, 'childList': false, 'subtree': false };
-    ncMutation.observe(document.querySelector('div[aria-label="video - currentTime"]'), config);
+    await new Promise(resolve => setTimeout(resolve, waitTime));
+    // コメント開く
+    console.log('comments click');
+    const btnCommentHide = await waitQuerySelector(cssControls + ' > div[class="_9ndw3l0"i] > button[class="_9ndw3l1 _1tmkx9h0"i]:nth-child(3)');
+    btnCommentHide.click();
+    const btnCommentOpen = await waitQuerySelector(cssCommentArea + ' > div[class="_1ti8yhz2"i] > button[class="_5jwikj0"i]');
+    btnCommentOpen.click();
   };
   const changeUrl = () => {
     const observer = new MutationObserver(() => {
@@ -221,15 +169,16 @@
     if (oldUrl !== e.detail.path) {
       oldUrl = e.detail.path; // oldUrlを更新
 
-      if (!isNuN(ncMutation)) { ncMutation.disconnect(); }
       dialogHide();
 
       if (new RegExp(regWatch, 'gis').test(location.pathname)) {
         console.log(location.hostname, 'www.nicovideo.jp' === location.hostname);
         if ('www.nicovideo.jp' === location.hostname) {
-          await playingWatchW();
+          console.log('pc > ');
+          await playingWatch();
         } else {
-          await playingWatchM();
+          console.log('sp > ');
+          await playingWatch();
         }
       }
     }
