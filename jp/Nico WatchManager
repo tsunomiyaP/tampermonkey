@@ -167,13 +167,14 @@
     const movies = await waitQuerySelector(cssMovies);
     const controls = await waitQuerySelector(cssControls);
 
+    await new Promise(resolve => setTimeout(resolve, waitTime));
+    console.log('waiting player state... clicker');
+    await waitQuerySelector(cssMain + ':has(> div[class="_1vg5ukp0 _1vg5ukp1"i])');
     // プレイヤー再生
     console.log('player click'); // 自動再生オンの場合不要
-//    const btnControlPlayer = await waitQuerySelector(cssControls + ' > div[class="_10qpu4i0"i] > button[aria-label="再生"i]');
-//    console.log(btnControlPlayer);
-//    btnControlPlayer.click();
-
-    await new Promise(resolve => setTimeout(resolve, waitTime));
+    // const btnControlPlayer = await waitQuerySelector(cssControls + ' > div[class="_10qpu4i0"i] > button[aria-label="再生"i]');
+    // console.log(btnControlPlayer);
+    // btnControlPlayer.click();
     // コメント開く
     console.log('comments click');
     const btnCommentHide = await waitQuerySelector(cssControls + ' > div[class="_9ndw3l0"i] > button[class="_9ndw3l1 _1tmkx9h0"i]:nth-child(3)');
