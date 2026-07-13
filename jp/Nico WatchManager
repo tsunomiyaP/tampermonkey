@@ -169,7 +169,7 @@
 
     await new Promise(resolve => setTimeout(resolve, waitTime));
     console.log('waiting player state... clicker');
-    await waitQuerySelector(cssMain + ':has(> div[class="_1vg5ukp0 _1vg5ukp1"i])');
+    await waitQuerySelector(cssControls + ':has(> div[class="_1n7apy0 _1n7apy1"i])');
     // プレイヤー再生
     console.log('player click'); // 自動再生オンの場合不要
     // const btnControlPlayer = await waitQuerySelector(cssControls + ' > div[class="_10qpu4i0"i] > button[aria-label="再生"i]');
@@ -177,10 +177,8 @@
     // btnControlPlayer.click();
     // コメント開く
     console.log('comments click');
-    const btnCommentHide = await waitQuerySelector(cssControls + ' > div[class="_9ndw3l0"i] > button[class="_9ndw3l1 _1tmkx9h0"i]:nth-child(3)');
-    btnCommentHide.click();
-    const btnCommentOpen = await waitQuerySelector(cssCommentArea + ' > div[class="_1ti8yhz2"i] > button[class="_5jwikj0"i]');
-    btnCommentOpen.click();
+    document.querySelector(cssControls + ' > div[class="_9ndw3l0"i] > button[class="_9ndw3l1 _1tmkx9h0"i]:nth-child(3)').click();
+    document.querySelector(cssCommentArea + ' > div[class="_1ti8yhz2"i] > button[class="_5jwikj0"i]').click();
   };
   const changeUrl = () => {
     const observer = new MutationObserver(() => {
