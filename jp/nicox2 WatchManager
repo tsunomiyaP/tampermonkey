@@ -177,7 +177,9 @@
     // btnControlPlayer.click();
     // コメント開く
     console.log('comments click');
-    document.querySelector(cssControls + ' > div[class="_9ndw3l0"i] > button[class="_9ndw3l1 _1tmkx9h0"i]:has(> svg > path[d^="M18 3H6C4.346"i])').click();
+    // コメント画面描画時[x]path Stylus
+    const cssCommentTxt = cssControls + ' > div[class="_9ndw3l0"i] > button[class="_9ndw3l1 _1tmkx9h0"i]:has(path[d^="M18 3H6C4.346"i])';
+    if (!isNuN(document.querySelector(cssCommentTxt))) { document.querySelector(cssCommentTxt).click(); }
     document.querySelector(cssCommentArea + ' > div[class="_1ti8yhz2"i] > button[class="_5jwikj0"i]').click();
   };
   const changeUrl = () => {
