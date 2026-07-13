@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Nico WatchManager
+// @name         NICOx2 WatchManager
 // @namespace    http://tampermonkey.net/
 // @version      6.0
 // @description  サイト設定 自動再生オンにすること > 自動遷移後の再生のため
@@ -177,7 +177,7 @@
     // btnControlPlayer.click();
     // コメント開く
     console.log('comments click');
-    document.querySelector(cssControls + ' > div[class="_9ndw3l0"i] > button[class="_9ndw3l1 _1tmkx9h0"i]:nth-child(3)').click();
+    document.querySelector(cssControls + ' > div[class="_9ndw3l0"i] > button[class="_9ndw3l1 _1tmkx9h0"i]:has(> svg > path[d^="M18 3H6C4.346"i])').click();
     document.querySelector(cssCommentArea + ' > div[class="_1ti8yhz2"i] > button[class="_5jwikj0"i]').click();
   };
   const changeUrl = () => {
