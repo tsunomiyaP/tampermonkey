@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         NICOx2 WatchManager
+// @name         nicox2 WatchManager
 // @namespace    http://tampermonkey.net/
 // @version      6.0
 // @description  サイト設定 自動再生オンにすること > 自動遷移後の再生のため
