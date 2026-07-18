@@ -174,15 +174,23 @@
     console.log('player click'); // 自動再生オンの場合不要
     const btn = await waitQuerySelectorCount(10, cssControls + ' > div[class="izcw0e0 _1xq99e00"i] > button[class="_1ss5odq0"i]');
     if (!isNuN(btn)) { btn.click(); }
-    // 再生画面 : 判断
-    // await waitQuerySelector(cssControls + ':has(> div[class="_1n7apy0 _1n7apy1"i])');
     // コメント開く
     console.log('comments click');
-    const cssComemntBtn = await waitQuerySelectorCount(10, cssCommentArea + ' > div[class="_1ti8yhz2"i] > button[class="_5jwikj0"i]');
-    if (!isNuN(cssComemntBtn)) { cssComemntBtn.click(); }
+    const comemntBtn = await waitQuerySelectorCount(10, cssCommentArea + ' > div[class="_1ti8yhz2"i] > button[class="_5jwikj0"i]');
+    if (!isNuN(comemntBtn)) { comemntBtn.click(); }
     // コメント画面描画時[x]path Stylus
-    const cssCommentTxt = await waitQuerySelectorCount(10, cssControls + ' > div[class="_9ndw3l0"i] > button[class="_9ndw3l1 _1tmkx9h0"i]:has(path[d^="M18 3H6C4.346"i])');
-    if (!isNuN(cssCommentTxt)) { cssCommentTxt.click(); }
+    const commentTxt = await waitQuerySelectorCount(10, cssControls + ' > div[class="_9ndw3l0"i] > button[class="_9ndw3l1 _1tmkx9h0"i]:has(path[d^="M18 3H6C4.346"i])');
+    if (!isNuN(commentTxt)) { commentTxt.click(); }
+
+    // 再生画面 : 判断
+    await waitQuerySelector(cssControls + ':has(> div[class="_1n7apy0 _1n7apy1"i])');
+    // コメント開く
+    console.log('comments click ... state ready ? ');
+    const comemntBtnController = await waitQuerySelectorCount(10, cssCommentArea + ' > div[class="_1ti8yhz2"i] > button[class="_5jwikj0"i]');
+    if (!isNuN(comemntBtnController)) { comemntBtnController.click(); }
+    // コメント画面描画時[x]path Stylus
+    const commentTxtController = await waitQuerySelectorCount(10, cssControls + ' > div[class="_9ndw3l0"i] > button[class="_9ndw3l1 _1tmkx9h0"i]:has(path[d^="M18 3H6C4.346"i])');
+    if (!isNuN(commentTxtController)) { commentTxtController.click(); }
   };
   const changeUrl = () => {
     const observer = new MutationObserver(() => {
