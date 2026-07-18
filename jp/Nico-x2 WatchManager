@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         nicox2 WatchManager
+// @name         Nico-x2 WatchManager
 // @namespace    http://tampermonkey.net/
 // @version      6.0
 // @description  サイト設定 自動再生オンにすること > 自動遷移後の再生のため
@@ -162,10 +162,10 @@
     });
   };
   const playingWatch = async () => {
-    const main = await waitQuerySelector(cssMain);
-    const player = await waitQuerySelector(cssPlayer);
-    const movies = await waitQuerySelector(cssMovies);
-    const controls = await waitQuerySelector(cssControls);
+    await waitQuerySelector(cssMain);
+    await waitQuerySelector(cssPlayer);
+    await waitQuerySelector(cssMovies);
+    await waitQuerySelector(cssControls);
 
     await new Promise(resolve => setTimeout(resolve, waitTime));
     console.log('waiting player state... clicker');
