@@ -455,13 +455,13 @@
 
         // youtube Area Manager
         await waitQuerySelector(manager);
-        await waitQuerySelectorCount(10, channelPC);
-        await waitQuerySelectorCount(10, channelMB);
         if (new RegExp('(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)(/videos|/streams|/playlists|/releases|/posts|/search|/community|/membership)', 'gis').test(e.detail.path)) {
           if ('www.youtube.com' === e.detail.host) {
+            await waitQuerySelectorCount(10, channelPC);
             const sectionPC = document.querySelector(channelPC);
             if (!isNuN(sectionPC)) { sectionPC.classList.add('ytAreaShow'); }
           } else if ('m.youtube.com' === e.detail.host) {
+            await waitQuerySelectorCount(10, channelMB);
             const sectionMB = document.querySelector(channelMB);
             if (!isNuN(sectionMB)) { sectionMB.classList.add('ytAreaShow'); }
           }
