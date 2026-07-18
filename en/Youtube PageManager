@@ -449,6 +449,8 @@
       // youtube Channel Area Manager
       if (new RegExp(regChannel, 'gis').test(e.detail.path)) {
         stylusElemCh.textContent = 'body { visibility: hidden !important; } ';
+        await new Promise(resolve => setTimeout(resolve, waitTime * 2));
+
         const channelPC = 'ytd-browse[page-subtype="channels"i] #primary'; // channel タブ
         const channelPCItem = 'ytd-section-list-renderer[page-subtype="channels"i]';
         const channelSP = 'ytm-browse > .modern-tabs > div[is-channel="true"i] ~ div'; // channel タブ
