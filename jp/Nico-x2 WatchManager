@@ -169,12 +169,12 @@
 
     await new Promise(resolve => setTimeout(resolve, waitTime));
     console.log('waiting player state... clicker');
-    await waitQuerySelector(cssControls + ':has(> div[class="_1n7apy0 _1n7apy1"i])');
     // プレイヤー再生
     console.log('player click'); // 自動再生オンの場合不要
-    // const btnControlPlayer = await waitQuerySelector(cssControls + ' > div[class="_10qpu4i0"i] > button[aria-label="再生"i]');
-    // console.log(btnControlPlayer);
-    // btnControlPlayer.click();
+    const btn = await waitQuerySelectorCount(10, cssControls + ' > div[class="izcw0e0 _1xq99e00"i] > button[class="_1ss5odq0"i]');
+    if (!isNuN(btn)) { btn.click(); }
+    // 再生画面 : 判断
+    await waitQuerySelector(cssControls + ':has(> div[class="_1n7apy0 _1n7apy1"i])');
     // コメント開く
     console.log('comments click');
     // コメント画面描画時[x]path Stylus
