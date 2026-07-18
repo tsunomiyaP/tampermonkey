@@ -451,54 +451,42 @@
         stylusElemCh.textContent = 'body { visibility: hidden !important; } ';
         const channelPC = 'ytd-browse[page-subtype="channels"i] #primary'; // channel タブ
         const channelPCItem = 'ytd-section-list-renderer[page-subtype="channels"i]';
-        const channelMB = 'ytm-browse > .modern-tabs > div[is-channel="true"i] ~ div'; // channel タブ
+        const channelSP = 'ytm-browse > .modern-tabs > div[is-channel="true"i] ~ div'; // channel タブ
+        const channelEX = 'tsunomiyaP|UCSsBxdA7yg523PegCT7O7Mg';
 
-        // youtube Area Manager
-        await waitQuerySelector(manager);
-        if (new RegExp('(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)(/videos|/streams|/playlists|/releases|/posts|/search|/community|/membership)', 'gis').test(e.detail.path)) {
-          if ('www.youtube.com' === e.detail.host) {
-            await waitQuerySelectorCount(10, channelPC);
-            const sectionPC = document.querySelector(channelPC);
-            if (!isNuN(sectionPC)) { sectionPC.classList.add('ytAreaShow'); }
-          } else if ('m.youtube.com' === e.detail.host) {
-            await waitQuerySelectorCount(10, channelMB);
-            const sectionMB = document.querySelector(channelMB);
-            if (!isNuN(sectionMB)) { sectionMB.classList.add('ytAreaShow'); }
-          }
+        // youtube Area Manager Manager:UserChannel
+        if (new RegExp(channelEX, 'gis').test(e.detail.path)) {
+          console.log('> youtube : my manager channel...');
+          stylusElemCh.textContent = '';
         } else {
-          const excChannel = 'tsunomiyaP|UCSsBxdA7yg523PegCT7O7Mg';
-          // console.log('not fav channel');
-          if (!new RegExp(excChannel, 'gis').test(e.detail.path)) {
+          if (new RegExp('(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)(/videos|/streams|/playlists|/releases|/posts|/search|/community|/membership)', 'gis').test(e.detail.path)) {
+            // [ホーム/home]タブ以外
             if ('www.youtube.com' === e.detail.host) {
+              stylusElemCh.textContent = '';
+            } else if ('m.youtube.com' === e.detail.host) {
+              stylusElemCh.textContent = '';
+            }
+          } else {
+            if ('www.youtube.com' === e.detail.host) {
+              stylusElemCh.textContent = channelPC + ' { visibility: hidden !important; } ';
+              // [ホーム]だがホーム設定していない場合をケア
               await waitQuerySelectorCount(10, channelPC + ' ' + channelPCItem);
               const sectionPC = document.querySelector(channelPC);
               const sectionPCItem = document.querySelector(channelPC + ' ' + channelPCItem);
-              if (!isNuN(sectionPC)) { if (!isNuN(sectionPCItem)) { sectionPCItem.remove(); } sectionPC.classList.remove('ytAreaShow'); }
+              if (!isNuN(sectionPC)) { if (!isNuN(sectionPCItem)) { sectionPCItem.remove(); } }
             } else if ('m.youtube.com' === e.detail.host) {
-              console.log('hidden channel area');
-              const sectionMB = document.querySelector(channelMB);
-              if (!isNuN(sectionMB)) { sectionMB.classList.remove('ytAreaShow'); }
-            }
-          } else {
-            // console.log('fav channel');
-            if ('www.youtube.com' === e.detail.host) {
-              const sectionPC = document.querySelector(channelPC);
-              if (!isNuN(sectionPC)) { sectionPC.classList.add('ytAreaShow'); }
-            } else if ('m.youtube.com' === e.detail.host) {
-              const sectionMB = document.querySelector(channelMB);
-              if (!isNuN(sectionMB)) { sectionMB.classList.add('ytAreaShow'); }
+              stylusElemCh.textContent = channelSP + ' { visibility: hidden !important; } ';
+              // [ホーム]だがホーム設定していない場合をケア
+              await waitQuerySelectorCount(10, channelSP);
             }
           }
         }
-        // style 可変値
-        await waitQuerySelectorCount(10, ':is(' + channelPC + ', ' + channelMB + ')');
-        await new Promise(resolve => setTimeout(resolve, waitTime * 4));
-        stylusElemCh.textContent = ':is(' + channelPC + ', ' + channelMB + '):not(.ytAreaShow) { visibility: hidden !important; } ';
       } else {
-        // youtube Area Manager
-        await waitQuerySelector(manager);
+        // channel外に移動後、stylus 削除
+        await new Promise(resolve => setTimeout(resolve, waitTime));
         stylusElemCh.textContent = '';
       }
+      await waitQuerySelector(manager);
 
       // movie contents
       const ytArray = itemsArray.filter((yt) => e.detail.host === yt.device);
