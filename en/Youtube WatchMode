@@ -128,33 +128,44 @@
   };
 
   const ytChatArea = async () => {
-    const chat = await waitQuerySelectorCount(4, 'div#chat-container');
+    const chat = await waitQuerySelector('div#chat-container');
     if (!isNuN(chat)) { chat.remove(); }
   };
   const ytStableVolume = async (settingBtn, drcBtn, closeArea) => {
     const setting = await waitQuerySelector(settingBtn);
     if (!isNuN(setting)) { setting.click(); }
 
-    const drcMenuItem = await waitQuerySelectorCount(4, drcBtn);
+    const drcMenuItem = await waitQuerySelectorCount(10, drcBtn);
     if (isNuN(drcMenuItem)) {
       document.querySelector(closeArea).click();
-      console.log('DRC Audio is already disabled');
+      console.log('> yt DRC Audio is already Disabled');
     } else {
       if (drcMenuItem.getAttribute('aria-checked') === 'true') {
         drcMenuItem.click();
-        console.log('Disabled DRC Audio');
+        console.log('> yt DRC Audio : Disabled...');
       } else {
-        console.log('DRC Audio is already disabled');
+        console.log('> yt DRC Audio is already Disabled');
       }
       document.querySelector(closeArea).click();
     }
   };
   const ytNavBtn = async () => {
-    const toggleBtn = 'button.ytp-autonav-toggle';
-    const area = await waitQuerySelectorCount(10, toggleBtn);
-    if (!isNuN(area) && area.querySelector('div > div.ytp-autonav-toggle-button').getAttribute('aria-checked') === 'true') {
-      area.click();
-    }
+    const cssControls = 'div[class="ytp-right-controls"i]';
+    const cssToggleNav = 'button.ytp-autonav-toggle';
+    const cssToggleNavCheck = 'div.ytp-autonav-toggle-button';
+
+    const toggleNavBtn = await waitQuerySelector(cssControls + ' ' + cssToggleNav);
+    const toggleNavCheck = await waitQuerySelector(cssControls + ' ' + cssToggleNav + ' ' + cssToggleNavCheck);
+    console.log('> yt auto nav clicker...');
+    if (toggleNavCheck.getAttribute('aria-checked') === 'true') { toggleNavBtn.click(); return ytNavBtn(); } else { return false; }
+  };
+  const ytSubBtn = async () => {
+    const cssControls = 'div[class="ytp-right-controls"i]';
+    const cssToggleSubBtn = 'button.ytp-subtitles-button';
+
+    const toggleSubBtn = await waitQuerySelector(cssControls + ' ' + cssToggleSubBtn);
+    console.log('> yt subtitle clicker...');
+    if (toggleSubBtn.getAttribute('aria-pressed') === 'true') { toggleSubBtn.click(); return ytSubBtn(); } else { return false; }
   };
   const qualityFix = async (canLevel) => {
     let q = qualitys[target];
@@ -172,32 +183,32 @@
     if (!ytPlayer.getAvailableQualityLevels().includes(q)) {
       return await qualityFix(canLevel - 1);
     }
-    console.log('> youtube quality list : ', ytPlayer.getAvailableQualityLevels());
+    console.log('> yt quality list : ', ytPlayer.getAvailableQualityLevels());
     ytPlayer.setPlaybackQualityRange(q);
     ytPlayer.setPlaybackQuality(q);
 
     await new Promise(resolve => setTimeout(resolve, waitTime));
-    console.log('> youtube quality low : ', q);
+    console.log('> yt quality low : ', q);
 
     // ライブ配信か否か pc, mobile
     // const badge = await waitQuerySelectorCount(1, 'button.ytp-live-badge-is-livehead, span.ytwPlayerTimeDisplayTime');
     const stats = ytPlayer.getVideoStats() || {};
-    console.log('> youtube Live status : ', stats.live);
+    console.log('> yt Live status : ', stats.live);
     if (stats.live === 'live' || stats.live === 'dvr' || stats.live === 'lp') {
       // 最低画質
       if (!ytPlayer.getAvailableQualityLevels().includes(q)) {
         q = qualitys[canLevel];
       }
-      console.log('> youtube can Live ... Live stream : ', q);
+      console.log('> yt can Live ... Live stream : ', q);
     } else {
       q = qualitys[target];
-      console.log('> youtube not Live ... movie watch : ', q);
+      console.log('> youtytube not Live ... movie watch : ', q);
     }
     ytPlayer.setPlaybackQualityRange(q);
     ytPlayer.setPlaybackQuality(q);
 
     await new Promise(resolve => setTimeout(resolve, waitTime));
-    console.log('> youtube quality FIX ... is : ', ytPlayer.getPlaybackQuality());
+    console.log('> yt quality FIX ... is : ', ytPlayer.getPlaybackQuality());
   };
 
   const changeUrl = () => {
@@ -224,18 +235,20 @@
           // pc
           console.log('> yt watch quality ... changing');
           await qualityFix(5);
-          console.log('> chat area ... remover');
-          await ytChatArea();
-          console.log('> stable volume 一定音量 setting...');
-          await ytStableVolume('button.ytp-settings-button[aria-label="設定"i]', 'div.ytp-drc-menu-item[role="menuitemcheckbox"i]', manager);
-          console.log('> auto nav next movies setting...');
-          await ytNavBtn();
+          console.log('> yt stable volume 一定音量 setting...');
+          ytStableVolume('button.ytp-settings-button[aria-label="設定"i]', 'div.ytp-drc-menu-item[role="menuitemcheckbox"i]', manager);
+          console.log('> yt chat area ... remover');
+          ytChatArea();
+          console.log('> yt auto nav next movies setting...');
+          ytNavBtn();
+          console.log('> yt auto subtitle setting...');
+          ytSubBtn();
         } else if ('m.youtube.com' === e.detail.host) {
           // mobile
           console.log('> yt watch quality ... changing');
           await qualityFix(5);
-          console.log('> stable volume 一定音量 setting...');
-          await ytStableVolume('button.player-settings-icon[aria-label="再生設定"i]', 'player-settings-menu > stable-volume-toggle yt-list-item-view-model > div > div > switch-button-view-model > button[aria-checked="true"i]', 'ytm-app > bottom-sheet-container[role="dialog"i]:not([hidden="true"i]) > ytw-scrim');
+          console.log('> yt stable volume 一定音量 setting...');
+          ytStableVolume('button.player-settings-icon[aria-label="再生設定"i]', 'player-settings-menu > stable-volume-toggle yt-list-item-view-model > div > div > switch-button-view-model > button[aria-checked="true"i]', 'ytm-app > bottom-sheet-container[role="dialog"i]:not([hidden="true"i]) > ytw-scrim');
         }
       }
       // style 無効化
