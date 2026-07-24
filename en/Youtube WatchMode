@@ -228,13 +228,13 @@
       // 設定ポップアップ初期非表示
       if (!isChatMode) { stylusElemSettings.textContent = 'div#chat-container { display: none !important; } '; } else { stylusElemSettings.textContent = ''; }
       stylusElemSettings.textContent += 'div.ytp-popup.ytp-settings-menu { display: none !important; } '; // pc
-      stylusElemSettings.textContent += 'ytm-app > bottom-sheet-container[role="dialog"i] { display: none !important; } '; // mobile
+      stylusElemSettings.textContent += 'ytm-app[id="app"i] > :is(bottom-sheet-container[aria-modal="true"i]) { display: none !important; } '; // mobile
 
       if (new RegExp(regWatch, 'gis').test(e.detail.path)) {
         if ('www.youtube.com' === e.detail.host) {
           // pc
           console.log('> yt stable volume 一定音量 setting...');
-          ytStableVolume('button.ytp-settings-button[aria-label="設定"i]', 'div.ytp-drc-menu-item[role="menuitemcheckbox"i]', manager);
+          await ytStableVolume('button.ytp-settings-button[aria-label="設定"i]', 'div.ytp-drc-menu-item[role="menuitemcheckbox"i]', manager);
           console.log('> yt watch quality ... changing');
           qualityFix(5);
           console.log('> yt chat area ... remover');
@@ -246,7 +246,7 @@
         } else if ('m.youtube.com' === e.detail.host) {
           // mobile
           console.log('> yt stable volume 一定音量 setting...');
-          ytStableVolume('button.player-settings-icon[aria-label="再生設定"i]', 'player-settings-menu > stable-volume-toggle yt-list-item-view-model > div > div > switch-button-view-model > button[aria-checked="true"i]', 'ytm-app > bottom-sheet-container[role="dialog"i]:not([hidden="true"i]) > ytw-scrim');
+          await ytStableVolume('button.player-settings-icon[aria-label="再生設定"i]', 'player-settings-menu > stable-volume-toggle yt-list-item-view-model > div > div > switch-button-view-model > button[aria-checked="true"i]', 'ytm-app > bottom-sheet-container[role="dialog"i]:not([hidden="true"i]) > ytw-scrim');
           console.log('> yt watch quality ... changing');
           qualityFix(5);
         }
