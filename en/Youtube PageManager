@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube PageManager
 // @namespace    http://tampermonkey.net/
-// @version      5.3
+// @version      5.5
 // @description  try to take over the world!
 // @author       You
 // @match        https://*.youtube.com/*
@@ -30,7 +30,7 @@
     { device: 'www.youtube.com', path: '^/results', area: 'ytd-search div#primary > ytd-section-list-renderer > div#contents', stylus: 'transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'm.youtube.com', path: '^/$|^/index', area: 'div.tab-content[tab-identifier="FEwhat_to_watch"i] div.rich-grid-renderer-contents', stylus: 'display: block; transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'm.youtube.com', path: '^/feed/subscriptions', area: 'div.tab-content[tab-identifier="FEsubscriptions"i] > ytm-tab-renderer > * > :is(lazy-list, div.rich-grid-renderer-contents)', stylus: 'display: block; transform: ' + scale + ' !important; pointer-events: none !important;' },
-    { device: 'm.youtube.com', path: '^/watch|^/live', area: ':is([section-identifier="related-items"] > lazy-list, div.related-items-container lazy-list)', stylus: 'display: block; transform: ' + scale + ' !important; pointer-events: none !important;' },
+    { device: 'm.youtube.com', path: '^/watch|^/live', area: 'div.related-items-container > ytm-item-section-renderer > lazy-list', stylus: 'display: block; transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'm.youtube.com', path: '^/@.+/(videos|streams)|^/channel/.+/(videos|streams)|^/c/.+/(videos|streams)|^/user/.+/(videos|streams)|^/u/.+/(videos|streams)', area: 'ytm-browse ytm-tab-renderer > ytm-rich-grid-renderer > div.rich-grid-renderer-contents', stylus: 'display: block; transform: ' + scale + ' !important; pointer-events: none !important;' },
     { device: 'm.youtube.com', path: '^/results', area: 'ytm-search > ytm-section-list-renderer > lazy-list', stylus: 'display: block; transform: ' + scale + ' !important; pointer-events: none !important;' },
   ];
@@ -214,18 +214,19 @@
 
     if (new RegExp(regWatch, 'gis').test(detail.path)) { // 動画エリア
       let ytChannel = '';
-      const ownerA = 'div#owner > ytd-video-owner-renderer div#upload-info :is(ytd-channel-name#channel-name div#text-container a, yt-attributed-string span[class])';
-      const ownerB = 'yt-attributed-string, ytm-slim-owner-renderer h3.slim-owner-channel-name span';
+      const ownerA = 'div#owner > ytd-video-owner-renderer div#upload-info :is(ytd-channel-name#channel-name div#text-container a, yt-attributed-string span[class])'; // PC
+      // channel ID [@xxx]形式
+      const ownerB = 'ytm-slim-video-metadata-section-renderer > ytm-slim-video-action-bar-renderer > div.slim-video-action-bar-actions > a'; // mobile
       await waitQuerySelector(ownerA + ', ' + ownerB);
       // pc 動画
-      const ytTitleMeta = [':is(div.ytLockupViewModelMetadata, div.media-item-details > div.media-item-info)', ':is(div.ytLockupMetadataViewModelTextContainer, div.media-item-metadata)', ':is(h3.ytLockupMetadataViewModelHeadingReset span, a > h3)'].join(' ');
-      const ytUserNMeta = [':is(div.ytLockupViewModelMetadata, div.media-item-details > div.media-item-info)', ':is(div.ytLockupMetadataViewModelTextContainer, div.media-item-metadata)', ':is(div.ytLockupMetadataViewModelMetadata div.ytContentMetadataViewModelMetadataRow > span, div[class] > ytm-badge-and-byline-renderer > span.YtmBadgeAndBylineRendererItemByline > span)'].join(' ');
+      const ytTitleMeta = [':is(div.ytLockupViewModelMetadata, div.media-item-details)', ':is(div.ytLockupMetadataViewModelTextContainer, div.media-item-info > div.media-item-metadata)', ':is(h3.ytLockupMetadataViewModelHeadingReset span, a > h3)'].join(' ');
+      const ytUserNMeta = [':is(div.ytLockupViewModelMetadata, div.media-item-details)', ':is(div.ytLockupMetadataViewModelTextContainer, div.media-channel)', ':is(div.ytLockupMetadataViewModelMetadata div.ytContentMetadataViewModelMetadataRow > span, ytm-channel-thumbnail-with-link-renderer > a)'].join(' ');
       mode.pc.ytTitle = isNuN(item.querySelector(ytTitleMeta)) ? '' : item.querySelector(ytTitleMeta).textContent;
       mode.pc.userNam = isNuN(item.querySelector(ytUserNMeta)) ? '' : item.querySelector(ytUserNMeta).textContent;
       mode.pc.userChN = '';
       // mobile
       mode.mobile.ytTitle = isNuN(item.querySelector(ytTitleMeta)) ? '' : item.querySelector(ytTitleMeta).textContent;
-      mode.mobile.userNam = isNuN(item.querySelector(ytUserNMeta)) ? '' : item.querySelector(ytUserNMeta).textContent;
+      mode.mobile.userNam = isNuN(item.querySelector(ytUserNMeta)) ? '' : item.querySelector(ytUserNMeta).href;
       mode.mobile.userChN = '';
 
       if (isDevice) {
@@ -247,7 +248,7 @@
       } else {
         // モバイル版
         const channel = document.querySelector(ownerB);
-        user = channel.textContent;
+        user = channel.href;
       }
 
       console.log(user, ytChannel);
