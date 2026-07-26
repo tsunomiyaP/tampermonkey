@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ABC WordsList
 // @namespace    http://tampermonkey.net/
-// @version      5.0
+// @version      1.0
 // @description  try to take over the world!
 // @author       You
 // @match        https://*.youtube.com/*
@@ -78,7 +78,7 @@
       '加賀美(\\s)*ハヤト|H_KAGAMI2434|@KagamiHayato',
       'シェリン(\\s)*[・]*バーガンディ|ShellinBurgundy|@ShellinBurgundy',
       '不破(\\s)*湊|Fuwa_Minato|@FuwaMinato',
-      '((?=.*(niji|にじ))(?=.*(ましろ[爻]*).*|ましろ爻)|mashiro2434|@MashiroMeme',
+      '((?=.*(niji|にじ))(?=.*(ましろ[爻]*).*)|ましろ爻)|mashiro2434|@MashiroMeme',
       'イブラヒム|honmono_ibrahim|@Ibrahim',
       '甲斐田(\\s)*晴|Kaida_Haru|@KaidaHaru',
       '弦月(\\s)*藤士郎|1O46V|@GenzukiTojiro',
@@ -189,8 +189,7 @@
       'ビエラ|@SHADEviera',
       'ドズル社|@dozle',
       'みけねこ|潤羽るしあ|@(95rn16|mikenekoko)',
-      'バキ童|ぐんぴぃ|@bakibakidt',
-      'こたけ正義感|@kotake_seigikan',
+      'バキ童|@bakibakidt',
       'うるか|CR_uruca|@crazyraccoon',
       'クイズノック|@quizknock',
       'なつめさんち|@natsume_sanchi',
