@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Twitter PageManager
 // @namespace    http://tampermonkey.net/
-// @version      5.1
+// @version      5.2
 // @description  try to take over the world!
 // @author       You
 // @match        https://x.com/*
@@ -60,8 +60,9 @@
   appendStylus += 'header[role="banner"i] div:has(> div > button[aria-label="アカウントメニュー"i]) { display: none !important; } ';
   // おすすめ
   appendStylus += 'div:is([aria-label^="タイムライン: "i]:not(:is([aria-label*="通知"i], [aria-label*="フォロー"i], [aria-label*="フォロワー"i], [aria-label*="ミュート"i], [aria-label*="ブロック"i], [aria-label*="リスト"i])), [aria-label$="さんのポスト"i]) > div > div[data-testid="cellInnerDiv"i]:not(:has(:is(article[data-testid="tweet"i], div[data-testid="trend"i], li[role="listitem"]))) { display : none !important; } ';
-  // ツイート内 [もっと見つける]
-  appendStylus += 'div[aria-label="タイムライン: 会話"i] > div > :is(div[data-testid="cellInnerDiv"i]:has(> div[class="css-175oi2r r-1adg3ll r-1ny4l3l"i] h2[role="heading"i]), div[data-testid="cellInnerDiv"i]:has(> div[class="css-175oi2r r-1adg3ll r-1ny4l3l"i] h2[role="heading"i]) ~ div[data-testid="cellInnerDiv"i]) { display : none !important; } ';
+  // ツイート内 もっと見つける 区間A ~ 区間Bまで削除
+  appendStylus += 'div[aria-label="タイムライン: 会話"i] div[data-testid="cellInnerDiv"i]:has(div[class="css-g5y9jx r-1adg3ll r-1ny4l3l"i]:empty) ~ div[data-testid="cellInnerDiv"i]:has(div[class="css-g5y9jx r-1adg3ll r-1ny4l3l"i]:empty) ~ div[data-testid="cellInnerDiv"i] { display : none !important; } ';
+
   // トレンドタブ：話題を検索 pc
   appendStylus += 'div[aria-label="ホームタイムライン"i] > div:has(div[role="presentation"i] > a[href$="/for_you"i][aria-selected="true"i]) ~ div:has(div[aria-label="タイムライン: 話題を検索"i]) { display: none !important; } ';
   // トレンドタブ：話題を検索 mobile
