@@ -327,7 +327,7 @@
     console.log('> yt subtitle clicker...');
     if (toggleSubBtn.getAttribute('aria-pressed') === 'true') { toggleSubBtn.click(); return ytSubBtn(); } else { return false; }
   };
-  const qualityFix = async (canLevel) => {
+  const ytQualityFix = async (canLevel) => {
     let q = qualitys[target];
 
     // 初期処理
@@ -335,13 +335,13 @@
     const ytPlayer = document.querySelector(player);
     await waitQuerySelector('div.ytp-left-controls, player-bottom-controls');
 
-    if (typeof ytPlayer.getAvailableQualityLevels() === 'undefined') { return await qualityFix(canLevel); }
-    if (ytPlayer.getPlaybackQuality().toLowerCase() === 'unknown') { return await qualityFix(canLevel); }
+    if (typeof ytPlayer.getAvailableQualityLevels() === 'undefined') { return await ytQualityFix(canLevel); }
+    if (ytPlayer.getPlaybackQuality().toLowerCase() === 'unknown') { return await ytQualityFix(canLevel); }
 
     // 初期値[最低値: tiny]
     q = qualitys[canLevel];
     if (!ytPlayer.getAvailableQualityLevels().includes(q)) {
-      return await qualityFix(canLevel - 1);
+      return await ytQualityFix(canLevel - 1);
     }
     console.log('> yt quality list : ', ytPlayer.getAvailableQualityLevels());
     ytPlayer.setPlaybackQualityRange(q);
@@ -393,10 +393,10 @@
       if (new RegExp(regWatch, 'gis').test(e.detail.path)) {
         if ('www.youtube.com' === e.detail.host) {
           // pc
+          console.log('> yt watch quality ... changing');
+          await ytQualityFix(5);
           console.log('> yt stable volume 一定音量 setting...');
           await ytStableVolume('button.ytp-settings-button[aria-label="設定"i]', 'div.ytp-drc-menu-item[role="menuitemcheckbox"i]', manager);
-          console.log('> yt watch quality ... changing');
-          qualityFix(5);
           console.log('> yt chat area ... remover');
           ytChatArea();
           console.log('> yt auto nav next movies setting...');
@@ -407,10 +407,10 @@
           ytProgressArea();
         } else if ('m.youtube.com' === e.detail.host) {
           // mobile
+          console.log('> yt watch quality ... changing');
+          await ytQualityFix(5);
           console.log('> yt stable volume 一定音量 setting...');
           await ytStableVolume('button.player-settings-icon[aria-label="再生設定"i]', 'player-settings-menu > stable-volume-toggle yt-list-item-view-model > div > div > switch-button-view-model > button[aria-checked="true"i]', 'ytm-app > bottom-sheet-container[role="dialog"i]:not([hidden="true"i]) > ytw-scrim');
-          console.log('> yt watch quality ... changing');
-          qualityFix(5);
         }
       }
       // style 無効化
