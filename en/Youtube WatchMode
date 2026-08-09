@@ -346,8 +346,6 @@
     console.log('> yt quality list : ', ytPlayer.getAvailableQualityLevels());
     ytPlayer.setPlaybackQualityRange(q);
     ytPlayer.setPlaybackQuality(q);
-
-    await new Promise(resolve => setTimeout(resolve, waitTime));
     console.log('> yt quality low : ', q);
 
     // ライブ配信か否か pc, mobile
@@ -364,10 +362,9 @@
       q = qualitys[target];
       console.log('> yt not Live ... movie watch : ', q);
     }
+    await new Promise(resolve => setTimeout(resolve, waitTime));
     ytPlayer.setPlaybackQualityRange(q);
     ytPlayer.setPlaybackQuality(q);
-
-    await new Promise(resolve => setTimeout(resolve, waitTime));
     console.log('> yt quality FIX ... is : ', ytPlayer.getPlaybackQuality());
   };
 
