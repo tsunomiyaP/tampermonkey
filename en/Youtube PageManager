@@ -407,8 +407,6 @@
         if (new RegExp(regChannel, 'gis').test(e.detail.path)) {
           stylusElemCh.textContent = 'body { visibility: hidden !important; } ';
 
-          await new Promise(resolve => setTimeout(resolve, waitTime * 2));
-
           const channelPC = 'ytd-browse[page-subtype="channels"i] #primary'; // channel タブ
           const channelPCItem = 'ytd-section-list-renderer[page-subtype="channels"i]';
           const channelSP = 'ytm-browse > .modern-tabs > div[is-channel="true"i] ~ div'; // channel タブ
@@ -417,9 +415,9 @@
           // youtube Area Manager Manager:UserChannel
           if (new RegExp(channelEX, 'gis').test(e.detail.path)) {
             console.log('> youtube : my manager channel...');
+            await new Promise(resolve => setTimeout(resolve, waitTime * 2));
             stylusElemCh.textContent = '';
-          } else {
-            if (new RegExp('(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)(/videos|/streams|/playlists|/releases|/posts|/search|/community|/membership)', 'gis').test(e.detail.path)) {
+          } else if (new RegExp('(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)(/videos|/streams|/playlists|/releases|/posts|/search|/community|/membership)', 'gis').test(e.detail.path)) {
               console.log('> youtube : my not home channel...');
               // [ホーム/home]タブ以外
               if ('www.youtube.com' === e.detail.host) {
@@ -427,7 +425,7 @@
               } else if ('m.youtube.com' === e.detail.host) {
                 stylusElemCh.textContent = '';
               }
-            } else {
+          } else {
               console.log('> youtube : my home channel... remove Area');
               if ('www.youtube.com' === e.detail.host) {
                 stylusElemCh.textContent = channelPC + ' { visibility: hidden !important; } ';
@@ -442,7 +440,6 @@
                 await waitQuerySelectorCount(10, channelSP);
               }
             }
-          }
         } else {
           // channel外に移動後、stylus 削除
           await new Promise(resolve => setTimeout(resolve, waitTime));
