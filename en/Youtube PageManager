@@ -427,16 +427,20 @@
           } else {
             console.log('> youtube : my home channel... remove Area');
             if ('www.youtube.com' === e.detail.host) {
-              stylusElemCh.textContent = channelPC + ' { visibility: hidden !important; } ';
               // [ホーム]だがホーム設定していない場合をケア
               await waitQuerySelectorCount(10, channelPC + ' ' + channelPCItem);
               const sectionPC = document.querySelector(channelPC);
               const sectionPCItem = document.querySelector(channelPC + ' ' + channelPCItem);
-              return isNuN(sectionPC) ? false : isNuN(sectionPCItem) ? false : new RegExp(channelEX, 'gis').test(location.pathname) ? false : sectionPCItem.remove();
+              const isFlag = isNuN(sectionPC) ? false : isNuN(sectionPCItem) ? false : new RegExp(channelEX, 'gis').test(location.pathname) ? false : true;
+              if (isFlag) {
+                sectionPCItem.remove();
+                await new Promise(resolve => setTimeout(resolve, waitTime));
+                stylusElemCh.textContent = channelPC + ' { visibility: hidden !important; } '; 
+              }
             } else if ('m.youtube.com' === e.detail.host) {
-              stylusElemCh.textContent = channelSP + ' { visibility: hidden !important; } ';
               // [ホーム]だがホーム設定していない場合をケア
               await waitQuerySelectorCount(10, channelSP);
+              stylusElemCh.textContent = channelSP + ' { visibility: hidden !important; } ';
             }
           }
         } else {
