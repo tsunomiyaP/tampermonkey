@@ -404,35 +404,44 @@
         return location.replace(replaceURL);
       } else {
         // youtube Channel Area Manager
-        if (new RegExp(regChannel, 'gis').test(e.detail.path)) {
+        if (new RegExp(regChannel, 'gis').test(location.pathname)) {
           const channelPC = 'ytd-browse[page-subtype="channels"i] #primary'; // channel タブ
           const channelPCItem = 'ytd-section-list-renderer[page-subtype="channels"i]';
           const channelSP = 'ytm-browse > .modern-tabs > div[is-channel="true"i] ~ div'; // channel タブ
           const channelEX = 'tsunomiyaP|UCSsBxdA7yg523PegCT7O7Mg';
 
-          // youtube Area Manager Manager:UserChannel
-          stylusElemCh.textContent = 'body { visibility: hidden !important; } ';
-          if (new RegExp(channelEX, 'gis').test(e.detail.path)) {
-            console.log('> youtube : my manager channel...');
-            stylusElemCh.textContent = '';
-          } else if (new RegExp('(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)(/videos|/streams|/playlists|/releases|/posts|/search|/community|/membership)', 'gis').test(e.detail.path)) {
-            console.log('> youtube : my not home channel...');
-            // [ホーム/home]タブ以外
-            stylusElemCh.textContent = '';
-          } else {
-            console.log('> youtube : my home channel... remove Area');
-            if ('www.youtube.com' === e.detail.host) {
-              // [ホーム]だがホーム設定していない場合をケア
-              await waitQuerySelectorCount(10, channelPC + ' ' + channelPCItem);
+          if ('www.youtube.com' === e.detail.host) {
+            // [ホーム]だがホーム設定していない場合をケア
+            stylusElemCh.textContent = 'body { visibility: hidden !important; } ';
+            await waitQuerySelectorCount(10, channelPC + ' ' + channelPCItem);
+            // youtube Area Manager Manager:UserChannel
+            if (new RegExp(channelEX, 'gis').test(location.pathname)) {
+              console.log('> youtube : my manager channel...');
+              stylusElemCh.textContent = '';
+            } else if (new RegExp('(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)(/videos|/streams|/playlists|/releases|/posts|/search|/community|/membership)', 'gis').test(location.pathname)) {
+              console.log('> youtube : my not home channel...');
+              // [ホーム/home]タブ以外
+              stylusElemCh.textContent = '';
+            } else {
+              console.log('> youtube : my home channel... remove Area');
               const sectionPC = document.querySelector(channelPC);
               const sectionPCItem = document.querySelector(channelPC + ' ' + channelPCItem);
-              const isFlag = isNuN(sectionPC) ? false : isNuN(sectionPCItem) ? false : new RegExp(channelEX, 'gis').test(location.pathname) ? false : true;
-              if (isFlag) {
-                sectionPCItem.remove();
-                stylusElemCh.textContent = channelPC + ' { visibility: hidden !important; } ';
-              }
-            } else if ('m.youtube.com' === e.detail.host) {
-              // [ホーム]だがホーム設定していない場合をケア
+              isNuN(sectionPC) ? false : isNuN(sectionPCItem) ? false : new RegExp(channelEX, 'gis').test(location.pathname) ? false : sectionPCItem.remove();
+              stylusElemCh.textContent = channelPC + ' { visibility: hidden !important; } ';
+            }
+          } else if ('m.youtube.com' === e.detail.host) {
+            // [ホーム]だがホーム設定していない場合をケア
+            stylusElemCh.textContent = 'body { visibility: hidden !important; } ';
+            // youtube Area Manager Manager:UserChannel
+            stylusElemCh.textContent = 'body { visibility: hidden !important; } ';
+            if (new RegExp(channelEX, 'gis').test(location.pathname)) {
+              console.log('> youtube : my manager channel...');
+              stylusElemCh.textContent = '';
+            } else if (new RegExp('(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)(/videos|/streams|/playlists|/releases|/posts|/search|/community|/membership)', 'gis').test(location.pathname)) {
+              console.log('> youtube : my not home channel...');
+              // [ホーム/home]タブ以外
+              stylusElemCh.textContent = '';
+            } else {
               stylusElemCh.textContent = channelSP + ' { visibility: hidden !important; } ';
             }
           }
