@@ -405,25 +405,20 @@
       } else {
         // youtube Channel Area Manager
         if (new RegExp(regChannel, 'gis').test(e.detail.path)) {
-          stylusElemCh.textContent = 'body { visibility: hidden !important; } ';
-
           const channelPC = 'ytd-browse[page-subtype="channels"i] #primary'; // channel タブ
           const channelPCItem = 'ytd-section-list-renderer[page-subtype="channels"i]';
           const channelSP = 'ytm-browse > .modern-tabs > div[is-channel="true"i] ~ div'; // channel タブ
           const channelEX = 'tsunomiyaP|UCSsBxdA7yg523PegCT7O7Mg';
 
           // youtube Area Manager Manager:UserChannel
+          stylusElemCh.textContent = 'body { visibility: hidden !important; } ';
           if (new RegExp(channelEX, 'gis').test(e.detail.path)) {
             console.log('> youtube : my manager channel...');
             stylusElemCh.textContent = '';
           } else if (new RegExp('(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)(/videos|/streams|/playlists|/releases|/posts|/search|/community|/membership)', 'gis').test(e.detail.path)) {
             console.log('> youtube : my not home channel...');
             // [ホーム/home]タブ以外
-            if ('www.youtube.com' === e.detail.host) {
-              stylusElemCh.textContent = '';
-            } else if ('m.youtube.com' === e.detail.host) {
-              stylusElemCh.textContent = '';
-            }
+            stylusElemCh.textContent = '';
           } else {
             console.log('> youtube : my home channel... remove Area');
             if ('www.youtube.com' === e.detail.host) {
@@ -434,12 +429,10 @@
               const isFlag = isNuN(sectionPC) ? false : isNuN(sectionPCItem) ? false : new RegExp(channelEX, 'gis').test(location.pathname) ? false : true;
               if (isFlag) {
                 sectionPCItem.remove();
-                await new Promise(resolve => setTimeout(resolve, waitTime));
-                stylusElemCh.textContent = channelPC + ' { visibility: hidden !important; } '; 
+                stylusElemCh.textContent = channelPC + ' { visibility: hidden !important; } ';
               }
             } else if ('m.youtube.com' === e.detail.host) {
               // [ホーム]だがホーム設定していない場合をケア
-              await waitQuerySelectorCount(10, channelSP);
               stylusElemCh.textContent = channelSP + ' { visibility: hidden !important; } ';
             }
           }
