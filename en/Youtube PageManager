@@ -415,12 +415,10 @@
           // youtube Area Manager Manager:UserChannel
           if (new RegExp(channelEX, 'gis').test(e.detail.path)) {
             console.log('> youtube : my manager channel...');
-            await new Promise(resolve => setTimeout(resolve, waitTime * 2));
             stylusElemCh.textContent = '';
           } else if (new RegExp('(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)(/videos|/streams|/playlists|/releases|/posts|/search|/community|/membership)', 'gis').test(e.detail.path)) {
             console.log('> youtube : my not home channel...');
             // [ホーム/home]タブ以外
-            await new Promise(resolve => setTimeout(resolve, waitTime * 2));
             if ('www.youtube.com' === e.detail.host) {
               stylusElemCh.textContent = '';
             } else if ('m.youtube.com' === e.detail.host) {
@@ -428,14 +426,13 @@
             }
           } else {
             console.log('> youtube : my home channel... remove Area');
-            await new Promise(resolve => setTimeout(resolve, waitTime * 2));
             if ('www.youtube.com' === e.detail.host) {
               stylusElemCh.textContent = channelPC + ' { visibility: hidden !important; } ';
               // [ホーム]だがホーム設定していない場合をケア
               await waitQuerySelectorCount(10, channelPC + ' ' + channelPCItem);
               const sectionPC = document.querySelector(channelPC);
               const sectionPCItem = document.querySelector(channelPC + ' ' + channelPCItem);
-              if (!isNuN(sectionPC)) { if (!isNuN(sectionPCItem)) { sectionPCItem.remove(); } }
+              return isNuN(sectionPC) ? false : isNuN(sectionPCItem) ? false : new RegExp(channelEX, 'gis').test(location.pathname) ? false : sectionPCItem.remove();
             } else if ('m.youtube.com' === e.detail.host) {
               stylusElemCh.textContent = channelSP + ' { visibility: hidden !important; } ';
               // [ホーム]だがホーム設定していない場合をケア
