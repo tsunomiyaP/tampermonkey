@@ -200,7 +200,7 @@
         mode.sp.ytTitle = isNuN(item.querySelector(ytTitleMetaW)) ? '' : item.querySelector(ytTitleMetaW).textContent;
         mode.sp.userNam = isNuN(item.querySelector(ytUserNMetaW)) ? '' : item.querySelector(ytUserNMetaW).href;
         mode.sp.userChN = '';
-        ytChannel = mode.mobile.userNam;
+        ytChannel = mode.sp.userNam;
 
         const channel = document.querySelector(ownerB);
         user = channel.href;
