@@ -114,6 +114,8 @@
       '九里(\\s)*詠太|KuriEita_Y4T4|@Eita_2434',
       '塚原(\\s)*大地|TsukaharaDaichi_Y4T4|@BIG_Tsukahara',
       'レヨン|Rayon_Y4T4|@Rayon_2434',
+      '神永(\\s)*タイガ|Taiga_kaminaga|@KaminagaTaiga',
+      '山田(\\s)*龍一郎|Ryuichiro_YMD|@YamadaRyuichiro',
 
       // en
       'ルカ(\\s)*[・]*カネシロ|Luca_Kaneshiro|@LucaKaneshiro',
