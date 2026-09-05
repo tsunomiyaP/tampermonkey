@@ -181,68 +181,68 @@
     const ytChaNlMetaHom = [':is(div.ytLockupViewModelMetadata)', ':is(div.ytLockupMetadataViewModelTextContainer)', ':is(div.ytLockupMetadataViewModelMetadata div.ytContentMetadataViewModelMetadataRow a)'].join(' ');
 
     if (isDevice) { // pc
-    if (new RegExp(regWatch, 'gis').test(detail.path)) { // 動画エリア
-      await waitQuerySelector(ownerA + ', ' + ownerB);
-      let user = '';
-      let ytChannel = '';
-      // pc 動画
-      mode.pc.ytTitle = isNuN(item.querySelector(ytTitleMetaWch)) ? '' : item.querySelector(ytTitleMetaWch).textContent;
-      mode.pc.userNam = isNuN(item.querySelector(ytUserNMetaWch)) ? '' : item.querySelector(ytUserNMetaWch).textContent;
-      mode.pc.userChN = '';
-      ytChannel = mode.pc.userNam;
+      if (new RegExp(regWatch, 'gis').test(detail.path)) { // 動画エリア
+        await waitQuerySelector(ownerA + ', ' + ownerB);
+        let user = '';
+        let ytChannel = '';
+        // pc 動画
+        mode.pc.ytTitle = isNuN(item.querySelector(ytTitleMetaWch)) ? '' : item.querySelector(ytTitleMetaWch).textContent;
+        mode.pc.userNam = isNuN(item.querySelector(ytUserNMetaWch)) ? '' : item.querySelector(ytUserNMetaWch).textContent;
+        mode.pc.userChN = '';
+        ytChannel = mode.pc.userNam;
 
-      const channel = document.querySelector(ownerA);
-      user = channel.textContent;
+        const channel = document.querySelector(ownerA);
+        user = channel.textContent;
 
-      console.log(user, ytChannel);
-      if (user !== ytChannel) { item.classList.add('own_ch_NuN'); }
-    } else if (new RegExp(regChannel, 'gis').test(detail.path)) { // チャンネルエリア
-      // pc 動画
-      mode.pc.ytTitle = isNuN(item.querySelector(ytTitleMetaChl)) ? '' : item.querySelector(ytTitleMetaChl).textContent;
-      mode.pc.userNam = '';
-      mode.pc.userChN = '';
-    } else if (new RegExp(regSearch, 'gis').test(detail.path)) { // 検索結果
-      // pc 動画
-      mode.pc.ytTitle = isNuN(item.querySelector(ytTitleMetaSch)) ? '' : item.querySelector(ytTitleMetaSch).textContent;
-      mode.pc.userNam = '';
-      mode.pc.userChN = '';
-    } else { // ホームなど
-      // pc 動画
-      mode.pc.ytTitle = isNuN(item.querySelector(ytTitleMetaHom)) ? '' : item.querySelector(ytTitleMetaHom).textContent;
-      mode.pc.userNam = isNuN(item.querySelector(ytUserNMetaHom)) ? '' : item.querySelector(ytUserNMetaHom).textContent;
-      mode.pc.userChN = isNuN(item.querySelector(ytChaNlMetaHom)) ? '' : item.querySelector(ytChaNlMetaHom).href;
-    }
+        console.log(user, ytChannel);
+        if (user !== ytChannel) { item.classList.add('own_ch_NuN'); }
+      } else if (new RegExp(regChannel, 'gis').test(detail.path)) { // チャンネルエリア
+        // pc 動画
+        mode.pc.ytTitle = isNuN(item.querySelector(ytTitleMetaChl)) ? '' : item.querySelector(ytTitleMetaChl).textContent;
+        mode.pc.userNam = '';
+        mode.pc.userChN = '';
+      } else if (new RegExp(regSearch, 'gis').test(detail.path)) { // 検索結果
+        // pc 動画
+        mode.pc.ytTitle = isNuN(item.querySelector(ytTitleMetaSch)) ? '' : item.querySelector(ytTitleMetaSch).textContent;
+        mode.pc.userNam = '';
+        mode.pc.userChN = '';
+      } else { // ホームなど
+        // pc 動画
+        mode.pc.ytTitle = isNuN(item.querySelector(ytTitleMetaHom)) ? '' : item.querySelector(ytTitleMetaHom).textContent;
+        mode.pc.userNam = isNuN(item.querySelector(ytUserNMetaHom)) ? '' : item.querySelector(ytUserNMetaHom).textContent;
+        mode.pc.userChN = isNuN(item.querySelector(ytChaNlMetaHom)) ? '' : item.querySelector(ytChaNlMetaHom).href;
+      }
     } else { // mobile : sp
-    if (new RegExp(regWatch, 'gis').test(detail.path)) { // 動画エリア
-      await waitQuerySelector(ownerA + ', ' + ownerB);
-      let user = '';
-      let ytChannel = '';
-      // mobile
-      mode.sp.ytTitle = isNuN(item.querySelector(ytTitleMetaWch)) ? '' : item.querySelector(ytTitleMetaWch).textContent;
-      mode.sp.userNam = isNuN(item.querySelector(ytUserNMetaWch)) ? '' : item.querySelector(ytUserNMetaWch).href;
-      mode.sp.userChN = '';
-      ytChannel = mode.sp.userNam;
+      if (new RegExp(regWatch, 'gis').test(detail.path)) { // 動画エリア
+        await waitQuerySelector(ownerA + ', ' + ownerB);
+        let user = '';
+        let ytChannel = '';
+        // mobile
+        mode.sp.ytTitle = isNuN(item.querySelector(ytTitleMetaWch)) ? '' : item.querySelector(ytTitleMetaWch).textContent;
+        mode.sp.userNam = isNuN(item.querySelector(ytUserNMetaWch)) ? '' : item.querySelector(ytUserNMetaWch).href;
+        mode.sp.userChN = '';
+        ytChannel = mode.sp.userNam;
 
-      const channel = document.querySelector(ownerB);
-      user = channel.href;
-      console.log(user, ytChannel);
-      if (user !== ytChannel) { item.classList.add('own_ch_NuN'); }
-    } else if (new RegExp(regChannel, 'gis').test(detail.path)) { // チャンネルエリア
-      // mobile
-      mode.sp.ytTitle = isNuN(item.querySelector(ytTitleMetaChl)) ? '' : item.querySelector(ytTitleMetaChl).textContent;
-      mode.sp.userNam = '';
-      mode.sp.userChN = '';
-    } else if (new RegExp(regSearch, 'gis').test(detail.path)) { // 検索結果
-      // mobile
-      mode.sp.ytTitle = isNuN(item.querySelector(ytTitleMetaSch)) ? '' : item.querySelector(ytTitleMetaSch).textContent;
-      mode.sp.userNam = '';
-      mode.sp.userChN = '';
-    } else { // ホームなど
-      // mobile
-      mode.sp.ytTitle = isNuN(item.querySelector(ytTitleMetaHom)) ? '' : item.querySelector(ytTitleMetaHom).textContent;
-      mode.sp.userNam = isNuN(item.querySelector(ytUserNMetaHom)) ? '' : item.querySelector(ytUserNMetaHom).textContent;
-      mode.sp.userChN = '';
-    }
+        const channel = document.querySelector(ownerB);
+        user = channel.href;
+        console.log(user, ytChannel);
+        if (user !== ytChannel) { item.classList.add('own_ch_NuN'); }
+      } else if (new RegExp(regChannel, 'gis').test(detail.path)) { // チャンネルエリア
+        // mobile
+        mode.sp.ytTitle = isNuN(item.querySelector(ytTitleMetaChl)) ? '' : item.querySelector(ytTitleMetaChl).textContent;
+        mode.sp.userNam = '';
+        mode.sp.userChN = '';
+      } else if (new RegExp(regSearch, 'gis').test(detail.path)) { // 検索結果
+        // mobile
+        mode.sp.ytTitle = isNuN(item.querySelector(ytTitleMetaSch)) ? '' : item.querySelector(ytTitleMetaSch).textContent;
+        mode.sp.userNam = '';
+        mode.sp.userChN = '';
+      } else { // ホームなど
+        // mobile
+        mode.sp.ytTitle = isNuN(item.querySelector(ytTitleMetaHom)) ? '' : item.querySelector(ytTitleMetaHom).textContent;
+        mode.sp.userNam = isNuN(item.querySelector(ytUserNMetaHom)) ? '' : item.querySelector(ytUserNMetaHom).textContent;
+        mode.sp.userChN = '';
+      }
     }
     const strData = isDevice ? mode.pc : mode.sp;
     youtubeItem.ytTitle = strData.ytTitle;
