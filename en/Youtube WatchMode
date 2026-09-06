@@ -291,11 +291,16 @@
     const chat = await waitQuerySelector('div#chat-container');
     if (!isNuN(chat)) { chat.remove(); }
   };
-  const ytStableVolume = async (settingBtn, drcBtn, closeArea) => {
+  const ytStableVolume = async (flag) => {
+    const settingBtn = ':is(button.ytp-settings-button[aria-label="設定"i], player-top-controls button.player-settings-icon[aria-label="再生設定"i])';
+    const drcBtn = ':is(div.ytp-drc-menu-item[aria-label="一定音量"i][role="menuitemcheckbox"i], player-settings-menu > stable-volume-toggle div.ytListItemViewModelTrailing > switch-button-view-model > button[aria-label="一定音量"i])';
+    const closeBtn = ':is(ytd-app, ytm-app > bottom-sheet-container[role="dialog"i] > ytw-scrim)';
+
     const setting = await waitQuerySelector(settingBtn);
     if (!isNuN(setting)) { setting.click(); }
 
     console.log('> yt DRC Audio is already waiting...');
+    await new Promise(resolve => setTimeout(resolve, waitTime));
     const drcMenuItem = document.querySelector(drcBtn);
     if (!isNuN(drcMenuItem)) {
       if (drcMenuItem.getAttribute('aria-checked') === 'true') {
@@ -305,7 +310,7 @@
         console.log('> yt DRC Audio is already Disabled');
       }
     }
-    document.querySelector(closeArea).click();
+    if (flag === 'replace') { history.replaceState(null, '', window.location.pathname + window.location.search); } else { document.querySelector(closeBtn).click(); }
   };
   const ytNavBtn = async () => {
     const cssControls = 'div[class="ytp-right-controls"i]';
@@ -386,12 +391,13 @@
       stylusElemSettings.textContent += 'ytm-app[id="app"i] > :is(bottom-sheet-container[aria-modal="true"i]) { display: none !important; } '; // mobile
 
       if (new RegExp(regWatch, 'gis').test(e.detail.path)) {
+        console.log('yt manager', document.querySelector(manager));
         if ('www.youtube.com' === e.detail.host) {
           // pc
           console.log('> yt watch quality ... changing');
           await ytQualityFix(5);
           console.log('> yt stable volume 一定音量 setting...');
-          await ytStableVolume('button.ytp-settings-button[aria-label="設定"i]', 'div.ytp-drc-menu-item[aria-label="一定音量"i][role="menuitemcheckbox"i]', manager);
+          await ytStableVolume('pc');
           console.log('> yt chat area ... remover');
           ytChatArea();
           console.log('> yt auto nav next movies setting...');
@@ -405,7 +411,7 @@
           console.log('> yt watch quality ... changing');
           await ytQualityFix(5);
           console.log('> yt stable volume 一定音量 setting...');
-          await ytStableVolume('player-top-controls button.player-settings-icon[aria-label="再生設定"i]', 'stable-volume-toggle div.ytListItemViewModelTrailing > switch-button-view-model > button[aria-label="一定音量"i]', 'ytm-app > bottom-sheet-container[role="dialog"i]:not([hidden="true"i]) > ytw-scrim');
+          await ytStableVolume('sp');
         }
       }
       // style 無効化
