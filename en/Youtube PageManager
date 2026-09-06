@@ -392,7 +392,7 @@
       // 動画URLから「t=」パラメータを排除
       if (new RegExp('&t=.+', 'gis').test(e.detail.href)) {
         const replaceURL = deleteParam(e.detail.href, 't').href;
-        return location.replace(replaceURL);
+        history.replaceState(null, '', replaceURL);
       } else {
         // youtube Channel Area Manager
         if (new RegExp(regChannel, 'gis').test(e.detail.path)) {
