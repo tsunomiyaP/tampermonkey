@@ -295,19 +295,17 @@
     const setting = await waitQuerySelector(settingBtn);
     if (!isNuN(setting)) { setting.click(); }
 
-    const drcMenuItem = await waitQuerySelectorCount(10, drcBtn);
-    if (isNuN(drcMenuItem)) {
-      document.querySelector(closeArea).click();
-      console.log('> yt DRC Audio is already Disabled');
-    } else {
+    console.log('> yt DRC Audio is already waiting...');
+    const drcMenuItem = document.querySelector(drcBtn);
+    if (!isNuN(drcMenuItem)) {
       if (drcMenuItem.getAttribute('aria-checked') === 'true') {
         drcMenuItem.click();
         console.log('> yt DRC Audio : Disabled...');
       } else {
         console.log('> yt DRC Audio is already Disabled');
       }
-      document.querySelector(closeArea).click();
     }
+    document.querySelector(closeArea).click();
   };
   const ytNavBtn = async () => {
     const cssControls = 'div[class="ytp-right-controls"i]';
@@ -393,7 +391,7 @@
           console.log('> yt watch quality ... changing');
           await ytQualityFix(5);
           console.log('> yt stable volume 一定音量 setting...');
-          await ytStableVolume('button.ytp-settings-button[aria-label="設定"i]', 'div.ytp-drc-menu-item[role="menuitemcheckbox"i]', manager);
+          await ytStableVolume('button.ytp-settings-button[aria-label="設定"i]', 'div.ytp-drc-menu-item[aria-label="一定音量"i][role="menuitemcheckbox"i]', manager);
           console.log('> yt chat area ... remover');
           ytChatArea();
           console.log('> yt auto nav next movies setting...');
@@ -407,7 +405,7 @@
           console.log('> yt watch quality ... changing');
           await ytQualityFix(5);
           console.log('> yt stable volume 一定音量 setting...');
-          await ytStableVolume('button.player-settings-icon[aria-label="再生設定"i]', 'player-settings-menu > stable-volume-toggle yt-list-item-view-model > div > div > switch-button-view-model > button[aria-checked="true"i]', 'ytm-app > bottom-sheet-container[role="dialog"i]:not([hidden="true"i]) > ytw-scrim');
+          await ytStableVolume('player-top-controls button.player-settings-icon[aria-label="再生設定"i]', 'stable-volume-toggle div.ytListItemViewModelTrailing > switch-button-view-model > button[aria-label="一定音量"i]', 'ytm-app > bottom-sheet-container[role="dialog"i]:not([hidden="true"i]) > ytw-scrim');
         }
       }
       // style 無効化
