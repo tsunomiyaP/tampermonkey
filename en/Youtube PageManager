@@ -58,6 +58,8 @@
     appendStylus += yt.area + ' .target:has(a[href*="/shorts"i]) { display: none; } ';
     // [Mix & playlist] [他(headline)]動画 削除
     appendStylus += yt.area + ' .target:has(a[href*="&list="i], #rich-shelf-header-container, .rich-shelf-header, chips-shelf-with-video-shelf-renderer, ytd-brand-video-singleton-renderer) { display: none; } ';
+    // 広告 削除
+    appendStylus += yt.area + ' .target:has(ytd-badge-supported-renderer) { display: none; } ';
   }
   const stylusElem = document.createElement('style');
   stylusElem.id = 'stylusElemPage';
