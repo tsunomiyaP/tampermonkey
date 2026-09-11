@@ -75,7 +75,7 @@
       '夢追(\\s)*翔|kakeru_yumeoi|@YumeoiKakeru',
       '三枝(\\s)*明那|333akina|@SaegusaAkina',
       'エクス(\\s)*[・]*アルビオ|ex_albio|@ExAlbio',
-      '加賀美(\\s)*ハヤト|H_KAGAMI2434|@KagamiHayato|(タラチオ|ﾀﾗﾁｵ)',
+      '加賀美(\\s)*ハヤト|H_KAGAMI2434|@KagamiHayato',
       'シェリン(\\s)*[・]*バーガンディ|ShellinBurgundy|@ShellinBurgundy',
       '不破(\\s)*湊|Fuwa_Minato|@FuwaMinato',
       '((?=.*(niji|にじ))(?=.*(ましろ[爻]*).*)|^ましろ|ましろ爻)|mashiro2434|@MashiroMeme',
@@ -114,6 +114,8 @@
       '九里(\\s)*詠太|KuriEita_Y4T4|@Eita_2434',
       '塚原(\\s)*大地|TsukaharaDaichi_Y4T4|@BIG_Tsukahara',
       'レヨン|Rayon_Y4T4|@Rayon_2434',
+      '神永(\\s)*タイガ|Taiga_kaminaga|@KaminagaTaiga',
+      '山田(\\s)*龍一郎|Ryuichiro_YMD|@YamadaRyuichiro',
 
       // en
       'ルカ(\\s)*[・]*カネシロ|Luca_Kaneshiro|@LucaKaneshiro',
@@ -181,8 +183,6 @@
 
       'キヨ。|kiyoisgod|レトルト|retokani|牛沢|uszw|ガッチマン|(gatchman666|gatchmanV666)',
       'ナポリの男たち|@napolimens',
-      'とりっぴぃ|@torippy',
-      '愛の戦士|@AINOSENSI',
       'M.S.S.P|MSSP|@newMSSP',
       '岡田斗司夫|@toshiookada0701',
       '山田玲司|@yamadareiji',
@@ -237,7 +237,7 @@
       // tips
       '中国|朝鮮|韓国|考察|(?<!.*英語)解説|反応|REACTION|女性向|神回',
       '(?=.*(にじ(さんじ)*|cr|valo|apex|pubg|(STREET(\\s)*FIGHTER|ストリートファイター|スト\\d)|(ow|over(\\s)*watch)|(?<!ho)(lol)(?!ive)|League(\\s)*of(\\s)*Legends|スプラ|ストリーマー|獅白|kzh))(?=.*((cup|カップ|かっぷ)|(custom|カスタム|かすたむ)|(プラベ|ぷらべ|マッチ)|杯|(交流|個人|団体)戦|祭|大会|選手権|チーム|運動会|切り抜き|企画|まとめ).*)',
-      'v(tuber)*最(協)*|v(tuber)*祭(協)*|#Vの|(mad|new)(\\s)*town|(天下統一)RUST|ストグラ|スト鯖|VCR|ストリヌ|V1GP|TRPG|ホロ7大豆|コーチング|漢気|漢義|スクリム|交流戦|講座|顔合わせ',
+      'v(tuber)*最(協)*|v(tuber)*祭(協)*|#Vの|(mad|new)(\\s)*town|(天下統一)RUST|ストグラ|ストリヌ|スト鯖|VCR|V1GP|TRPG|ホロ7大豆|コーチング|漢気|漢義|スクリム|交流戦|講座|顔合わせ',
     ],
     execludeWords: []
   };
