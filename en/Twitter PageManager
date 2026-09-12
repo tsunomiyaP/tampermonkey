@@ -165,7 +165,6 @@
   };
 
   const tweetMoreLines = async () => {
-    // Hide Discover new Lists
     const showMoreLines = await waitQuerySelector('div[aria-label="タイムライン: 会話"i] > div');
     if (!showMoreLines) return false;
     // 子要素取得
