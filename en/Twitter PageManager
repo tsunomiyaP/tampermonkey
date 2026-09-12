@@ -20,35 +20,30 @@
   const waitTime = 1000;
   const twMain = 'main[role="main"i]';
   const twColumns = 'div[data-testid="cellInnerDiv"i]';
-  const quoAColumn = 'removeItem';
+  const xitemDom = 'stayofItem';
+  const xitemRem = 'removeItem';
   const remReTweet = 'span[data-testid="socialContext"i]';
-  const remAd = 'div[data-testid="placementTracking"i]';
+  const remAd = 'div[class="css-g5y9jx r-zl2h9q"i] div[class="css-g5y9jx r-1kkk96v"i] span[class="css-1jxf684 r-bcqeeo r-1ttztb7 r-qvutc0 r-1tl8opc"i]';
   const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
   // 可変数
-  let twMutationManager, twMutationTimeline;
+  let twMutationManager;
   let oldUrl = '';
   let label = ''; // 現在のタブ
   // ==========================================================
   // stylus: beforebegin, afterbegin, beforeend, afterend
   let appendStylus = '';
-  // area stylus
-  appendStylus += twMain + ' div[aria-label="ホームタイムライン"i] > div > div:is(:not([class="css-175oi2r r-633pao r-u8s1d r-dkhcqf r-axxi2z r-18jm5s1 r-13qz1uu"i])), ' + twColumns + ':has(:not(:is(div[data-testid="tweetPhoto"i], div[data-testid="card.wrapper"i]))), [data-testid="sidebarColumn"i] *, header[role="banner"i] *, nav[role="navigation"i] * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background-color: rgba(255, 255, 255, 1) !important; /* または背景色を調整 */ color: rgba(0, 0, 0, 1) !important; } ';
-  appendStylus += twMain + ' div[aria-label="ホームタイムライン"i] > div > div[class="css-g5y9jx r-633pao r-u8s1d r-dkhcqf r-axxi2z r-18jm5s1 r-13qz1uu"i] { display: none !important; } ';
   appendStylus += twColumns + ' div[data-testid="Tweet-User-Avatar"i] { display: none !important; } ';
   appendStylus += 'a[href*="/grok.com/"i], div[data-testid="GrokDrawer"i], button[aria-label*="Grok"], button[aria-label="プロフィールの要約"i], button[aria-label="チャット"] { display: none !important; } ';
   /* gradient stylus :意味あるかは不明 */
-  appendStylus += '[style*="backdrop-filter"i], [style*="filter: blur"i], *[style*="blur("i] { filter: none !important; }';
-  appendStylus += '[class*="shadow"], [style*="box-shadow"i] { box-shadow: none !important; }';
-  appendStylus += '[class*="gradient"], [class*="bg-gradient"i], [style*="linear-gradient("i] { background-image: none !important; }';
-  appendStylus += 'video { transform: none !important; will-change: auto !important; background-color: black !important; }';
   appendStylus += 'img[src*="twimg.com/emoji"i] { display: none !important; } ';
   /** css style border line */
   appendStylus += twColumns + ' .r-1867qdf { border-radius: 0px !important; }';
   appendStylus += 'form[aria-label="検索"i] > div > div.r-sdzlij { border-bottom-left-radius: 0px !important; border-bottom-right-radius: 0px !important; border-top-left-radius: 0px !important; border-top-right-radius: 0px !important; }';
   // tweet hide
   appendStylus += 'div[aria-label="タイムライン: 会話"i] ' + twColumns + ':not(.conversationX, .subTreeLinesX) { display: none !important; } ';
-  appendStylus += twColumns + '.' + quoAColumn + ' { display: none !important; } ';
-  appendStylus += twColumns + ':has(' + remReTweet + ', ' + remAd + ') { display: none !important; } ';
+  appendStylus += twColumns + '.' + xitemRem + ' { display: none !important; } ';
+  appendStylus += twColumns + ':has(' + remReTweet + ') { display: none !important; } ';
+  appendStylus += 'div[role="menu"i][class="css-g5y9jx r-j2cz3j r-14lw9ot r-1q9bdsx r-1upvrn0 r-1udh08x r-u8s1d"i]:has(div[data-testid="Dropdown"i] > div[role="menuitem"i]) { display: none !important; } ';
   // ext area stylus
   appendStylus += 'div[aria-label="トレンド"i] > div > div:not(:has(form[aria-label="検索"i])) { display: none !important; } ';
   appendStylus += 'nav[role="navigation"i] > a[href$="/i/grok"i], div[role="dialog"i] div:has(> a[href$="/i/grok"i]), nav[role="navigation"i] > a[href$="/communities"i], div[role="dialog"i] div:has(> a[href$="/communities"i]), nav[role="navigation"i] > a[href$="/i/premium_sign_up"i], div[role="dialog"i] div:has(> a[href$="/i/premium_sign_up"i]), nav[role="navigation"i] > a[href$="/i/verified-orgs-signup"i], div[role="dialog"i] div:has(> a[href$="/i/verified-orgs-signup"i]), nav[role="navigation"i] > a[href$="/jobs"i], div[role="dialog"i] div:has(> a[href$="/jobs"i]), nav[role="navigation"i] > a[href$="/i/jf/creators/studio"i], div[role="dialog"i] div:has(> a[href$="/i/jf/creators/studio"i]), nav[role="navigation"i] > a[href$="/i/chat"i], div[role="dialog"i] div:has(> a[href$="/i/chat"i]), nav[role="navigation"i] > a[href$="/i/monetization"i], div[role="dialog"i] div:has(> a[href$="/i/monetization"i]), nav[role="navigation"i] > a[href$="/i/connect_people"i], div[role="dialog"i] div:has(> a[href$="/i/connect_people"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href$="/i/premium_sign_up"i], div[role="dialog"i] div:has(> a[href$="/i/premium_sign_up"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href$="/i/verified-orgs-signup"i], div[role="dialog"i] div:has(> a[href$="/i/verified-orgs-signup"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href$="/i/jf/creators/studio"i], div[role="dialog"i] div:has(> a[href$="/i/jf/creators/studio"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href*="ads.x.com/"i], div[role="dialog"i] div:has(> a[href*="ads.x.com/"i]) { display: none !important; }';
@@ -127,7 +122,7 @@
   const searchParams = (searchUrl, param) => {
     const base = new URL(location.protocol + '//' + location.hostname);
     const url = new URL(searchUrl, base);
-    console.log('url section', url);
+    // console.log('url section', url);
     // URLSearchParamsオブジェクトを取得
     const params = url.searchParams;
 
@@ -164,17 +159,31 @@
     return false;
   };
 
+  const switchToNewestReplies = async () => {
+    // const menu = document.querySelector('div[aria-label="タイムライン: 会話"i] div[class="css-g5y9jx r-1awozwy r-18u37iz r-1wtj0ep r-6gpygo"i] button[aria-haspopup="menu"i]');
+    // f (menu.textContent !== '最新') { menu.click(); }
+    // const dropdownLists = await document.querySelectorAll('div[role="menu"i][class="css-g5y9jx r-j2cz3j r-14lw9ot r-1q9bdsx r-1upvrn0 r-1udh08x r-u8s1d"i] div[data-testid="Dropdown"i] > div[role="menuitem"i]');
+    // dropdownLists.item(1).click(); // 最新 : sort_replies=recency
+    // const replaceURL = deleteParam(window.location.href, 'sort_replies').href;
+    // history.replaceState(null, '', replaceURL);
+    if (!searchParams(window.location.href, 'sort_replies')) {
+      location.replace(window.location.href + '?sort_replies=recency');
+    }
+  };
   const tweetMoreLines = async () => {
+    if (!window.location.href.includes('/status/')) return false;
+    await switchToNewestReplies();
+
+    await new Promise(resolve => setTimeout(resolve, waitTime * 2));
     const showMoreLines = await waitQuerySelector('div[aria-label="タイムライン: 会話"i] > div');
-    if (!showMoreLines) return false;
     // 子要素取得
-    const timelineItems = showMoreLines.querySelectorAll('[data-testid="cellInnerDiv"i]:not(.subTreeLinesX)');
+    const timelineItems = showMoreLines.querySelectorAll('[data-testid="cellInnerDiv"i]');
     for (const elem of timelineItems) {
       elem.classList.remove('subTreeLinesX');
     }
     const conversation = timelineItems.item(0);
     const count = conversation.querySelector('div[class="css-g5y9jx r-j5o65s r-rull8r r-qklmqi"i] span[data-testid="app-text-transition-container"i]').textContent;
-    console.log('tweet 会話 > ', count);
+    console.log('tweet 会話 > ', count, timelineItems);
     conversation.classList.add('conversationX');
     let len = 0;
     for (const elem of timelineItems) {
@@ -187,10 +196,15 @@
   const removeElements = async () => {
     const nodeTimeline = await waitQuerySelector('div[aria-label^="タイムライン: "i] > div');
     if (!nodeTimeline) return false;
-    const timelineItems = nodeTimeline.querySelectorAll('[data-testid="cellInnerDiv"i]:not(.' + quoAColumn + ')');
+    await new Promise(resolve => setTimeout(resolve, waitTime));
+    const timelineItems = nodeTimeline.querySelectorAll('[data-testid="cellInnerDiv"i]:not(.' + xitemDom + ')');
 
     console.log('tweet remove item length > ', timelineItems.length);
-    for await (const tweet of timelineItems) {
+    for (const tweet of timelineItems) {
+      tweet.classList.add(xitemDom);
+      // 広告
+      isNuN(tweet.querySelector(remAd)) ? '' : tweet.querySelector(remAd).textContent !== '広告' ? '' : tweet.classList.add(xitemRem);
+
       const words = isNuN(abc) ? [] : abc.hideword;
       // 非表示対象文字列
       for (const word of words) {
@@ -198,30 +212,19 @@
         if (regWord.test(tweet.textContent)) {
           console.log([word, tweet.textContent]);
           // tweet.style.setProperty('display', 'none', 'important');
-          tweet.classList.add(quoAColumn);
+          tweet.classList.add(xitemRem);
           break;
         }
       }
-      await new Promise(resolve => setTimeout(resolve, waitTime));
     }
-  };
-  const polling = async () => {
-    await waitQuerySelector('div[aria-label^="タイムライン: "i] > div');
-
-    await tweetMoreLines();
-    await removeElements();
-  };
-  const initial = async () => {
-    await polling();
   };
   const twPath = async () => {
     const nodeMain = await waitQuerySelector(twMain);
-
     // Mutation Observer
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
     twMutationManager = new MutationObserver(async () => {
-      await initial();
-      twMutationManager.observe(nodeMain, config);
+      await removeElements();
+      await tweetMoreLines();
     });
     twMutationManager.observe(nodeMain, config);
   };
@@ -244,7 +247,6 @@
       console.log('tab : ', label, '、URL : ', oldUrl);
 
       if (!isNuN(twMutationManager)) { twMutationManager.disconnect(); }
-      if (!isNuN(twMutationTimeline)) { twMutationTimeline.disconnect(); }
 
       await twPath();
     }
