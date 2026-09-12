@@ -168,7 +168,7 @@
     const showMoreLines = await waitQuerySelector('div[aria-label="タイムライン: 会話"i] > div');
     if (!showMoreLines) return false;
     // 子要素取得
-    const timelineItems = showMoreLines.querySelectorAll('[data-testid="cellInnerDiv"i]');
+    const timelineItems = showMoreLines.querySelectorAll('[data-testid="cellInnerDiv"i]:not(.subTreeLinesX)');
     for (const elem of timelineItems) {
       elem.classList.remove('subTreeLinesX');
     }
@@ -187,7 +187,7 @@
   const removeElements = async () => {
     const nodeTimeline = await waitQuerySelector('div[aria-label^="タイムライン: "i] > div');
     if (!nodeTimeline) return false;
-    const timelineItems = nodeTimeline.querySelectorAll('[data-testid="cellInnerDiv"i]');
+    const timelineItems = nodeTimeline.querySelectorAll('[data-testid="cellInnerDiv"i]:not(.' + quoAColumn + ')');
 
     console.log('tweet remove item length > ', timelineItems.length);
     for await (const tweet of timelineItems) {
