@@ -166,7 +166,7 @@
 
   const tweetMoreLines = async () => {
     // Hide Discover new Lists
-    const showMoreLines = await waitQuerySelector('div[aria-label="タイムライン: 会話"i]');
+    const showMoreLines = await waitQuerySelector('div[aria-label="タイムライン: 会話"i] > div');
     if (!showMoreLines) return false;
     // 子要素取得
     const timelineItems = showMoreLines.querySelectorAll('[data-testid="cellInnerDiv"i]');
@@ -185,9 +185,13 @@
       len++;
     }
   };
-  const removeElements = async (tweets) => {
-    console.log('tweet remove item length > ', tweets.length);
-    for await (const tweet of tweets) {
+  const removeElements = async () => {
+    const nodeTimeline = await waitQuerySelector('div[aria-label^="タイムライン: "i] > div');
+    if (!nodeTimeline) return false;
+    const timelineItems = nodeTimeline.querySelectorAll('[data-testid="cellInnerDiv"i]');
+
+    console.log('tweet remove item length > ', timelineItems.length);
+    for await (const tweet of timelineItems) {
       const words = isNuN(abc) ? [] : abc.hideword;
       // 非表示対象文字列
       for (const word of words) {
@@ -199,24 +203,14 @@
           break;
         }
       }
-      await new Promise(resolve => setTimeout(resolve, 50));
+      await new Promise(resolve => setTimeout(resolve, waitTime));
     }
   };
   const polling = async () => {
-    const nodeTimeline = await waitQuerySelector('div[aria-label^="タイムライン: "i] > div');
+    await waitQuerySelector('div[aria-label^="タイムライン: "i] > div');
 
-    await tweetMoreLines(true);
-    // Mutation Observer initialize
-    const config = { 'attributes': false, 'childList': true, 'subtree': true };
-    twMutationTimeline = new MutationObserver(async () => {
-      setTimeout(async () => {
-        let timelineItems = nodeTimeline.querySelectorAll('[data-testid="cellInnerDiv"i]');
-        if (!isNuN(twMutationTimeline)) { twMutationTimeline.disconnect(); }
-        removeElements(timelineItems);
-        twMutationTimeline.observe(nodeTimeline, config);
-      }, waitTime);
-    });
-    twMutationTimeline.observe(nodeTimeline, config);
+    await tweetMoreLines();
+    await removeElements();
   };
   const initial = async () => {
     await polling();
