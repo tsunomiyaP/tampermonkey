@@ -21,10 +21,8 @@
   const twMain = 'main[role="main"i]';
   const twColumns = 'div[data-testid="cellInnerDiv"i]';
   const quoAColumn = 'removeItem';
-  const quoBColumn = 'quoteItem';
-  const remAd = 'div[class="css-146c3p1 r-bcqeeo r-1ttztb7 r-qvutc0 r-1tl8opc r-1b43r93 r-14yzgew r-16dba41"i]';
   const remReTweet = 'span[data-testid="socialContext"i]';
-  const moreTweet = 'button[data-testid="tweet-text-show-more-link"i]';
+  const remAd = 'div[data-testid="placementTracking"i]';
   const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
   // 可変数
   let twMutationManager, twMutationTimeline;
@@ -50,19 +48,18 @@
   appendStylus += twColumns + ' .r-1867qdf { border-radius: 0px !important; }';
   appendStylus += 'form[aria-label="検索"i] > div > div.r-sdzlij { border-bottom-left-radius: 0px !important; border-bottom-right-radius: 0px !important; border-top-left-radius: 0px !important; border-top-right-radius: 0px !important; }';
   // tweet hide
-  appendStylus += twColumns + '.' + quoAColumn + ' { display: none !important; } ';
-  appendStylus += twColumns + ':not(.' + quoBColumn + ') { visibility: hidden !important; } ';
-  appendStylus += twColumns + ':has(' + remReTweet + ') { display: none !important; } ';
+  appendStylus += 'div[aria-label="タイムライン: 会話"i] ' + twColumns + ':not(.conversationX, .subTreeLinesX) { display: none !important; } ';
   appendStylus += twColumns + ' button[aria-label*="Grok"i] { display: none !important; } ';
-  appendStylus += twColumns + ':has(div[class="css-175oi2r r-2pydbh"i] > div[class="css-175oi2r r-1awozwy r-18u37iz r-1ey881g r-1wtj0ep"i] > ' + remAd + ') { display: none !important; } ';
+  appendStylus += twColumns + '.' + quoAColumn + ' { display: none !important; } ';
+  appendStylus += twColumns + ':has(' + remReTweet + ') { display: none !important; } ';
+  // 広告
+  appendStylus += twColumns + ':has(' + remAd + ') { display: none !important; } ';
   // ext area stylus
   appendStylus += 'div[aria-label="トレンド"i] > div > div:not(:has(form[aria-label="検索"i])) { display: none !important; } ';
   appendStylus += 'nav[role="navigation"i] > a[href$="/i/grok"i], div[role="dialog"i] div:has(> a[href$="/i/grok"i]), nav[role="navigation"i] > a[href$="/communities"i], div[role="dialog"i] div:has(> a[href$="/communities"i]), nav[role="navigation"i] > a[href$="/i/premium_sign_up"i], div[role="dialog"i] div:has(> a[href$="/i/premium_sign_up"i]), nav[role="navigation"i] > a[href$="/i/verified-orgs-signup"i], div[role="dialog"i] div:has(> a[href$="/i/verified-orgs-signup"i]), nav[role="navigation"i] > a[href$="/jobs"i], div[role="dialog"i] div:has(> a[href$="/jobs"i]), nav[role="navigation"i] > a[href$="/i/jf/creators/studio"i], div[role="dialog"i] div:has(> a[href$="/i/jf/creators/studio"i]), nav[role="navigation"i] > a[href$="/i/chat"i], div[role="dialog"i] div:has(> a[href$="/i/chat"i]), nav[role="navigation"i] > a[href$="/i/monetization"i], div[role="dialog"i] div:has(> a[href$="/i/monetization"i]), nav[role="navigation"i] > a[href$="/i/connect_people"i], div[role="dialog"i] div:has(> a[href$="/i/connect_people"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href$="/i/premium_sign_up"i], div[role="dialog"i] div:has(> a[href$="/i/premium_sign_up"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href$="/i/verified-orgs-signup"i], div[role="dialog"i] div:has(> a[href$="/i/verified-orgs-signup"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href$="/i/jf/creators/studio"i], div[role="dialog"i] div:has(> a[href$="/i/jf/creators/studio"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href*="ads.x.com/"i], div[role="dialog"i] div:has(> a[href*="ads.x.com/"i]) { display: none !important; }';
   appendStylus += 'header[role="banner"i] div:has(> div > button[aria-label="アカウントメニュー"i]) { display: none !important; } ';
   // おすすめ
   appendStylus += 'div:is([aria-label^="タイムライン: "i]:not(:is([aria-label*="通知"i], [aria-label*="フォロー"i], [aria-label*="フォロワー"i], [aria-label*="ミュート"i], [aria-label*="ブロック"i], [aria-label*="リスト"i])), [aria-label$="さんのポスト"i]) > div > div[data-testid="cellInnerDiv"i]:not(:has(:is(article[data-testid="tweet"i], div[data-testid="trend"i], li[role="listitem"]))) { display : none !important; } ';
-  // ツイート内 もっと見つける 区間A ~ 区間Bまで削除
-  appendStylus += 'div[aria-label="タイムライン: 会話"i] div[data-testid="cellInnerDiv"i]:has(div[class="css-g5y9jx r-1adg3ll r-1ny4l3l"i]:empty) ~ div[data-testid="cellInnerDiv"i]:has(div[class="css-g5y9jx r-1adg3ll r-1ny4l3l"i]:empty) ~ div[data-testid="cellInnerDiv"i] { display : none !important; } ';
 
   // トレンドタブ：話題を検索 pc
   appendStylus += 'div[aria-label="ホームタイムライン"i] > div:has(div[role="presentation"i] > a[href$="/for_you"i][aria-selected="true"i]) ~ div:has(div[aria-label="タイムライン: 話題を検索"i]) { display: none !important; } ';
@@ -172,15 +169,31 @@
     return false;
   };
 
+    const tweetMoreLines = async (flg) => {
+    // Hide Discover new Lists
+    let showMoreLines = await waitQuerySelector('div[aria-label="タイムライン: 会話"i]');
+    if (!showMoreLines) return false;
+    // 子要素取得
+    let timelineItems = showMoreLines.querySelectorAll('[data-testid="cellInnerDiv"i]');
+    for (const elem of timelineItems) {
+      elem.classList.remove('subTreeLinesX');
+    }
+    let conversation = timelineItems.item(0);
+    let count = conversation.querySelector('div[class="css-g5y9jx r-j5o65s r-rull8r r-qklmqi"i] span[data-testid="app-text-transition-container"i]').textContent;
+    console.log('会話：', count, timelineItems);
+    conversation.classList.add('conversationX');
+    let len = 0;
+    for (const elem of timelineItems) {
+      if (len !== 0 && len <= parseInt(count, 10) + 1) {
+        elem.classList.add('subTreeLinesX');
+      }
+      len++;
+    }
+  };
+
   const removeElements = async (tweets) => {
     console.log('tweet remove item length > ', tweets.length);
     for await (const tweet of tweets) {
-      tweet.classList.add(quoBColumn);
-
-      if (!isNuN(tweet.querySelector(moreTweet))) {
-        tweet.querySelector(moreTweet).click();
-      }
-
       const words = isNuN(abc) ? [] : abc.hideword;
       // 非表示対象文字列
       for (const word of words) {
@@ -198,23 +211,18 @@
   const polling = async () => {
     const nodeTimeline = await waitQuerySelector('div[aria-label^="タイムライン: "i] > div');
 
+    await tweetMoreLines(true);
     // Mutation Observer initialize
-    let tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
-    if (tweets.length !== 0) await removeElements(tweets);
-
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
     twMutationTimeline = new MutationObserver(async () => {
       setTimeout(async () => {
         if (!isNuN(twMutationTimeline)) { twMutationTimeline.disconnect(); }
-        tweets = document.querySelectorAll(twColumns + ':not(.' + quoBColumn + ')');
-        if (tweets.length !== 0) await removeElements(tweets);
         twMutationTimeline.observe(nodeTimeline, config);
       }, waitTime);
     });
     twMutationTimeline.observe(nodeTimeline, config);
   };
   const initial = async () => {
-    await waitQuerySelector(twColumns + ':not(.' + quoBColumn + ')');
     await polling();
   };
   const twPath = async () => {
