@@ -32,17 +32,17 @@
   // ==========================================================
   // stylus: beforebegin, afterbegin, beforeend, afterend
   let appendStylus = '';
-  appendStylus += twColumns + ' div[data-testid="Tweet-User-Avatar"i] { display: none !important; } ';
+  appendStylus += 'div[data-testid="cellInnerDiv"i] div:has(> div[data-testid="Tweet-User-Avatar"i]) { display: none !important; } ';
   appendStylus += 'a[href*="/grok.com/"i], div[data-testid="GrokDrawer"i], button[aria-label*="Grok"], button[aria-label="プロフィールの要約"i], button[aria-label="チャット"] { display: none !important; } ';
   /* gradient stylus :意味あるかは不明 */
   appendStylus += 'img[src*="twimg.com/emoji"i] { display: none !important; } ';
   /** css style border line */
-  appendStylus += twColumns + ' .r-1867qdf { border-radius: 0px !important; }';
+  appendStylus += 'div[data-testid="cellInnerDiv"i] .r-1867qdf { border-radius: 0px !important; }';
   appendStylus += 'form[aria-label="検索"i] > div > div.r-sdzlij { border-bottom-left-radius: 0px !important; border-bottom-right-radius: 0px !important; border-top-left-radius: 0px !important; border-top-right-radius: 0px !important; }';
   // tweet hide
-  appendStylus += 'div[aria-label="タイムライン: 会話"i] ' + twColumns + ':not(.conversationX, .subTreeLinesX) { display: none !important; } ';
-  appendStylus += twColumns + '.' + xitemRem + ' { display: none !important; } ';
-  appendStylus += twColumns + ':has(' + remReTweet + ') { display: none !important; } ';
+  appendStylus += 'section[aria-labelledby="accessible-list-0"i] > div[aria-label="タイムライン: 会話"i] > div > div[data-testid="cellInnerDiv"i]:not(.conversationX):not(.subTreeLinesX) { display: none !important; } ';
+  appendStylus += 'div[data-testid="cellInnerDiv"i].' + xitemRem + ' { display: none !important; } ';
+  appendStylus += 'div[data-testid="cellInnerDiv"i]:has(' + remReTweet + ') { display: none !important; } ';
   appendStylus += 'div[role="menu"i][class="css-g5y9jx r-j2cz3j r-14lw9ot r-1q9bdsx r-1upvrn0 r-1udh08x r-u8s1d"i]:has(div[data-testid="Dropdown"i] > div[role="menuitem"i]) { display: none !important; } ';
   // ext area stylus
   appendStylus += 'div[aria-label="トレンド"i] > div > div:not(:has(form[aria-label="検索"i])) { display: none !important; } ';
@@ -140,6 +140,12 @@
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
   };
   // eslint-disable-next-line no-unused-vars
+  const buildURL = (baseUrl, paramsObject) => {
+    const url = new URL(baseUrl);
+    url.search = new URLSearchParams(paramsObject).toString();
+    return url.toString();
+  };
+  // eslint-disable-next-line no-unused-vars
   const userAgent = () => {
     const userDevice = navigator.userAgent;
     if (userDevice.indexOf('iPhone') > 0 || userDevice.indexOf('iPod') > 0 || userDevice.indexOf('Android') > 0 && userDevice.indexOf('Mobile') > 0) {
@@ -159,45 +165,55 @@
     return false;
   };
 
-  const switchToNewestReplies = async () => {
+  const switchToNewestReplies = async (href) => {
     // const menu = document.querySelector('div[aria-label="タイムライン: 会話"i] div[class="css-g5y9jx r-1awozwy r-18u37iz r-1wtj0ep r-6gpygo"i] button[aria-haspopup="menu"i]');
     // f (menu.textContent !== '最新') { menu.click(); }
     // const dropdownLists = await document.querySelectorAll('div[role="menu"i][class="css-g5y9jx r-j2cz3j r-14lw9ot r-1q9bdsx r-1upvrn0 r-1udh08x r-u8s1d"i] div[data-testid="Dropdown"i] > div[role="menuitem"i]');
     // dropdownLists.item(1).click(); // 最新 : sort_replies=recency
     // const replaceURL = deleteParam(window.location.href, 'sort_replies').href;
     // history.replaceState(null, '', replaceURL);
-    if (!searchParams(window.location.href, 'sort_replies')) {
-      location.replace(window.location.href + '?sort_replies=recency');
+    if (searchParams(href, 'sort_replies')) {
+      console.log('> tweet is sort ... recency replacement.');
+    } else {
+      const search = buildURL(href, { sort_replies: 'recency' });
+      location.replace(search);
     }
   };
-  const tweetMoreLines = async () => {
-    if (!window.location.href.includes('/status/')) return false;
-    await switchToNewestReplies();
+  const tweetMoreLines = async (e) => {
+    if (e.detail.path.includes('/status/')) {
+      await switchToNewestReplies(e.detail.href);
 
-    await new Promise(resolve => setTimeout(resolve, waitTime * 2));
-    const showMoreLines = await waitQuerySelector('div[aria-label="タイムライン: 会話"i] > div');
-    // 子要素取得
-    const timelineItems = showMoreLines.querySelectorAll('[data-testid="cellInnerDiv"i]');
-    for (const elem of timelineItems) {
-      elem.classList.remove('subTreeLinesX');
-    }
-    const conversation = timelineItems.item(0);
-    const count = conversation.querySelector('div[class="css-g5y9jx r-j5o65s r-rull8r r-qklmqi"i] span[data-testid="app-text-transition-container"i]').textContent;
-    console.log('tweet 会話 > ', count, timelineItems);
-    conversation.classList.add('conversationX');
-    let len = 0;
-    for (const elem of timelineItems) {
-      if (len !== 0 && len <= parseInt(count, 10) + 1) {
-        elem.classList.add('subTreeLinesX');
+      const showMoreLine = await waitQuerySelector('section[aria-labelledby="accessible-list-0"i] > div[aria-label="タイムライン: 会話"i] > div');
+      await waitQuerySelector(twColumns);
+
+      // 子要素取得
+      const timelineItems = Array.from(showMoreLine.querySelectorAll(twColumns));
+      const conversation = timelineItems[0];
+      conversation.classList.add('conversationX');
+
+      const counterTxt = 'button[data-testid="reply"i] span[data-testid="app-text-transition-container"i]';
+      const count = isNuN(conversation.querySelector(counterTxt)) ? 0 : conversation.querySelector(counterTxt).textContent;
+
+      // 返信のみ抽出
+      const subtree = timelineItems.slice(1);
+      console.log('tweet 会話 > ', count, timelineItems);
+      const len = parseInt(count, 10); // 10進数変換
+      for (let i = 0; i < len; i++) {
+        subtree[i].classList.add('subTreeLinesX');
       }
-      len++;
     }
   };
-  const removeElements = async () => {
-    const nodeTimeline = await waitQuerySelector('div[aria-label^="タイムライン: "i] > div');
-    if (!nodeTimeline) return false;
+  const removeElements = async (e) => {
+    let nodeTimeline = await waitQuerySelector('div[aria-label^="タイムライン: "i] > div');
+    if (e.detail.path.includes('/status/')) {
+      // 会話の場合、読み込みは会話内のみでよい
+      nodeTimeline = await waitQuerySelector('section[aria-labelledby="accessible-list-0"i] > div[aria-label="タイムライン: 会話"i] > div');
+    } else {
+      nodeTimeline = await waitQuerySelector('div[aria-label^="タイムライン: "i] > div');
+    }
+    await waitQuerySelector(twColumns);
     await new Promise(resolve => setTimeout(resolve, waitTime));
-    const timelineItems = nodeTimeline.querySelectorAll('[data-testid="cellInnerDiv"i]:not(.' + xitemDom + ')');
+    const timelineItems = nodeTimeline.querySelectorAll(twColumns + ':not(.' + xitemDom + ')');
 
     console.log('tweet remove item length > ', timelineItems.length);
     for (const tweet of timelineItems) {
@@ -218,13 +234,12 @@
       }
     }
   };
-  const twPath = async () => {
-    const nodeMain = await waitQuerySelector(twMain);
+  const twPath = async (e, nodeMain) => {
     // Mutation Observer
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
     twMutationManager = new MutationObserver(async () => {
-      await removeElements();
-      await tweetMoreLines();
+      await tweetMoreLines(e);
+      await removeElements(e);
     });
     twMutationManager.observe(nodeMain, config);
   };
@@ -240,7 +255,8 @@
   // URL検知
   window.addEventListener('urlChange', async (e) => {
     const tab = await waitQuerySelectorCount(10, 'div[role="presentation"i] div[role="tab"i][aria-selected="true"i] span');
-    const tabLabel = isNuN(tab) ? '' : tab.textContent;
+    const tabLabel = isNuN(tab) ? 'NuN' : tab.textContent;
+
     if (oldUrl !== e.detail.path || label !== tabLabel) {
       oldUrl = e.detail.path; // oldUrlを更新
       label = tabLabel;
@@ -248,7 +264,8 @@
 
       if (!isNuN(twMutationManager)) { twMutationManager.disconnect(); }
 
-      await twPath();
+      const nodeMain = await waitQuerySelector(twMain);
+      await twPath(e, nodeMain);
     }
   });
   const eventHandler = () => {
