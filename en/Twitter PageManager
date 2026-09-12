@@ -34,10 +34,8 @@
   // area stylus
   appendStylus += twMain + ' div[aria-label="ホームタイムライン"i] > div > div:is(:not([class="css-175oi2r r-633pao r-u8s1d r-dkhcqf r-axxi2z r-18jm5s1 r-13qz1uu"i])), ' + twColumns + ':has(:not(:is(div[data-testid="tweetPhoto"i], div[data-testid="card.wrapper"i]))), [data-testid="sidebarColumn"i] *, header[role="banner"i] *, nav[role="navigation"i] * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background-color: rgba(255, 255, 255, 1) !important; /* または背景色を調整 */ color: rgba(0, 0, 0, 1) !important; } ';
   appendStylus += twMain + ' div[aria-label="ホームタイムライン"i] > div > div[class="css-g5y9jx r-633pao r-u8s1d r-dkhcqf r-axxi2z r-18jm5s1 r-13qz1uu"i] { display: none !important; } ';
-  appendStylus += twColumns + ' div[class="css-175oi2r r-18u37iz r-136ojw6"i] > div:first-child { display: none !important; } ';
-  appendStylus += twColumns + ' div[class="css-175oi2r r-18u37iz r-184en5c"i] > div:first-child { display: none !important; } ';
   appendStylus += twColumns + ' div[data-testid="Tweet-User-Avatar"i] { display: none !important; } ';
-  appendStylus += 'a[href*="/grok.com/"i], div[data-testid="GrokDrawer"i], button[aria-label="プロフィールの要約"i] { display: none !important; } ';
+  appendStylus += 'a[href*="/grok.com/"i], div[data-testid="GrokDrawer"i], button[aria-label*="Grok"], button[aria-label="プロフィールの要約"i], button[aria-label="チャット"] { display: none !important; } ';
   /* gradient stylus :意味あるかは不明 */
   appendStylus += '[style*="backdrop-filter"i], [style*="filter: blur"i], *[style*="blur("i] { filter: none !important; }';
   appendStylus += '[class*="shadow"], [style*="box-shadow"i] { box-shadow: none !important; }';
@@ -49,18 +47,14 @@
   appendStylus += 'form[aria-label="検索"i] > div > div.r-sdzlij { border-bottom-left-radius: 0px !important; border-bottom-right-radius: 0px !important; border-top-left-radius: 0px !important; border-top-right-radius: 0px !important; }';
   // tweet hide
   appendStylus += 'div[aria-label="タイムライン: 会話"i] ' + twColumns + ':not(.conversationX, .subTreeLinesX) { display: none !important; } ';
-  appendStylus += twColumns + ' button[aria-label*="Grok"i] { display: none !important; } ';
   appendStylus += twColumns + '.' + quoAColumn + ' { display: none !important; } ';
-  appendStylus += twColumns + ':has(' + remReTweet + ') { display: none !important; } ';
-  // 広告
-  appendStylus += twColumns + ':has(' + remAd + ') { display: none !important; } ';
+  appendStylus += twColumns + ':has(' + remReTweet + ', ' + remAd + ') { display: none !important; } ';
   // ext area stylus
   appendStylus += 'div[aria-label="トレンド"i] > div > div:not(:has(form[aria-label="検索"i])) { display: none !important; } ';
   appendStylus += 'nav[role="navigation"i] > a[href$="/i/grok"i], div[role="dialog"i] div:has(> a[href$="/i/grok"i]), nav[role="navigation"i] > a[href$="/communities"i], div[role="dialog"i] div:has(> a[href$="/communities"i]), nav[role="navigation"i] > a[href$="/i/premium_sign_up"i], div[role="dialog"i] div:has(> a[href$="/i/premium_sign_up"i]), nav[role="navigation"i] > a[href$="/i/verified-orgs-signup"i], div[role="dialog"i] div:has(> a[href$="/i/verified-orgs-signup"i]), nav[role="navigation"i] > a[href$="/jobs"i], div[role="dialog"i] div:has(> a[href$="/jobs"i]), nav[role="navigation"i] > a[href$="/i/jf/creators/studio"i], div[role="dialog"i] div:has(> a[href$="/i/jf/creators/studio"i]), nav[role="navigation"i] > a[href$="/i/chat"i], div[role="dialog"i] div:has(> a[href$="/i/chat"i]), nav[role="navigation"i] > a[href$="/i/monetization"i], div[role="dialog"i] div:has(> a[href$="/i/monetization"i]), nav[role="navigation"i] > a[href$="/i/connect_people"i], div[role="dialog"i] div:has(> a[href$="/i/connect_people"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href$="/i/premium_sign_up"i], div[role="dialog"i] div:has(> a[href$="/i/premium_sign_up"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href$="/i/verified-orgs-signup"i], div[role="dialog"i] div:has(> a[href$="/i/verified-orgs-signup"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href$="/i/jf/creators/studio"i], div[role="dialog"i] div:has(> a[href$="/i/jf/creators/studio"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href*="ads.x.com/"i], div[role="dialog"i] div:has(> a[href*="ads.x.com/"i]) { display: none !important; }';
   appendStylus += 'header[role="banner"i] div:has(> div > button[aria-label="アカウントメニュー"i]) { display: none !important; } ';
   // おすすめ
   appendStylus += 'div:is([aria-label^="タイムライン: "i]:not(:is([aria-label*="通知"i], [aria-label*="フォロー"i], [aria-label*="フォロワー"i], [aria-label*="ミュート"i], [aria-label*="ブロック"i], [aria-label*="リスト"i])), [aria-label$="さんのポスト"i]) > div > div[data-testid="cellInnerDiv"i]:not(:has(:is(article[data-testid="tweet"i], div[data-testid="trend"i], li[role="listitem"]))) { display : none !important; } ';
-
   // トレンドタブ：話題を検索 pc
   appendStylus += 'div[aria-label="ホームタイムライン"i] > div:has(div[role="presentation"i] > a[href$="/for_you"i][aria-selected="true"i]) ~ div:has(div[aria-label="タイムライン: 話題を検索"i]) { display: none !important; } ';
   // トレンドタブ：話題を検索 mobile
@@ -70,6 +64,7 @@
   appendStylus += 'div[aria-label="ホームタイムライン"i] > div div[role="presentation"i] > a[href$="/entertainment"i] { display: none !important; } ';
   // navigation
   appendStylus += 'nav[role="navigation"i] > a[href$="/i/grok"i], div[role="dialog"i] div:has(> a[href$="/i/grok"i]), nav[role="navigation"i] > a[href$="/communities"i], div[role="dialog"i] div:has(> a[href$="/communities"i]), nav[role="navigation"i] > a[href$="/i/premium_sign_up"i], div[role="dialog"i] div:has(> a[href$="/i/premium_sign_up"i]), nav[role="navigation"i] > a[href$="/i/verified-orgs-signup"i], div[role="dialog"i] div:has(> a[href$="/i/verified-orgs-signup"i]), nav[role="navigation"i] > a[href$="/jobs"i], div[role="dialog"i] div:has(> a[href$="/jobs"i]), nav[role="navigation"i] > a[href$="/i/jf/creators/studio"i], div[role="dialog"i] div:has(> a[href$="/i/jf/creators/studio"i]), nav[role="navigation"i] > a[href$="/i/chat"i], div[role="dialog"i] div:has(> a[href$="/i/chat"i]), nav[role="navigation"i] > a[href$="/i/monetization"i], div[role="dialog"i] div:has(> a[href$="/i/monetization"i]), nav[role="navigation"i] > a[href$="/i/connect_people"i], div[role="dialog"i] div:has(> a[href$="/i/connect_people"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href$="/i/premium_sign_up"i], div[role="dialog"i] div:has(> a[href$="/i/premium_sign_up"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href$="/i/verified-orgs-signup"i], div[role="dialog"i] div:has(> a[href$="/i/verified-orgs-signup"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href$="/i/jf/creators/studio"i], div[role="dialog"i] div:has(> a[href$="/i/jf/creators/studio"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href*="ads.x.com/"i], div[role="dialog"i] div:has(> a[href*="ads.x.com/"i]) { display: none !important; }';
+
   const stylusElem = document.createElement('style');
   stylusElem.id = 'stylusElemPage';
   stylusElem.textContent = appendStylus;
@@ -169,18 +164,18 @@
     return false;
   };
 
-    const tweetMoreLines = async (flg) => {
+  const tweetMoreLines = async () => {
     // Hide Discover new Lists
-    let showMoreLines = await waitQuerySelector('div[aria-label="タイムライン: 会話"i]');
+    const showMoreLines = await waitQuerySelector('div[aria-label="タイムライン: 会話"i]');
     if (!showMoreLines) return false;
     // 子要素取得
-    let timelineItems = showMoreLines.querySelectorAll('[data-testid="cellInnerDiv"i]');
+    const timelineItems = showMoreLines.querySelectorAll('[data-testid="cellInnerDiv"i]');
     for (const elem of timelineItems) {
       elem.classList.remove('subTreeLinesX');
     }
-    let conversation = timelineItems.item(0);
-    let count = conversation.querySelector('div[class="css-g5y9jx r-j5o65s r-rull8r r-qklmqi"i] span[data-testid="app-text-transition-container"i]').textContent;
-    console.log('会話：', count, timelineItems);
+    const conversation = timelineItems.item(0);
+    const count = conversation.querySelector('div[class="css-g5y9jx r-j5o65s r-rull8r r-qklmqi"i] span[data-testid="app-text-transition-container"i]').textContent;
+    console.log('tweet 会話 > ', count);
     conversation.classList.add('conversationX');
     let len = 0;
     for (const elem of timelineItems) {
@@ -190,7 +185,6 @@
       len++;
     }
   };
-
   const removeElements = async (tweets) => {
     console.log('tweet remove item length > ', tweets.length);
     for await (const tweet of tweets) {
@@ -216,7 +210,9 @@
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
     twMutationTimeline = new MutationObserver(async () => {
       setTimeout(async () => {
+        let timelineItems = nodeTimeline.querySelectorAll('[data-testid="cellInnerDiv"i]');
         if (!isNuN(twMutationTimeline)) { twMutationTimeline.disconnect(); }
+        removeElements(timelineItems);
         twMutationTimeline.observe(nodeTimeline, config);
       }, waitTime);
     });
