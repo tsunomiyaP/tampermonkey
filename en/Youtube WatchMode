@@ -20,11 +20,16 @@
   // ==========================================================
   // 変数宣言
   const waitTime = 1000;
-  const isChatMode = true; //   true: 再生画面 チャット 非表示
-  const isMovieMode = false; // true: 再生画面 動画要素 非表示
-  const isProgress = true; //   true: 再生画面 翻訳、次の動画再生 無効
-  const isSTVol = false; //     true: 再生画面 一定音量 無効
-  const isQuality = true; //   true: 再生画面 画質自動変更
+  // true: 再生画面 チャット 非表示
+  const isChatMode = true;
+  // true: 再生画面 動画要素 非表示
+  const isMovieMode = false;
+  // true: 再生画面 翻訳、次の動画再生 無効
+  const isProgress = true;
+  // true: 再生画面 一定音量 無効
+  const isSTVol = false; 
+  // true: 再生画面 画質自動変更
+  const isQuality = true;
 
   const manager = 'ytd-app, ytm-app[id="app"i]';
   const player = 'div#movie_player.html5-video-player';
@@ -346,8 +351,12 @@
       let q = qualitys[level];
       // 初期処理
       const ytPlayer = await waitQuerySelector(player);
-      ytPlayer.mute();
-      ytPlayer.playVideo(); // 自動再生
+      // 音声ミュート
+      // ytPlayer.mute();
+      // 音声ミュート解除
+      // ytPlayer.unMute();
+      // 自動再生
+      ytPlayer.playVideo();
       const stats = ytPlayer.getVideoStats() || {};
 
       // ライブ配信か否か pc, mobile
@@ -371,8 +380,6 @@
       ytPlayer.setPlaybackQualityRange(q);
       ytPlayer.setPlaybackQuality(q);
       await new Promise(resolve => setTimeout(resolve, 2000));
-
-      ytPlayer.unMute();
     }
   };
 
