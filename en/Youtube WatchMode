@@ -20,14 +20,16 @@
   // ==========================================================
   // 変数宣言
   const waitTime = 1000;
-  const isChatMode = false;
-  const isMovieMode = false;
-  const isVolMode = true;
+  const isChatMode = true; //   true: 再生画面 チャット 非表示
+  const isMovieMode = false; // true: 再生画面 動画要素 非表示
+  const isProgress = true; //   true: 再生画面 翻訳、次の動画再生 無効
+  const isSTVol = false; //     true: 再生画面 一定音量 無効
+  const isQuality = true; //   true: 再生画面 画質自動変更
+
   const manager = 'ytd-app, ytm-app[id="app"i]';
   const player = 'div#movie_player.html5-video-player';
-  // youtube 画質 [0 : 1080, 1 : 720, 2 : 480, 3 : 360, 4 : 240, 5 : 144, 6 : auto]
-  const qualitys = ['hd1080', 'hd720', 'large', 'medium', 'small', 'tiny', 'auto'];
-  const target = 1;
+  // youtube  画質 [0 : 144, 1 : 240, 2 : 360, 3 : 480, 4 : 720, 5 : 1080, 6 : auto]
+  const qualitys = ['tiny', 'small', 'medium', 'large', 'hd720', 'hd1080', 'auto'];
   const regWatch = '^/watch|^/live';
   let oldUrl = '', ytMobPlayer = '';
   // ==========================================================
@@ -287,10 +289,11 @@
     });
     ytMobPlayer.observe(document.querySelector(player), config);
   };
-
-  const ytChatArea = async () => {
-    const chat = await waitQuerySelector('div#chat-container');
-    if (!isNuN(chat)) { chat.remove(); }
+  const ytChatArea = async (flag) => {
+    if (flag) {
+      const chat = await waitQuerySelector('div#chat-container');
+      if (!isNuN(chat)) { chat.remove(); }
+    }
   };
   const ytStableVolume = async (flag) => {
     if (flag) {
@@ -316,63 +319,61 @@
       document.querySelector(closeBtn).click();
     }
   };
-  const ytNavBtn = async () => {
-    const cssControls = 'div[class="ytp-right-controls"i]';
-    const cssToggleNav = 'button.ytp-autonav-toggle';
-    const cssToggleNavCheck = 'div.ytp-autonav-toggle-button';
+  const ytNavBtn = async (flag) => {
+    if (flag) {
+      const cssControls = 'div[class="ytp-right-controls"i]';
+      const cssToggleNav = 'button.ytp-autonav-toggle';
+      const cssToggleNavCheck = 'div.ytp-autonav-toggle-button';
 
-    const toggleNavBtn = await waitQuerySelector(cssControls + ' ' + cssToggleNav);
-    const toggleNavCheck = await waitQuerySelector(cssControls + ' ' + cssToggleNav + ' ' + cssToggleNavCheck);
-    console.log('> yt auto nav clicker...');
-    if (toggleNavCheck.getAttribute('aria-checked') === 'true') { toggleNavBtn.click(); return ytNavBtn(); } else { return false; }
-  };
-  const ytSubBtn = async () => {
-    const cssControls = 'div[class="ytp-right-controls"i]';
-    const cssToggleSubBtn = 'button.ytp-subtitles-button';
-
-    const toggleSubBtn = await waitQuerySelector(cssControls + ' ' + cssToggleSubBtn);
-    console.log('> yt subtitle clicker...');
-    if (toggleSubBtn.getAttribute('aria-pressed') === 'true') { toggleSubBtn.click(); return ytSubBtn(); } else { return false; }
-  };
-  const ytQualityFix = async (canLevel) => {
-    let q = qualitys[target];
-
-    // 初期処理
-    await waitQuerySelector(player);
-    const ytPlayer = document.querySelector(player);
-    await waitQuerySelector('div.ytp-left-controls, player-bottom-controls');
-
-    if (typeof ytPlayer.getAvailableQualityLevels() === 'undefined') { return await ytQualityFix(canLevel); }
-    if (ytPlayer.getPlaybackQuality().toLowerCase() === 'unknown') { return await ytQualityFix(canLevel); }
-
-    // 初期値[最低値: tiny]
-    q = qualitys[canLevel];
-    if (!ytPlayer.getAvailableQualityLevels().includes(q)) {
-      return await ytQualityFix(canLevel - 1);
+      const toggleNavBtn = await waitQuerySelector(cssControls + ' ' + cssToggleNav);
+      const toggleNavCheck = await waitQuerySelector(cssControls + ' ' + cssToggleNav + ' ' + cssToggleNavCheck);
+      console.log('> yt auto nav clicker...');
+      if (toggleNavCheck.getAttribute('aria-checked') === 'true') { toggleNavBtn.click(); return ytNavBtn(); } else { return false; }
     }
-    console.log('> yt quality list : ', ytPlayer.getAvailableQualityLevels());
-    ytPlayer.setPlaybackQualityRange(q);
-    ytPlayer.setPlaybackQuality(q);
-    console.log('> yt quality low : ', q);
+  };
+  const ytSubBtn = async (flag) => {
+    if (flag) {
+      const cssControls = 'div[class="ytp-right-controls"i]';
+      const cssToggleSubBtn = 'button.ytp-subtitles-button';
 
-    // ライブ配信か否か pc, mobile
-    // const badge = await waitQuerySelectorCount(1, 'button.ytp-live-badge-is-livehead, span.ytwPlayerTimeDisplayTime');
-    const stats = ytPlayer.getVideoStats() || {};
-    console.log('> yt Live status : ', stats.live);
-    if (stats.live === 'live' || stats.live === 'dvr' || stats.live === 'lp') {
-      // 最低画質
-      if (!ytPlayer.getAvailableQualityLevels().includes(q)) {
-        q = qualitys[canLevel];
+      const toggleSubBtn = await waitQuerySelector(cssControls + ' ' + cssToggleSubBtn);
+      console.log('> yt subtitle clicker...');
+      if (toggleSubBtn.getAttribute('aria-pressed') === 'true') { toggleSubBtn.click(); return ytSubBtn(); } else { return false; }
+    }
+  };
+  const ytQualityFix = async (flag, level) => {
+    if (flag) {
+      let q = qualitys[level];
+      // 初期処理
+      const ytPlayer = await waitQuerySelector(player);
+      ytPlayer.mute();
+      ytPlayer.playVideo(); // 自動再生
+      const stats = ytPlayer.getVideoStats() || {};
+
+      // ライブ配信か否か pc, mobile
+      console.log('> yt Live status : ', stats.live);
+      if (stats.live === 'live' || stats.live === 'dvr' || stats.live === 'lp') {
+        // 最低画質
+        console.log('> yt can Live ... Live stream : ', qualitys[0]);
+        q = qualitys[0];
+      } else {
+        if (ytPlayer.getAvailableQualityLevels()) { // PC版
+          console.log(q, ytPlayer.getAvailableQualityLevels());
+          if (!ytPlayer.getAvailableQualityLevels().includes(q)) {
+            console.log('> yt quality FIX ... is not quality ... : ', ytPlayer.getPlaybackQuality());
+            if (0 < level) { // YT画質[最低値: tiny]
+              return await ytQualityFix(flag, parseInt(level, 10) - 1); // 10進数変換;
+            }
+          }
+        }
       }
-      console.log('> yt can Live ... Live stream : ', q);
-    } else {
-      q = qualitys[target];
-      console.log('> yt not Live ... movie watch : ', q);
+      // 画質設定
+      ytPlayer.setPlaybackQualityRange(q);
+      ytPlayer.setPlaybackQuality(q);
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      ytPlayer.unMute();
     }
-    await new Promise(resolve => setTimeout(resolve, 50));
-    ytPlayer.setPlaybackQualityRange(q);
-    ytPlayer.setPlaybackQuality(q);
-    console.log('> yt quality FIX ... is : ', ytPlayer.getPlaybackQuality());
   };
 
   const changeUrl = () => {
@@ -390,7 +391,7 @@
       oldUrl = e.detail.path + e.detail.search; // oldUrlを更新
 
       // 設定ポップアップ初期非表示
-      if (!isChatMode) { stylusElemSettings.textContent = 'div#chat-container { display: none !important; } '; } else { stylusElemSettings.textContent = ''; }
+      if (isChatMode) { stylusElemSettings.textContent = 'div#chat-container { display: none !important; } '; } else { stylusElemSettings.textContent = ''; }
       stylusElemSettings.textContent += 'div.ytp-popup.ytp-settings-menu { display: none !important; } '; // pc
       stylusElemSettings.textContent += 'ytm-app[id="app"i] > :is(bottom-sheet-container[aria-modal="true"i]) { display: none !important; } '; // mobile
 
@@ -399,28 +400,28 @@
         if ('www.youtube.com' === e.detail.host) {
           // pc
           console.log('> yt watch quality ... changing');
-          await ytQualityFix(5);
+          await ytQualityFix(isQuality, 4);
           console.log('> yt stable volume 一定音量 setting...');
-          await ytStableVolume(isVolMode);
+          await ytStableVolume(isSTVol);
           console.log('> yt chat area ... remover');
-          ytChatArea();
+          ytChatArea(isChatMode);
           console.log('> yt auto nav next movies setting...');
-          ytNavBtn();
+          ytNavBtn(isProgress);
           console.log('> yt auto subtitle setting...');
-          ytSubBtn();
+          ytSubBtn(isProgress);
           console.log('> yt progress bar initialize...');
           ytProgressArea();
         } else if ('m.youtube.com' === e.detail.host) {
           // mobile
           console.log('> yt watch quality ... changing');
-          await ytQualityFix(5);
+          await ytQualityFix(isQuality, 4);
           console.log('> yt stable volume 一定音量 setting...');
-          await ytStableVolume(isVolMode);
+          await ytStableVolume(isSTVol);
         }
       }
       // style 無効化
       await new Promise(resolve => setTimeout(resolve, waitTime));
-      if (!isChatMode) { stylusElemSettings.textContent = 'div#chat-container { display: none !important; } '; } else { stylusElemSettings.textContent = ''; }
+      if (isChatMode) { stylusElemSettings.textContent = 'div#chat-container { display: none !important; } '; } else { stylusElemSettings.textContent = ''; }
     }
   });
   const eventHandler = () => {
