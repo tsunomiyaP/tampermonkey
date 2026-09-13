@@ -165,23 +165,24 @@
     return false;
   };
 
-  const switchToNewestReplies = async (href) => {
-    // const menu = document.querySelector('div[aria-label="タイムライン: 会話"i] div[class="css-g5y9jx r-1awozwy r-18u37iz r-1wtj0ep r-6gpygo"i] button[aria-haspopup="menu"i]');
-    // f (menu.textContent !== '最新') { menu.click(); }
-    // const dropdownLists = await document.querySelectorAll('div[role="menu"i][class="css-g5y9jx r-j2cz3j r-14lw9ot r-1q9bdsx r-1upvrn0 r-1udh08x r-u8s1d"i] div[data-testid="Dropdown"i] > div[role="menuitem"i]');
-    // dropdownLists.item(1).click(); // 最新 : sort_replies=recency
-    // const replaceURL = deleteParam(window.location.href, 'sort_replies').href;
-    // history.replaceState(null, '', replaceURL);
-    if (searchParams(href, 'sort_replies')) {
-      console.log('> tweet is sort ... recency replacement.');
-    } else {
-      const search = buildURL(href, { sort_replies: 'recency' });
-      location.replace(search);
+  const switchToNewestReplies = async (e) => {
+    if (e.detail.path.includes('/status/')) {
+      // const menu = document.querySelector('div[aria-label="タイムライン: 会話"i] div[class="css-g5y9jx r-1awozwy r-18u37iz r-1wtj0ep r-6gpygo"i] button[aria-haspopup="menu"i]');
+      // if (menu.textContent !== '最新') { menu.click(); }
+      // const dropdownLists = await document.querySelectorAll('div[role="menu"i][class="css-g5y9jx r-j2cz3j r-14lw9ot r-1q9bdsx r-1upvrn0 r-1udh08x r-u8s1d"i] div[data-testid="Dropdown"i] > div[role="menuitem"i]');
+      // dropdownLists.item(1).click(); // 最新 : sort_replies=recency
+      // const replaceURL = deleteParam(window.location.href, 'sort_replies').href;
+      // history.replaceState(null, '', replaceURL);
+      if (searchParams(e.detail.href, 'sort_replies')) {
+        console.log('> tweet is sort ... recency replacement.');
+      } else {
+        const search = buildURL(e.detail.href, { sort_replies: 'recency' });
+        location.replace(search);
+      }
     }
   };
   const tweetMoreLines = async (e) => {
     if (e.detail.path.includes('/status/')) {
-      await switchToNewestReplies(e.detail.href);
 
       const showMoreLine = await waitQuerySelector('section[aria-labelledby="accessible-list-0"i] > div[aria-label="タイムライン: 会話"i] > div');
       await waitQuerySelector(twColumns);
@@ -254,6 +255,8 @@
   };
   // URL検知
   window.addEventListener('urlChange', async (e) => {
+    // 返信ランを最新順に変更
+    await switchToNewestReplies(e);
     const tab = await waitQuerySelectorCount(10, 'div[role="presentation"i] div[role="tab"i][aria-selected="true"i] span');
     const tabLabel = isNuN(tab) ? 'NuN' : tab.textContent;
 
