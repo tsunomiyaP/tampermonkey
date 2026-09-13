@@ -369,7 +369,7 @@
       q = qualitys[target];
       console.log('> yt not Live ... movie watch : ', q);
     }
-    await new Promise(resolve => setTimeout(resolve, waitTime));
+    await new Promise(resolve => setTimeout(resolve, 50));
     ytPlayer.setPlaybackQualityRange(q);
     ytPlayer.setPlaybackQuality(q);
     console.log('> yt quality FIX ... is : ', ytPlayer.getPlaybackQuality());
