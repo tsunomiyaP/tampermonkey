@@ -27,7 +27,7 @@
   // true: 再生画面 翻訳、次の動画再生 無効
   const isProgress = true;
   // true: 再生画面 一定音量 無効
-  const isSTVol = false; 
+  const isSTVol = true;
   // true: 再生画面 画質自動変更
   const isQuality = true;
 
@@ -346,29 +346,57 @@
       if (toggleSubBtn.getAttribute('aria-pressed') === 'true') { toggleSubBtn.click(); return ytSubBtn(); } else { return false; }
     }
   };
+  const waitPlayerState = async (ytPlayer) => {
+    // player state
+    // -1 YT.PlayerState.UNSTARTED未開始（動画が読み込まれていない状態）
+    // 0  YT.PlayerState.ENDED終了（最後まで再生し終わった）
+    // 1  YT.PlayerState.PLAYING再生中
+    // 2  YT.PlayerState.PAUSED一時停止中
+    // 3  YT.PlayerState.BUFFERINGバッファリング中（読み込み中）
+    // 5  YT.PlayerState.CUED頭出し済み（方法1・2で解説した、停止状態での読込完了）
+
+    let state = ytPlayer.getPlayerState();
+    let attempts = 0;
+    const maxAttempts = 100;
+    while (attempts < maxAttempts) {
+      ytPlayer.mute();
+      ytPlayer.pauseVideo();
+      await new Promise(resolve => setTimeout(resolve, 10));
+      state = ytPlayer.getPlayerState();
+      attempts++;
+    }
+    ytPlayer.unMute();
+    return state;
+  };
   const ytQualityFix = async (flag, level) => {
+    // ytPlayer.pauseVideo();
+    // ytPlayer.mute();
+    // ytPlayer.unMute();
+    // ytPlayer.playVideo();
+
     if (flag) {
-      let q = qualitys[level];
+      let wit = qualitys[level];
+      let low = qualitys[0];
       // 初期処理
       const ytPlayer = await waitQuerySelector(player);
-      // 音声ミュート
-      // ytPlayer.mute();
-      // 音声ミュート解除
-      // ytPlayer.unMute();
-      // 自動再生
-      ytPlayer.playVideo();
-      const stats = ytPlayer.getVideoStats() || {};
+      await waitPlayerState(ytPlayer);
+      // if (ytPlayer.getPlaybackQuality() === 'unknown') { return await ytQualityFix(flag, level); }
+      // low quality set initialize
+      ytPlayer.setPlaybackQualityRange(low);
+      ytPlayer.setPlaybackQuality(low);
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      console.log('low quality set initialize...', ytPlayer.getPlaybackQuality());
 
       // ライブ配信か否か pc, mobile
-      console.log('> yt Live status : ', stats.live);
+      const stats = ytPlayer.getVideoStats() || {};
       if (stats.live === 'live' || stats.live === 'dvr' || stats.live === 'lp') {
         // 最低画質
-        console.log('> yt can Live ... Live stream : ', qualitys[0]);
-        q = qualitys[0];
+        console.log('> yt can Live ... Live stream : ', low);
+        wit = low;
       } else {
         if (ytPlayer.getAvailableQualityLevels()) { // PC版
-          console.log(q, ytPlayer.getAvailableQualityLevels());
-          if (!ytPlayer.getAvailableQualityLevels().includes(q)) {
+          console.log(wit, ytPlayer.getAvailableQualityLevels());
+          if (!ytPlayer.getAvailableQualityLevels().includes(wit)) {
             console.log('> yt quality FIX ... is not quality ... : ', ytPlayer.getPlaybackQuality());
             if (0 < level) { // YT画質[最低値: tiny]
               return await ytQualityFix(flag, parseInt(level, 10) - 1); // 10進数変換;
@@ -377,9 +405,12 @@
         }
       }
       // 画質設定
-      ytPlayer.setPlaybackQualityRange(q);
-      ytPlayer.setPlaybackQuality(q);
+      ytPlayer.setPlaybackQualityRange(wit);
+      ytPlayer.setPlaybackQuality(wit);
       await new Promise(resolve => setTimeout(resolve, 2000));
+      console.log('now quality set power on...', ytPlayer.getPlaybackQuality());
+      // 自動再生
+      ytPlayer.playVideo();
     }
   };
 
