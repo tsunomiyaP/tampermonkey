@@ -255,8 +255,6 @@
   };
   // URL検知
   window.addEventListener('urlChange', async (e) => {
-    // 返信ランを最新順に変更
-    await switchToNewestReplies(e);
     const tab = await waitQuerySelectorCount(10, 'div[role="presentation"i] div[role="tab"i][aria-selected="true"i] span');
     const tabLabel = isNuN(tab) ? 'NuN' : tab.textContent;
 
@@ -264,6 +262,8 @@
       oldUrl = e.detail.path; // oldUrlを更新
       label = tabLabel;
       console.log('tab : ', label, '、URL : ', oldUrl);
+      // 返信ランを最新順に変更
+      await switchToNewestReplies(e);
 
       if (!isNuN(twMutationManager)) { twMutationManager.disconnect(); }
 
