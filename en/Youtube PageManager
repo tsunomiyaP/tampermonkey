@@ -76,7 +76,7 @@
     for (let cookie of cookies) {
       const [key, value] = cookie.trim().split('=');
       if (key === name) {
-        return JSON.parse(value);
+        return JSON.parse(decodeURIComponent(value));
       }
     }
     return [];
