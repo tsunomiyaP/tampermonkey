@@ -242,6 +242,7 @@
     execludeWords: []
   };
 
-  window.sessionStorage.removeItem('ABC');
-  window.sessionStorage.setItem('ABC', JSON.stringify(words));
+  // window.sessionStorage.removeItem('ABC');
+  // window.sessionStorage.setItem('ABC', JSON.stringify(words));
+  document.cookie = 'ABC=' + JSON.stringify(words);
 })();
