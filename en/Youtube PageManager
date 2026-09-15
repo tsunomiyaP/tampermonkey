@@ -38,7 +38,7 @@
   const regSearch = '^/results';
   const regChannel = '^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+';
   // const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
-  const abc = getCookieArray('ytABC');
+  const abc = getCookieArray('ABC');
   // 可変数
   let ytMutation, oldUrl = '', flg = 'waiting';
   // ==========================================================
