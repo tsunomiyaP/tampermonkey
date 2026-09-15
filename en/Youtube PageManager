@@ -38,7 +38,6 @@
   const regSearch = '^/results';
   const regChannel = '^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+';
   // const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
-  const abc = getCookieArray('ABC');
   // 可変数
   let ytMutation, oldUrl = '', flg = 'waiting';
   // ==========================================================
@@ -264,6 +263,7 @@
     youtubeItem.userChN = strData.userChN;
 
     console.log('ytData > ', isDevice ? mode.pc : mode.sp);
+    const abc = getCookieArray('ABC');
 
     const words = isNuN(abc) ? '' : abc.hideword;
     const excludes = isNuN(abc) ? '' : abc.execludeWords;
