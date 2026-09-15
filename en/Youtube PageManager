@@ -67,19 +67,228 @@
   const stylusElemCh = document.createElement('style');
   stylusElemCh.id = 'stylusElemCh';
   // ==========================================================
+  const abc = {
+    hideword: [ // 名称|youtube|チャンネルアカウント
 
-  // eslint-disable-next-line no-unused-vars
-  const getCookieArray = (name) => {
-    const cookies = document.cookie.split(';');
-    for (let cookie of cookies) {
-      const [key, value] = cookie.trim().split('=');
-      if (key === name) {
-        // JSON文字列を配列に戻す
-        return JSON.parse(value);
-      }
-    }
-    return null;
+      // holostars jp
+      '花咲(\\s)*みやび|miyabihanasaki|@HanasakiMiyabi',
+      '奏手(\\s)*イヅル|kanadeizuru|@KanadeIzuru',
+      'アルランディス|arurandeisu|@Arurandeisu',
+      '律可|rikkaroid|@rikka',
+      'アステル(\\s)*[・]*レダ|astelleda|@AstelLeda',
+      '岸堂(\\s)*天真|kishidotemma|@KishidoTemma',
+      '夕刻(\\s)*ロベル|yukokuroberu|@YukokuRoberu',
+      '影山(\\s)*シエン|kageyamashien|@KageyamaShien',
+      '荒咬(\\s)*オウガ|aragamioga|@AragamiOga',
+      '夜十神(\\s)*封魔|yatogamifuma|@YatogamiFuma',
+      '羽継(\\s)*烏有|utsugiuyu|@UtsugiUyu',
+      '水無世(\\s)*燐央|minaserioch|@MinaseRio',
+
+      // en
+      'リージス(\\s)*[・]*アルテア|regisaltare|@RegisAltare',
+      'アクセル(\\s)*[・]*シリオス|axelsyrios|@AxelSyrios',
+      'ガビス(\\s)*[・]*ベッテル|gavisbettel|@GavisBettel',
+      'マキナ(\\s)*[・]*X(\\s)*[・]*フレオン|machinaxflayon|@MachinaXFlayon',
+      '万象院(\\s)*ハッカ|banzoinhakka|@BanzoinHakka',
+      '定水寺(\\s)*シンリ|josuijishinri|@JosuijiShinri',
+      'ジュラルド(\\s)*[・]*ティー(\\s)*[・]*レクスフォード|jurardtrexford|@JurardTRexford',
+      'ゴールドブレット|goldbullet_en|@Goldbulletch',
+      'オクタビオ|octavio_holo|@Octavio_en',
+      'クリムゾン(\\s)*[・]*ルーズ|crimzonruze|@CrimzonRuze',
+
+      // other groups
+      'ホロスタ(ーズ)*|holostar(s)*|スタこれ',
+      'uproar|tempus|armis',
+      '(?=.*(holo|ホロ))(?=.*(みこ|スバル).*)|さくらみこ|大空スバル|プロテインザスバル|常闇トワ',
+
+      // 敬称略
+      '(?=.*(holo|ホロ))(?=.*(みやび|イヅル|アルさん|りっか|天真|ロベル|オウガ|封魔|烏有|燐央).*)',
+
+      // nijisanji jp
+      '渋谷(\\s)*ハジメ|sibuya_hajime|@ShibuyaHajime',
+      'ギルザレンⅢ世|gilzaren_iii|@GilzarenIII',
+      '剣持(\\s)*刀也|rei_Toya_rei|@KenmochiToya',
+      '伏見(\\s)*ガク|gaku_fushimi|@FushimiGaku',
+      '(?=.*(niji|にじ))(?=.*(叶).*)|kanae_2434|@Kanae',
+      '卯月(\\s)*コウ|udukikohh|@UzukiKou',
+      '花畑(\\s)*チャイカ|zulmihp1nlmot5y|@HanabatakeChaika',
+      '社(\\s)*築|846kizuq|@YashiroKizuku',
+      '春崎(\\s)*エアル|harusakiair2434|@HarusakiAir',
+      '葛葉|vamp_kuzu|@Kuzuha',
+      '神田(\\s)*笑一|kanda_shoichi|@KandaShoichi',
+      '舞元(\\s)*啓介|maimoto_k|@MaimotoKeisuke',
+      'ジョー(\\s)*[・]*力一|joerikiichi|@JoeRikiichi',
+      'ベルモンド(\\s)*[・]*バンデラス|belmond_b_2434|@BelmondBanderas',
+      '夢追(\\s)*翔|kakeru_yumeoi|@YumeoiKakeru',
+      '三枝(\\s)*明那|333akina|@SaegusaAkina',
+      'エクス(\\s)*[・]*アルビオ|ex_albio|@ExAlbio',
+      '加賀美(\\s)*ハヤト|H_KAGAMI2434|@KagamiHayato',
+      'シェリン(\\s)*[・]*バーガンディ|ShellinBurgundy|@ShellinBurgundy',
+      '不破(\\s)*湊|Fuwa_Minato|@FuwaMinato',
+      '((?=.*(niji|にじ))(?=.*(ましろ[爻]*).*)|^ましろ|ましろ爻)|mashiro2434|@MashiroMeme',
+      'イブラヒム|honmono_ibrahim|@Ibrahim',
+      '甲斐田(\\s)*晴|Kaida_Haru|@KaidaHaru',
+      '弦月(\\s)*藤士郎|1O46V|@GenzukiTojiro',
+      '長尾(\\s)*景|kei_nagao2434|@NagaoKei',
+      'オリバー(\\s)*[・]*エバンス|oliverD_23|@OliverEvans',
+      'レオス(\\s)*[・]*ヴィンセント|Leos_Vincent|@LeosVincent',
+      'ローレン(\\s)*[・]*イロアス|Lauren_iroas|@LaurenIroas',
+      '四季凪(\\s)*アキラ|Shikinagi_2434|@ShikinagiAkira',
+      'セラフ(\\s)*[・]*ダズルガーデン|SerAph_DazZ|@SeraphDazzlegarden',
+      '風楽(\\s)*奏斗|KNTFR2434|@FuraKanato',
+      '渡会(\\s)*雲雀|watarai_hibari|@WataraiHibari',
+      '赤城(\\s)*ウェン|akagi_wen|@AkagiWen',
+      '宇佐美(\\s)*リト|usamirito_power|@UsamiRito',
+      '佐伯(\\s)*イッテツ|Saiki_Supadari|@SaikiIttetsu',
+      '緋八(\\s)*マナ|Hibachi_Mana|@HibachiMana',
+      '伊波(\\s)*ライ|rai_173|@InamiRai',
+      '小柳(\\s)*ロウ|Rou_2434|@KoyanagiRou',
+      '星導(\\s)*ショウ|Show_SylveSTAR|@HoshirubeSho',
+      '叢雲(\\s)*カゲツ|Kagetsu_2434|@MurakumoKagetsu',
+      'ミラン(\\s)*[・]*ケストレル|Milan_Kestrel|@MilanKestrel',
+      '魁星|Kaisei_2434|@Kaisei_nijisanji',
+      '北見(\\s)*遊征|Kitami_Coolguy|@KitamiYusei',
+      '榊(\\s)*ネス|Ness_Sakaki|@SakakiNess',
+      '酒寄(\\s)*颯馬|sakayori_soma|@SakayoriSoma',
+      '渚(\\s)*トラウト|Tr0uT_2434|@NagisaTrout',
+      '五木(\\s)*左京|Itsuki_Sakyo|@ItsukiSakyo',
+      '一橋(\\s)*綾人|Aya10_1tsubashi|@HitotsubashiAyato',
+      '篠宮(\\s)*ゆの|Yuno_Shino38|@ShinomiyaYuno',
+      '城瀬(\\s)*いすみ|Shiro_Isumyan|@ShiroseIsumi',
+      '皇(\\s)*れお|sumeragi_0o|@SumeragiReo',
+      '花籠(\\s)*つばさ|Hanakago_2434rr|@HanakagoTsubasa',
+      '男(\\s)*虎|Onotora_Y4T4|@OnoTora333',
+      '九里(\\s)*詠太|KuriEita_Y4T4|@Eita_2434',
+      '塚原(\\s)*大地|TsukaharaDaichi_Y4T4|@BIG_Tsukahara',
+      'レヨン|Rayon_Y4T4|@Rayon_2434',
+      '神永(\\s)*タイガ|Taiga_kaminaga|@KaminagaTaiga',
+      '山田(\\s)*龍一郎|Ryuichiro_YMD|@YamadaRyuichiro',
+
+      // en
+      'ルカ(\\s)*[・]*カネシロ|Luca_Kaneshiro|@LucaKaneshiro',
+      '闇ノ(\\s)*シュウ|Shu_Yamino|@ShuYamino',
+      'ヴォックス(\\s)*[・]*アクマ|Vox_Akuma|@VoxAkuma',
+      'アルバーン(\\s)*[・]*ノックス|alban_knox|@AlbanKnox',
+      'サニー(\\s)*[・]*ブリスコー|sonny_brisko|@SonnyBrisko',
+      '浮奇(\\s)*[・]*ヴィオレタ|uki_violeta|@UkiVioleta',
+      'レン(\\s)*ゾット|RenZott0|@RenZotto',
+      'ドッピオ(\\s)*ドロップサイト|D_Dropscythe|@DoppioDropscythe',
+      'ヴェール(\\s)*ヴァーミリオン|Ver_Vermillion|@VerVermillion',
+      'ベンタクロウ(\\s)*ブリンガー|Tyrant_Vanta|@VantacrowBringer',
+      'ヴェザリウス(\\s)*バンデージ|VezaliusBandage|@VezaliusBandage',
+      'ユウ(\\s)*Q(\\s)*ウィルソン|YuQWilson|@YuQ\\.Wilson',
+      'クロード(\\s)*クローマーク|ClaudeClawmark|@ClaudeClawmark',
+      '凉舞(\\s)*バレンウォート|RyomaBarrenwort|@RyomaBarrenwort',
+      'フリオドール|Freo_2434|@Freodore_nijisanji',
+      'ケイリクス(\\s)*[・]*デボネア|KaelixDebonair|@KaelixDebonair',
+      'セイブル|Seible_2434|@Seible_nijisanji',
+      'ジール(\\s)*[・]*ギンジョウカ|ZealGinjoka|@ZealGinjoka',
+
+      // kr
+      'ガオン|Gaon2434|@Gaon',
+      'ミン(\\s)*スゥーハ|SuhaMin2434|@MinSuha',
+      'ハ(\\s)*ユン|HaYun2434|@HaYun',
+
+      // id
+      'ライ(\\s)*ガリレイ|Rai_Galilei|@RaiGalilei',
+
+      // 敬称略
+      '甲斐田|不破|加賀美|舞元|力一|剣持|シェリン|レオス|叶(?!.*え)',
+      '月ノ(\\s)*美兎|@TsukinoMito|美兎|竜胆(\\s)*尊|@RindouMikoto',
+      // 愛称
+      '(?=.*(niji|にじ))(?=.*(社長|委員長|教授|ズハ).*)|アッキーナ|エビオ|かなかな|やしきず|ベルさん|ふわっち',
+
+      // other groups nijisanji
+      '^にじさんじ|^nijisanji|nijisanji_en|nijisanji(\\s)*en',
+      '#(にじ(さんじ)*|NIJI(SANJI)*)',
+      'ハピトリ|メイフ|SMC|チューリップ組|エデン組|3skm|oriens|dytica|cellmates|セルメイツ',
+      'chronoir|くろのわ|くろなん',
+      'rof(\\s)*[-]*mao|ろふまお',
+      'ヴォルタクション|voltaction',
+      'VΔLZ|ヴァルツ|ばるつ|VALZ',
+      '七次元生徒会|seitokai_07',
+
+      // others vtuber
+      '佃煮(\\s)*のりお|犬山(\\s)*たまき|norioo_|noriopro',
+      'かなえ先生|@KanaeVCriminologist',
+      '柊(\\s)*ツルギ|@HiiragiTsurugi',
+      '渋谷(\\s)*ハル|渋ハル|@shibuyahal',
+      'コーサカ|@monsterzmate',
+      'かみと|@kamitochannel',
+      '天開(\\s)*司|天開塾|@tenkaitsukasa',
+      '歌衣(\\s)*メイカ|メイカちゃんねる|@utaimeika',
+
+      // others youtuber
+      'はじめしゃちょー|@hajimesyacho',
+      'ヒカキン|hikakin|@seikin',
+      '東海オンエア|ロードシルク|@tokaionair',
+      'フィッシャーズ|@fischers',
+      'ヒカル|kinnpatuhikaru|@hikaruYouTube',
+      'よしなま|@yoshinama0130',
+      '赤髪のとも|@akagaminotomo',
+      'スカイピース|sky(\\s)*peace|@Skypeace',
+
+      'キヨ。|kiyoisgod|レトルト|retokani|牛沢|uszw|ガッチマン|(gatchman666|gatchmanV666)',
+      'ナポリの男たち|@napolimens',
+      'M.S.S.P|MSSP|@newMSSP',
+      '岡田斗司夫|@toshiookada0701',
+      '山田玲司|@yamadareiji',
+      'コレコレ|@korekorech',
+      'よにのちゃんねる|@yoninochannel',
+      'もこう|@mokoustream',
+      'ポケソル|@pokesol|今日ポケ|@KYOUPOKE',
+      'ビエラ|@SHADEviera',
+      'ドズル社|@dozle',
+      'みけねこ|潤羽るしあ|@(95rn16|mikenekoko)',
+      'バキ童|@bakibakidt',
+      'うるか|CR_uruca|@crazyraccoon',
+      'クイズノック|@quizknock',
+      'なつめさんち|@natsume_sanchi',
+      'ぽんぽこ|ぽこピー|ピーナッツくん|@pokopea',
+
+      // others streamer
+      'twitch.tv/yuyuta0702|ゆゆうた|@(yuyuta0702|yuyutadesu)',
+      'twitch.tv/kato_junichi0817|加藤(\\s)*純一|うんこちゃん|@junchannel',
+      'twitch.tv/zetyou2|(w(\\s)*/(\\s)*)*ズズ|zetyou2|@zuzu_channel',
+      'twitch.tv/kenki521|けんき|@(kenki521|kenki521)',
+      'twitch.tv/tachikawabr|立川|@tachikawabr',
+      'twitch.tv/koujikog|小路kog|@(koujikog|kog4586)',
+      'twitch.tv/cr_arisakaaa|ありさか|@Arisakaaa',
+      'twitch.tv/ikoma_dogura|どぐら|@(ikoma_dogura|maneater_dgr)',
+      'twitch.tv/k4sen|k4sen|@zzxk4sen',
+      'twitch.tv/fps_shaka|釈迦|@(fps_shaka|avashaka|shaka)',
+      'twitch.tv/vodkavdk|(ぼどか|ボドカ)|@(vodkachaso|vodkavdk)',
+      'twitch.tv/zackraystream|ザクレイ|@(zackraystream|zackray3056)',
+      'twitch.tv/ixa_inaba|@(ixa_inaba|inaba360)',
+      'twitch.tv/acqua_0316|acqua|@(acqua_0316|acqua316)',
+      'twitch.tv/shirayuki_reid|白雪(\\s)*レイド|@shirayuki_reid',
+      'twitch.tv/5_mario|五月病(\\s)*マリオ|@(5_mario|5mario)',
+
+      // 芸人
+      '狩野英孝|@eikogo3822',
+      '中田敦彦|@NKTofficial',
+      '梶原雄太|カジサック|@kajisac',
+      '粗品|@soshina',
+      'ララチューン|@lalatuune',
+      'オモコロ|@omocorochannel',
+      '花江夏樹|@hanae0626',
+      '木村良平|@Ryouhey_Drunk',
+
+      // other groups ...
+      'ぶいすぽ|vspo',
+      'monsterz(\\s)*mate|モンスターズメイト|mzm_kosaka',
+      'ネオポリス',
+      'ハルヴァロ',
+      'プロゲーマー',
+
+      // tips
+      '中国|朝鮮|韓国|考察|(?<!.*英語)解説|反応|REACTION|女性向|神回',
+      '(?=.*(にじ(さんじ)*|cr|valo|apex|pubg|(STREET(\\s)*FIGHTER|ストリートファイター|スト\\d)|(ow|over(\\s)*watch)|(?<!ho)(lol)(?!ive)|League(\\s)*of(\\s)*Legends|スプラ|ストリーマー|獅白|kzh))(?=.*((cup|カップ|かっぷ)|(custom|カスタム|かすたむ)|(プラベ|ぷらべ|マッチ)|杯|(交流|個人|団体)戦|祭|大会|選手権|チーム|運動会|切り抜き|企画|まとめ).*)',
+      'v(tuber)*最(協)*|v(tuber)*祭(協)*|#Vの|(mad|new)(\\s)*town|(天下統一)RUST|ストグラ|ストリヌ|スト鯖|VCR|V1GP|TRPG|ホロ7大豆|コーチング|漢気|漢義|スクリム|交流戦|講座|顔合わせ',
+    ],
+    execludeWords: []
   };
+  // ==========================================================
   // eslint-disable-next-line no-unused-vars
   const isNuN = (selector) => {
     if (selector === null || selector === undefined || selector === '') { return true; } else { return false; }
@@ -264,7 +473,6 @@
 
     console.log('ytData > ', isDevice ? mode.pc : mode.sp);
     // const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
-    const abc = JSON.parse(window.localStorage.getItem('ABC')) || null;
 
     const words = isNuN(abc) ? '' : abc.hideword;
     const excludes = isNuN(abc) ? '' : abc.execludeWords;
