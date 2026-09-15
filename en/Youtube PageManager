@@ -37,7 +37,6 @@
   const regWatch = '^/watch|^/live';
   const regSearch = '^/results';
   const regChannel = '^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+';
-  // const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
   // 可変数
   let ytMutation, oldUrl = '', flg = 'waiting';
   // ==========================================================
@@ -75,10 +74,11 @@
     for (let cookie of cookies) {
       const [key, value] = cookie.trim().split('=');
       if (key === name) {
-        return JSON.parse(decodeURIComponent(value));
+        // JSON文字列を配列に戻す
+        return JSON.parse(value);
       }
     }
-    return [];
+    return null;
   };
   // eslint-disable-next-line no-unused-vars
   const isNuN = (selector) => {
@@ -263,7 +263,8 @@
     youtubeItem.userChN = strData.userChN;
 
     console.log('ytData > ', isDevice ? mode.pc : mode.sp);
-    const abc = getCookieArray('ABC');
+    // const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
+    const abc = JSON.parse(window.localStorage.getItem('ABC')) || null;
 
     const words = isNuN(abc) ? '' : abc.hideword;
     const excludes = isNuN(abc) ? '' : abc.execludeWords;
