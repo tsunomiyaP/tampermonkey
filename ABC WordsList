@@ -244,5 +244,6 @@
 
   // window.sessionStorage.removeItem('ABC');
   // window.sessionStorage.setItem('ABC', JSON.stringify(words));
-  document.cookie = 'ABC=' + encodeURIComponent(JSON.stringify(words)) + ';';
+  window.localStorage.removeItem('ABC');
+  window.localStorage.setItem('ABC', JSON.stringify(words));
 })();
