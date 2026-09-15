@@ -37,7 +37,8 @@
   const regWatch = '^/watch|^/live';
   const regSearch = '^/results';
   const regChannel = '^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+';
-  const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
+  // const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
+  const abc = getCookieArray('ytABC');
   // 可変数
   let ytMutation, oldUrl = '', flg = 'waiting';
   // ==========================================================
@@ -69,6 +70,17 @@
   stylusElemCh.id = 'stylusElemCh';
   // ==========================================================
 
+  // eslint-disable-next-line no-unused-vars
+  const getCookieArray = (name) => {
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+      const [key, value] = cookie.trim().split('=');
+      if (key === name) {
+        return JSON.parse(value);
+      }
+    }
+    return [];
+  };
   // eslint-disable-next-line no-unused-vars
   const isNuN = (selector) => {
     if (selector === null || selector === undefined || selector === '') { return true; } else { return false; }
