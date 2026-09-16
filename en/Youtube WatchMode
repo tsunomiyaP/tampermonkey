@@ -437,10 +437,8 @@
         console.log('yt manager', document.querySelector(manager));
         if ('www.youtube.com' === e.detail.host) {
           // pc
-          console.log('> yt watch quality ... changing');
-          await ytQualityFix(isQuality, 4);
           console.log('> yt stable volume 一定音量 setting...');
-          await ytStableVolume(isSTVol);
+          ytStableVolume(isSTVol);
           console.log('> yt chat area ... remover');
           ytChatArea(isChatMode);
           console.log('> yt auto nav next movies setting...');
@@ -449,12 +447,14 @@
           ytSubBtn(isProgress);
           console.log('> yt progress bar initialize...');
           ytProgressArea();
-        } else if ('m.youtube.com' === e.detail.host) {
-          // mobile
           console.log('> yt watch quality ... changing');
           await ytQualityFix(isQuality, 4);
+        } else if ('m.youtube.com' === e.detail.host) {
+          // mobile
           console.log('> yt stable volume 一定音量 setting...');
-          await ytStableVolume(isSTVol);
+          ytStableVolume(isSTVol);
+          console.log('> yt watch quality ... changing');
+          await ytQualityFix(isQuality, 4);
         }
       }
       // style 無効化
