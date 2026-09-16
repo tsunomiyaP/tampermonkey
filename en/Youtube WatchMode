@@ -301,6 +301,8 @@
     }
   };
   const ytStableVolume = async (flag) => {
+    stylusElemSettings.textContent += 'div.ytp-popup.ytp-settings-menu { display: none !important; } '; // pc
+    stylusElemSettings.textContent += 'ytm-app[id="app"i] > :is(bottom-sheet-container[aria-modal="true"i]) { display: none !important; } '; // mobile
     if (flag) {
       const settingBtn = ':is(button.ytp-settings-button[aria-label="設定"i], player-top-controls button.player-settings-icon[aria-label="再生設定"i])';
       const drcBtn = ':is(div.ytp-drc-menu-item[aria-label="一定音量"i][role="menuitemcheckbox"i], player-settings-menu > stable-volume-toggle div.ytListItemViewModelTrailing > switch-button-view-model > button[aria-label="一定音量"i])';
@@ -427,14 +429,13 @@
 
       // 設定ポップアップ初期非表示
       if (isChatMode) { stylusElemSettings.textContent = 'div#chat-container { display: none !important; } '; } else { stylusElemSettings.textContent = ''; }
-      stylusElemSettings.textContent += 'div.ytp-popup.ytp-settings-menu { display: none !important; } '; // pc
-      stylusElemSettings.textContent += 'ytm-app[id="app"i] > :is(bottom-sheet-container[aria-modal="true"i]) { display: none !important; } '; // mobile
 
       if (new RegExp(regWatch, 'gis').test(e.detail.path)) {
-        console.log('yt manager', document.querySelector(manager));
         // 初期処理
+        await waitQuerySelector(manager);
         const ytPlayer = await waitQuerySelector(player);
         await waitPlayerState(ytPlayer);
+
         if ('www.youtube.com' === e.detail.host) {
           // pc
           console.log('> yt stable volume 一定音量 setting...');
