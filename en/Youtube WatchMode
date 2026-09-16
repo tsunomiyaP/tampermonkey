@@ -368,7 +368,7 @@
     ytPlayer.unMute();
     return state;
   };
-  const ytQualityFix = async (flag, level) => {
+  const ytQualityFix = async (ytPlayer, flag, level) => {
     // ytPlayer.pauseVideo();
     // ytPlayer.mute();
     // ytPlayer.unMute();
@@ -377,9 +377,6 @@
     if (flag) {
       let wit = qualitys[level];
       let low = qualitys[0];
-      // 初期処理
-      const ytPlayer = await waitQuerySelector(player);
-      await waitPlayerState(ytPlayer);
       // if (ytPlayer.getPlaybackQuality() === 'unknown') { return await ytQualityFix(flag, level); }
       // low quality set initialize
       ytPlayer.setPlaybackQualityRange(low);
@@ -399,7 +396,7 @@
           if (!ytPlayer.getAvailableQualityLevels().includes(wit)) {
             console.log('> yt quality FIX ... is not quality ... : ', ytPlayer.getPlaybackQuality());
             if (0 < level) { // YT画質[最低値: tiny]
-              return await ytQualityFix(flag, parseInt(level, 10) - 1); // 10進数変換;
+              return await ytQualityFix(ytPlayer, flag, parseInt(level, 10) - 1); // 10進数変換;
             }
           }
         }
@@ -435,6 +432,9 @@
 
       if (new RegExp(regWatch, 'gis').test(e.detail.path)) {
         console.log('yt manager', document.querySelector(manager));
+        // 初期処理
+        const ytPlayer = await waitQuerySelector(player);
+        await waitPlayerState(ytPlayer);
         if ('www.youtube.com' === e.detail.host) {
           // pc
           console.log('> yt stable volume 一定音量 setting...');
@@ -448,13 +448,13 @@
           console.log('> yt progress bar initialize...');
           ytProgressArea();
           console.log('> yt watch quality ... changing');
-          await ytQualityFix(isQuality, 4);
+          await ytQualityFix(ytPlayer, isQuality, 4);
         } else if ('m.youtube.com' === e.detail.host) {
           // mobile
           console.log('> yt stable volume 一定音量 setting...');
           ytStableVolume(isSTVol);
           console.log('> yt watch quality ... changing');
-          await ytQualityFix(isQuality, 4);
+          await ytQualityFix(ytPlayer, isQuality, 4);
         }
       }
       // style 無効化
