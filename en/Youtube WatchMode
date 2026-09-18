@@ -359,7 +359,7 @@
       if (toggleSubBtn.getAttribute('aria-pressed') === 'true') { toggleSubBtn.click(); return ytSubBtn(); } else { return false; }
     }
   };
-  const waitPlayerState = async (ytPlayer) => {
+  const waitPlayerState = async (ytPlayer, detail) => {
     // player state
     // -1 YT.PlayerState.UNSTARTED未開始（動画が読み込まれていない状態）
     // 0  YT.PlayerState.ENDED終了（最後まで再生し終わった）
@@ -369,14 +369,26 @@
     // 5  YT.PlayerState.CUED頭出し済み（方法1・2で解説した、停止状態での読込完了）
 
     let state = ytPlayer.getPlayerState();
+    let flg = false;
     let attempts = 0;
     const maxAttempts = 100;
     while (attempts < maxAttempts) {
-      if (1 === state) {
-        // 動画の音声ミュートして先出で音漏れ防ぐ
-        ytPlayer.mute();
-        ytPlayer.pauseVideo();
+      // 動画の音声ミュートして先出で音漏れ防ぐ
+      ytPlayer.mute();
+      ytPlayer.pauseVideo();
+      if (!flg) {
+        const isDevice = 'www.youtube.com' === detail.host ? true : false;
+        if (isDevice) {
+          console.log('> yt pc mode DRC change');
+        } else {
+          console.log('> yt mobile mode DRC change');
+          // コントローラ(設定ボタン)表示
+          const area = await waitQuerySelector(player);
+          area.click();
+        }
+        flg = true;
       }
+
       await new Promise(resolve => setTimeout(resolve, 10));
       state = ytPlayer.getPlayerState();
       attempts++;
@@ -448,7 +460,7 @@
         // 初期処理
         await waitQuerySelector(manager);
         const ytPlayer = await waitQuerySelector(player);
-        await waitPlayerState(ytPlayer);
+        await waitPlayerState(ytPlayer, e.detail);
 
         if ('www.youtube.com' === e.detail.host) {
           // pc
