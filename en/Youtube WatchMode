@@ -300,41 +300,11 @@
       if (!isNuN(chat)) { chat.remove(); }
     }
   };
-  const ytStableVolume = async (flag, detail) => {
+  const ytStableVolume = async (flag) => {
     if (flag) {
-      stylusElemSettings.textContent += 'div.ytp-popup.ytp-settings-menu { display: none !important; } '; // pc
-      stylusElemSettings.textContent += 'ytm-app[id="app"i] > :is(bottom-sheet-container[aria-modal="true"i]) { display: none !important; } '; // mobile
-
-      const isDevice = 'www.youtube.com' === detail.host ? true : false;
-      if (isDevice) {
-        console.log('> yt pc mode DRC change');
-      } else {
-        console.log('> yt mobile mode DRC change');
-        const area = await waitQuerySelector('div#player-control-container div.player-controls-content');
-        area.click();
-      }
-      const settingBtn = ':is(button.ytp-settings-button[aria-label="設定"i], player-top-controls button.player-settings-icon[aria-label="再生設定"i])';
-      const drcBtn = ':is(div.ytp-drc-menu-item[aria-label="一定音量"i][role="menuitemcheckbox"i], player-settings-menu > stable-volume-toggle div.ytListItemViewModelTrailing > switch-button-view-model > button[aria-label="一定音量"i])';
-      const closeBtn = ':is(ytd-app, ytm-app > bottom-sheet-container[role="dialog"i] > ytw-scrim)';
-
-      console.log('> yt DRC Audio is already waiting...');
-      const setting = await waitQuerySelector(settingBtn);
-      if (!isNuN(setting)) { setting.click(); }
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      const drcMenuItem = document.querySelector(drcBtn);
-      if (!isNuN(drcMenuItem)) {
-        if (drcMenuItem.getAttribute('aria-checked') === 'true') {
-          drcMenuItem.click();
-          console.log('> yt DRC Audio : Disabled...');
-        } else {
-          console.log('> yt DRC Audio is already Disabled');
-        }
-      } else {
-        console.log('> yt DRC Audio is nothing...');
-      }
-      // history.replaceState(null, '', window.location.pathname + window.location.search);
-      document.querySelector(closeBtn).click();
+      const drcPrefValue = JSON.stringify({"data": 1 /** 有効にしたい場合は 1 */, "expiration": Date.now() + (24 * 60 * 60 * 1000) /** 1日有効 */ });
+      sessionStorage.setItem('yt-player-drc-pref', drcPrefValue);
+      localStorage.setItem('yt-player-drc-pref', drcPrefValue);
     }
   };
   const ytNavBtn = async (flag) => {
@@ -359,7 +329,7 @@
       if (toggleSubBtn.getAttribute('aria-pressed') === 'true') { toggleSubBtn.click(); return ytSubBtn(); } else { return false; }
     }
   };
-  const waitPlayerState = async (ytPlayer, detail) => {
+  const waitPlayerState = async (ytPlayer) => {
     // player state
     // -1 YT.PlayerState.UNSTARTED未開始（動画が読み込まれていない状態）
     // 0  YT.PlayerState.ENDED終了（最後まで再生し終わった）
@@ -376,18 +346,6 @@
       // 動画の音声ミュートして先出で音漏れ防ぐ
       ytPlayer.mute();
       ytPlayer.pauseVideo();
-      if (!flg) {
-        const isDevice = 'www.youtube.com' === detail.host ? true : false;
-        if (isDevice) {
-          console.log('> yt pc mode DRC change');
-        } else {
-          console.log('> yt mobile mode DRC change');
-          // コントローラ(設定ボタン)表示
-          const area = await waitQuerySelector(player);
-          area.click();
-        }
-        flg = true;
-      }
 
       await new Promise(resolve => setTimeout(resolve, 10));
       state = ytPlayer.getPlayerState();
@@ -460,12 +418,12 @@
         // 初期処理
         await waitQuerySelector(manager);
         const ytPlayer = await waitQuerySelector(player);
-        await waitPlayerState(ytPlayer, e.detail);
+        await waitPlayerState(ytPlayer);
 
         if ('www.youtube.com' === e.detail.host) {
           // pc
           console.log('> yt stable volume 一定音量 setting...');
-          await ytStableVolume(isSTVol, e.detail);
+          await ytStableVolume(isSTVol);
           console.log('> yt chat area ... remover');
           ytChatArea(isChatMode);
           console.log('> yt auto nav next movies setting...');
@@ -479,7 +437,7 @@
         } else if ('m.youtube.com' === e.detail.host) {
           // mobile
           console.log('> yt stable volume 一定音量 setting...');
-          await ytStableVolume(isSTVol, e.detail);
+          await ytStableVolume(isSTVol);
           console.log('> yt watch quality ... changing');
           await ytQualityFix(ytPlayer, isQuality, 4);
         }
