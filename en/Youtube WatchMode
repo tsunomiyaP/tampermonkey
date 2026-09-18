@@ -364,17 +364,15 @@
     let state = ytPlayer.getPlayerState();
     let attempts = 0;
     const maxAttempts = 100;
-    while (state === 5) {
-      if (attempts < maxAttempts) {
+    while (attempts < maxAttempts) {
+      if (2 < state) {
         // 動画の音声ミュートして先出で音漏れ防ぐ
         ytPlayer.mute();
         ytPlayer.pauseVideo();
-        await new Promise(resolve => setTimeout(resolve, 10));
-        state = ytPlayer.getPlayerState();
-        attempts++;
-      } else {
-        break;
       }
+      await new Promise(resolve => setTimeout(resolve, 10));
+      state = ytPlayer.getPlayerState();
+      attempts++;
     }
     // 動画の音声ミュート解除
     ytPlayer.unMute();
