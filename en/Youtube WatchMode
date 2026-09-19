@@ -331,9 +331,13 @@
         } else {
           console.log('> yt DRC Audio is nothing...');
         }
+        // history.replaceState(null, '', window.location.pathname + window.location.search);
+        document.querySelector(closeBtn).click();
       }
-      // history.replaceState(null, '', window.location.pathname + window.location.search);
-      document.querySelector(closeBtn).click();
+
+      if (0 < ytPlayer.currentTime) {
+        ytPlayer.currentTime = 0;
+      }
       // 動画の音声ミュート解除
       // ytPlayer.unMute();
       ytPlayer.setVolume(100);
