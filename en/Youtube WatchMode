@@ -315,21 +315,22 @@
       } else {
         await waitQuerySelector('div#player-control-overlay > div.player-controls-content player-top-controls');
       }
-      const setting = await waitQuerySelector(settingBtn);
-      if (!isNuN(setting)) { setting.click(); }
-
-      await new Promise(resolve => setTimeout(resolve, 200));
-
-      const drcMenuItem = document.querySelector(drcBtn);
-      if (!isNuN(drcMenuItem)) {
-        if (drcMenuItem.getAttribute('aria-checked') === 'true') {
-          drcMenuItem.click();
-          console.log('> yt DRC Audio : Disabled...');
-        } else {
-          console.log('> yt DRC Audio is already Disabled');
-        }
+      const setting = await waitQuerySelectorCount(10, settingBtn);
+      if (isNuN(setting)) {
+        console.log('> yt Setting is nothing...');
       } else {
-        console.log('> yt DRC Audio is nothing...');
+        setting.click();
+        const drcMenuItem = await waitQuerySelectorCount(10, drcBtn);
+        if (!isNuN(drcMenuItem)) {
+          if (drcMenuItem.getAttribute('aria-checked') === 'true') {
+            drcMenuItem.click();
+            console.log('> yt DRC Audio : Disabled...');
+          } else {
+            console.log('> yt DRC Audio is already Disabled');
+          }
+        } else {
+          console.log('> yt DRC Audio is nothing...');
+        }
       }
       // history.replaceState(null, '', window.location.pathname + window.location.search);
       document.querySelector(closeBtn).click();
