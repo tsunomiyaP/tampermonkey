@@ -300,11 +300,42 @@
       if (!isNuN(chat)) { chat.remove(); }
     }
   };
-  const ytStableVolume = async (flag) => {
+  const ytStableVolume = async (ytPlayer, flag) => {
     if (flag) {
-      const drcPrefValue = JSON.stringify({"data": 1 /** 有効にしたい場合は 1 */, "expiration": Date.now() + (24 * 60 * 60 * 1000) /** 1日有効 */ });
-      sessionStorage.setItem('yt-player-drc-pref', drcPrefValue);
-      localStorage.setItem('yt-player-drc-pref', drcPrefValue);
+      stylusElemSettings.textContent += 'div.ytp-popup.ytp-settings-menu { display: none !important; } '; // pc
+      stylusElemSettings.textContent += 'ytm-app[id="app"i] > :is(bottom-sheet-container[aria-modal="true"i]) { display: none !important; } '; // mobile
+
+      const settingBtn = ':is(button.ytp-settings-button[aria-label="設定"i], player-top-controls button.player-settings-icon[aria-label="再生設定"i])';
+      const drcBtn = ':is(div.ytp-drc-menu-item[aria-label="一定音量"i][role="menuitemcheckbox"i], player-settings-menu > stable-volume-toggle div.ytListItemViewModelTrailing > switch-button-view-model > button[aria-label="一定音量"i])';
+      const closeBtn = ':is(ytd-app, ytm-app > bottom-sheet-container[role="dialog"i] > ytw-scrim)';
+
+      console.log('> yt DRC Audio is already waiting...');
+      if ('www.youtube.com' === location.host) {
+        await new Promise(resolve => setTimeout(resolve, 10));
+      } else {
+        await waitQuerySelector('div#player-control-overlay > div.player-controls-content player-top-controls');
+      }
+      const setting = await waitQuerySelector(settingBtn);
+      if (!isNuN(setting)) { setting.click(); }
+
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+      const drcMenuItem = document.querySelector(drcBtn);
+      if (!isNuN(drcMenuItem)) {
+        if (drcMenuItem.getAttribute('aria-checked') === 'true') {
+          drcMenuItem.click();
+          console.log('> yt DRC Audio : Disabled...');
+        } else {
+          console.log('> yt DRC Audio is already Disabled');
+        }
+      } else {
+        console.log('> yt DRC Audio is nothing...');
+      }
+      // history.replaceState(null, '', window.location.pathname + window.location.search);
+      document.querySelector(closeBtn).click();
+      // 動画の音声ミュート解除
+      // ytPlayer.unMute();
+      ytPlayer.setVolume(100);
     }
   };
   const ytNavBtn = async (flag) => {
@@ -338,21 +369,24 @@
     // 3  YT.PlayerState.BUFFERINGバッファリング中（読み込み中）
     // 5  YT.PlayerState.CUED頭出し済み（方法1・2で解説した、停止状態での読込完了）
 
-    let state = ytPlayer.getPlayerState();
-    let flg = false;
     let attempts = 0;
     const maxAttempts = 100;
     while (attempts < maxAttempts) {
-      // 動画の音声ミュートして先出で音漏れ防ぐ
-      ytPlayer.mute();
-      ytPlayer.pauseVideo();
+      // 動画の音声ミュート状態が優先されて設定ボタン表示されないので、ミュート解除して先出で音(0)で漏れ防ぐ
+      ytPlayer.unMute();
+      // ytPlayer.mute();
+      ytPlayer.setVolume(0);
 
-      await new Promise(resolve => setTimeout(resolve, 10));
-      state = ytPlayer.getPlayerState();
-      attempts++;
+      if ('www.youtube.com' === location.host) {
+        ytPlayer.pauseVideo();
+        await new Promise(resolve => setTimeout(resolve, 10));
+        attempts++;
+      } else {
+        ytPlayer.pauseVideo();
+        await new Promise(resolve => setTimeout(resolve, 10));
+        attempts++;
+      }
     }
-    // 動画の音声ミュート解除
-    ytPlayer.unMute();
   };
   const ytQualityFix = async (ytPlayer, flag, level) => {
     // ytPlayer.pauseVideo();
@@ -394,6 +428,7 @@
       console.log('now quality set power on...', ytPlayer.getPlaybackQuality());
       // 自動再生
       ytPlayer.playVideo();
+      ytPlayer.setVolume(0);
     }
   };
 
@@ -422,8 +457,6 @@
 
         if ('www.youtube.com' === e.detail.host) {
           // pc
-          console.log('> yt stable volume 一定音量 setting...');
-          await ytStableVolume(isSTVol);
           console.log('> yt chat area ... remover');
           ytChatArea(isChatMode);
           console.log('> yt auto nav next movies setting...');
@@ -434,12 +467,14 @@
           ytProgressArea();
           console.log('> yt watch quality ... changing');
           await ytQualityFix(ytPlayer, isQuality, 4);
+          console.log('> yt stable volume 一定音量 setting...');
+          await ytStableVolume(ytPlayer, isSTVol);
         } else if ('m.youtube.com' === e.detail.host) {
           // mobile
-          console.log('> yt stable volume 一定音量 setting...');
-          await ytStableVolume(isSTVol);
           console.log('> yt watch quality ... changing');
           await ytQualityFix(ytPlayer, isQuality, 4);
+          console.log('> yt stable volume 一定音量 setting...');
+          await ytStableVolume(ytPlayer, isSTVol);
         }
       }
       // style 無効化
