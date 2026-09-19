@@ -334,14 +334,14 @@
         // history.replaceState(null, '', window.location.pathname + window.location.search);
         document.querySelector(closeBtn).click();
       }
-
-      if (0 < ytPlayer.currentTime) {
-        ytPlayer.currentTime = 0;
-      }
-      // 動画の音声ミュート解除
-      // ytPlayer.unMute();
-      ytPlayer.setVolume(100);
     }
+
+    if (0 < ytPlayer.currentTime) {
+      ytPlayer.currentTime = 0;
+    }
+    // 動画の音声ミュート解除
+    // ytPlayer.unMute();
+    ytPlayer.setVolume(100);
   };
   const ytNavBtn = async (flag) => {
     if (flag) {
@@ -431,10 +431,10 @@
       ytPlayer.setPlaybackQuality(wit);
       await new Promise(resolve => setTimeout(resolve, 2000));
       console.log('now quality set power on...', ytPlayer.getPlaybackQuality());
-      // 自動再生
-      ytPlayer.playVideo();
-      ytPlayer.setVolume(0);
     }
+    // 自動再生
+    ytPlayer.playVideo();
+    ytPlayer.setVolume(0);
   };
 
   const changeUrl = () => {
