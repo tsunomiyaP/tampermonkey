@@ -334,7 +334,7 @@
       // history.replaceState(null, '', window.location.pathname + window.location.search);
       document.querySelector(closeBtn).click();
     }
-    console.log('yt movie 読み込み位置変更');
+    // 読み込み位置を強制的に「はじめに(0)」戻す
     ytPlayer.seekTo(0, true);
     // 動画の音声ミュート解除
     // ytPlayer.unMute();
@@ -363,7 +363,7 @@
     }
   };
   const waitPlayerState = async (ytPlayer) => {
-    // player state
+    // video tag : video.getPlayerState()
     // -1 YT.PlayerState.UNSTARTED未開始（動画が読み込まれていない状態）
     // 0  YT.PlayerState.ENDED終了（最後まで再生し終わった）
     // 1  YT.PlayerState.PLAYING再生中
