@@ -336,9 +336,11 @@
       }
     }
 
-    if (0 < ytPlayer.currentTime) {
-      ytPlayer.currentTime = 0;
-    }
+    ytPlayer.addEventListener('loadedmetadata', () => {
+      if (0 < ytPlayer.currentTime) {
+        ytPlayer.currentTime = 0;
+      }
+    });
     // 動画の音声ミュート解除
     // ytPlayer.unMute();
     ytPlayer.setVolume(100);
