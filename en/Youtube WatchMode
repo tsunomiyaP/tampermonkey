@@ -334,13 +334,19 @@
       // history.replaceState(null, '', window.location.pathname + window.location.search);
       document.querySelector(closeBtn).click();
     }
-    ytPlayer.addEventListener('loadedmetadata', () => {
-      console.log('yt movie 読み込み位置変更');
-      ytPlayer.currentTime = 0;
-      // 動画の音声ミュート解除
-      // ytPlayer.unMute();
-      ytPlayer.setVolume(100);
-    });
+    console.log('yt movie 読み込み位置変更');
+    let attempts = 0;
+    const maxAttempts = 100;
+    while (attempts < maxAttempts) {
+      if (1 <= ytPlayer.readyState) {
+        ytPlayer.currentTime = 0;
+        // 動画の音声ミュート解除
+        // ytPlayer.unMute();
+        ytPlayer.setVolume(100);
+      }
+      await new Promise(resolve => setTimeout(resolve, 10));
+      attempts++;
+    }
   };
   const ytNavBtn = async (flag) => {
     if (flag) {
@@ -431,11 +437,9 @@
       await new Promise(resolve => setTimeout(resolve, 2000));
       console.log('now quality set power on...', ytPlayer.getPlaybackQuality());
     }
-    ytPlayer.addEventListener('loadedmetadata', () => {
-      // 自動再生
-      ytPlayer.playVideo();
-      ytPlayer.setVolume(0);
-    });
+    // 自動再生
+    ytPlayer.playVideo();
+    ytPlayer.setVolume(0);
   };
 
   const changeUrl = () => {
