@@ -334,10 +334,11 @@
       // history.replaceState(null, '', window.location.pathname + window.location.search);
       document.querySelector(closeBtn).click();
     }
+    console.log('読み込み位置変更');
+    ytPlayer.currentTime = 0;
     // 動画の音声ミュート解除
     // ytPlayer.unMute();
     ytPlayer.setVolume(100);
-    ytPlayer.currentTime = 0;
   };
   const ytNavBtn = async (flag) => {
     if (flag) {
