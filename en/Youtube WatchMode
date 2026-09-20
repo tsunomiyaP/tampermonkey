@@ -212,7 +212,7 @@
   const mathFloor = (floor) => {
     return floor | 0;
   };
-  const videoTime = (video) => {
+  const videoTime = (ytPlayer) => {
     // const MS = 1;
     // const SECOND = 1000 * MS;
     // const MINUTE = 60 * SECOND;
@@ -222,10 +222,10 @@
     // const MONTH = 30 * DAY;
     // const YEAR = 365 * DAY;
 
-    const seconds = String(mathFloor(video.currentTime % 60));
-    const minutes = String(mathFloor((video.currentTime % 3600) / 60));
-    const hours = String(mathFloor(video.currentTime / 3600));
-    if (video.currentTime / 60 > 60) {
+    const seconds = String(mathFloor(ytPlayer.currentTime % 60));
+    const minutes = String(mathFloor((ytPlayer.currentTime % 3600) / 60));
+    const hours = String(mathFloor(ytPlayer.currentTime / 3600));
+    if (ytPlayer.currentTime / 60 > 60) {
       return hours + ':' + minutes.padStart(2, 0) + ':' + seconds.padStart(2, 0);
     } else {
       return minutes + ':' + seconds.padStart(2, 0);
@@ -315,35 +315,29 @@
       } else {
         await waitQuerySelector('div#player-control-overlay > div.player-controls-content player-top-controls');
       }
-      const setting = await waitQuerySelectorCount(10, settingBtn);
-      if (isNuN(setting)) {
-        console.log('> yt Setting is nothing...');
-      } else {
-        setting.click();
-        const drcMenuItem = await waitQuerySelectorCount(10, drcBtn);
-        if (!isNuN(drcMenuItem)) {
-          if (drcMenuItem.getAttribute('aria-checked') === 'true') {
-            drcMenuItem.click();
-            console.log('> yt DRC Audio : Disabled...');
-          } else {
-            console.log('> yt DRC Audio is already Disabled');
-          }
-        } else {
-          console.log('> yt DRC Audio is nothing...');
-        }
-        // history.replaceState(null, '', window.location.pathname + window.location.search);
-        document.querySelector(closeBtn).click();
-      }
-    }
+      const setting = await waitQuerySelector(settingBtn);
+      if (!isNuN(setting)) { setting.click(); }
 
-    ytPlayer.addEventListener('loadedmetadata', () => {
-      if (0 < ytPlayer.currentTime) {
-        ytPlayer.currentTime = 0;
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+      const drcMenuItem = document.querySelector(drcBtn);
+      if (!isNuN(drcMenuItem)) {
+        if (drcMenuItem.getAttribute('aria-checked') === 'true') {
+          drcMenuItem.click();
+          console.log('> yt DRC Audio : Disabled...');
+        } else {
+          console.log('> yt DRC Audio is already Disabled');
+        }
+      } else {
+        console.log('> yt DRC Audio is nothing...');
       }
-    });
+      // history.replaceState(null, '', window.location.pathname + window.location.search);
+      document.querySelector(closeBtn).click();
+    }
     // 動画の音声ミュート解除
     // ytPlayer.unMute();
     ytPlayer.setVolume(100);
+    ytPlayer.currentTime = 0;
   };
   const ytNavBtn = async (flag) => {
     if (flag) {
