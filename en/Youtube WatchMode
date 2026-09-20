@@ -335,18 +335,10 @@
       document.querySelector(closeBtn).click();
     }
     console.log('yt movie 読み込み位置変更');
-    let attempts = 0;
-    const maxAttempts = 100;
-    while (attempts < maxAttempts) {
-      if (1 <= ytPlayer.readyState) {
-        ytPlayer.currentTime = 0;
-        // 動画の音声ミュート解除
-        // ytPlayer.unMute();
-        ytPlayer.setVolume(100);
-      }
-      await new Promise(resolve => setTimeout(resolve, 10));
-      attempts++;
-    }
+    ytPlayer.seekTo(0, true);
+    // 動画の音声ミュート解除
+    // ytPlayer.unMute();
+    ytPlayer.setVolume(100);
   };
   const ytNavBtn = async (flag) => {
     if (flag) {
