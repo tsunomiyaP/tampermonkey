@@ -317,8 +317,7 @@
       }
       const setting = await waitQuerySelector(settingBtn);
       if (!isNuN(setting)) { setting.click(); }
-
-      await new Promise(resolve => setTimeout(resolve, 200));
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       const drcMenuItem = document.querySelector(drcBtn);
       if (!isNuN(drcMenuItem)) {
