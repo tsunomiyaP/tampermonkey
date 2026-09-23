@@ -1,0 +1,54 @@
+// ==UserScript==
+// @name         Pixiv Mobile Home Precise Cleaner
+// @namespace    http://tampermonkey.net/
+// @version      3.2
+// @description  pixivのモバイル版ホームから指定された要素および広告・プレミアム誘導を非表示にします
+// @author       You
+// @match        https://www.pixiv.net/*
+// @icon         https://www.pixiv.net/favicon.ico
+// @grant        none
+// @run-at       document-start
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    const css = `
+        .w-full[data-ga4-label="trend_tag_section_content" i],
+        .w-full[data-ga4-label="ranking_content" i],
+        .w-full[data-ga4-label="lead_content" i],
+        .w-full[data-ga4-label="pixivision_content" i],
+        .w-full:has([data-ga4-entity-id^="collection/" i]),
+        .w-full:has([data-ga4-entity-id^="novel" i]),
+        .flex-col > section:has([href^="/premium/" i]),
+        div > div[class="sc-3517b0ae-2 sc-3517b0ae-4 fiHasW hoXTiH" i] {
+            display: none !important;
+        }
+    `;
+
+    function injectStyle() {
+        if (document.getElementById('pixiv-precise-cleaner')) return;
+        const style = document.createElement('style');
+        style.id = 'pixiv-precise-cleaner';
+        style.type = 'text/css';
+        style.appendChild(document.createTextNode(css));
+        (document.head || document.documentElement).appendChild(style);
+    }
+
+    if (document.documentElement) {
+        injectStyle();
+    }
+
+    const observer = new MutationObserver(() => {
+        injectStyle();
+    });
+
+    if (document.body) {
+        observer.observe(document.body, { childList: true, subtree: true });
+    } else {
+        document.addEventListener('DOMContentLoaded', () => {
+            injectStyle();
+            observer.observe(document.body, { childList: true, subtree: true });
+        });
+    }
+})();
