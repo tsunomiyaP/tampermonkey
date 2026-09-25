@@ -62,7 +62,7 @@
       'ギルザレンⅢ世|gilzaren_iii|@GilzarenIII',
       '剣持(\\s)*刀也|rei_Toya_rei|@KenmochiToya',
       '伏見(\\s)*ガク|gaku_fushimi|@FushimiGaku',
-      '(?=.*(niji|にじ))(?=.*(叶).*)|kanae_2434|Kanae(\\s)*channel|@Kanae',
+      '叶(?!.*え)|kanae_2434|kanae(\\s)*channel|@Kanae',
       '卯月(\\s)*コウ|udukikohh|@UzukiKou',
       '花畑(\\s)*チャイカ|zulmihp1nlmot5y|@HanabatakeChaika',
       '社(\\s)*築|846kizuq|@YashiroKizuku',
@@ -78,7 +78,7 @@
       '加賀美(\\s)*ハヤト|H_KAGAMI2434|@KagamiHayato',
       'シェリン(\\s)*[・]*バーガンディ|ShellinBurgundy|@ShellinBurgundy',
       '不破(\\s)*湊|Fuwa_Minato|@FuwaMinato',
-      '((?=.*(niji|にじ))(?=.*(ましろ[爻]*).*)|^ましろ|ましろ爻)|mashiro2434|@MashiroMeme',
+      'ましろ[爻]*|mashiro2434|@MashiroMeme',
       'イブラヒム|honmono_ibrahim|@Ibrahim',
       '甲斐田(\\s)*晴|Kaida_Haru|@KaidaHaru',
       '弦月(\\s)*藤士郎|1O46V|@GenzukiTojiro',
@@ -116,6 +116,9 @@
       'レヨン|Rayon_Y4T4|@Rayon_2434',
       '神永(\\s)*タイガ|Taiga_kaminaga|@KaminagaTaiga',
       '山田(\\s)*龍一郎|Ryuichiro_YMD|@YamadaRyuichiro',
+
+      // 敬称略
+      '(?=.*(niji|にじ))(?=.*(渋谷|ギルザレン|剣持|伏見|叶(?!.*え)|卯月|花畑|社|エアル|葛葉|神田|舞元|力一|ベルモンド|夢追|三枝|エクス|加賀美|シェリン|不破|ましろ|イブラヒム|甲斐田|弦月|長尾|オリバー|レオス|ローレン|四季凪|セラフ|風楽|雲雀|赤城|宇佐美|佐伯|緋八|伊波|小柳|星導|叢雲|ミラン|魁星|北見|榊|颯馬|渚|左京|一橋|篠宮|城瀬|皇|花籠|虎|九里|塚原|レヨン|タイガ|山田).*)',
 
       // en
       'ルカ(\\s)*[・]*カネシロ|Luca_Kaneshiro|@LucaKaneshiro',
