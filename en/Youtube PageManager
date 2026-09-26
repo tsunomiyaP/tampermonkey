@@ -48,14 +48,10 @@
   for (const yt of itemsArray) {
     // 非表示
     appendStylus += '.remove_item, .own_ch_NuN { display: none !important; } ';
-    if (new RegExp(regWatch, 'gis').test(location.pathname)) {
-      appendStylus += yt.area + ':not(:has(ytd-item-section-renderer > div#contents)) > *:not(.target) { display: none !important; /* visibility: hidden !important; **/ } ';
-    } else if (new RegExp(regSearch, 'gis').test(location.pathname)) {
-      appendStylus += yt.area + ':not(:has(> ytd-item-section-renderer > div#contents)) > *:not(.target) { display: none !important; /* visibility: hidden !important; **/ } ';
-      appendStylus += yt.area + ':not(:has(> ytm-item-section-renderer > lazy-list)) > *:not(.target) { display: none !important; /* visibility: hidden !important; **/ } ';
-    } else {
-      appendStylus += yt.area + ' > *:not(.target) { display: none !important; /* visibility: hidden !important; **/ } ';
-    }
+    // pc
+    appendStylus += yt.area + ':not(:has(:is(ytd-item-section-renderer > div#contents, > ytd-item-section-renderer > div#contents, > ytm-item-section-renderer > lazy-list))) > *:not(.target) { display: none !important; /* visibility: hidden !important; **/ } ';
+    // mobile
+    appendStylus += yt.area + ':not(:has(:is(> ytm-item-section-renderer > lazy-list))) > *:not(.target) { display: none !important; /* visibility: hidden !important; **/ } ';
     appendStylus += yt.area + ' .target.minScale:not(:has(div[class*="subheader"i])) > * { ' + yt.stylus + ' } ';
     // [ショート]動画 削除
     appendStylus += yt.area + ' .target:has(a[href*="/shorts"i]) { display: none; } ';
