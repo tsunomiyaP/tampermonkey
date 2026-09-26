@@ -238,8 +238,8 @@
 
         const channel = document.querySelector(ownerB);
         user = channel.href;
-        console.log(user, ytChannel);
         if (user !== ytChannel) { item.classList.add('own_ch_NuN'); }
+
       } else if (new RegExp(regChannel, 'gis').test(detail.path)) { // チャンネルエリア
         // mobile
         mode.sp.ytTitle = isNuN(item.querySelector(ytMetaT)) ? '' : item.querySelector(ytMetaT).textContent;
@@ -262,7 +262,7 @@
     youtubeItem.userNam = strData.userNam;
     youtubeItem.userChN = strData.userChN;
 
-    console.log('ytData > ', isDevice ? mode.pc : mode.sp);
+    // console.log('ytData > ', isDevice ? mode.pc : mode.sp);
 
     const words = isNuN(abc) ? '' : abc.hideword;
     const excludes = isNuN(abc) ? '' : abc.execludeWords;
@@ -285,40 +285,17 @@
     return flg;
   };
   const scaleShowMovie = async (area, item, detail) => {
-    if (item.classList.contains('target') && !item.classList.contains('show')) {
+    if (!item.classList.contains('target')) {
       // console.log('test2 1件ずつ', item);
       const flg = await removeMovieInformation(item, detail);
       if (!flg) { item.classList.add('show', 'minScale'); } else { item.classList.add('remove_item', 'minScale'); }
     }
-    document.addEventListener('click', async (e) => {
-      if (e.target.classList.contains('target')) {
-        let items = null;
-        if (new RegExp(regSearch, 'gis').test(detail.path)) {
-          let itemArea = area;
-          const device = 'www.youtube.com' === detail.host ? true : false;
-          if (device) {
-            itemArea = area + ' > ytd-item-section-renderer > div#contents';
-          } else {
-            itemArea = area + ' > ytm-item-section-renderer > lazy-list';
-          }
-          await waitQuerySelector(itemArea); // 子要素存在チェック
-          items = document.querySelectorAll(itemArea + ' > .target');
-        } else {
-          const itemArea = area;
-          await waitQuerySelector(itemArea); // 子要素存在チェック
-          items = document.querySelectorAll(itemArea + ' > .target');
-        }
-        // Array.from(items).forEach((el) => el.classList.add('minScale'));
-        for await (const el of items) { el.classList.add('minScale'); }
-        e.target.classList.remove('minScale');
-      }
-    });
   };
   const ytMovieShowCase = async (area, detail) => {
     let items = 0;
     const ytLoop = setInterval(async() => {
       if (new RegExp(regSearch, 'gis').test(detail.path)) {
-        let itemArea = area;
+        let itemArea = area + ' > *:not(.target)';
         const device = 'www.youtube.com' === detail.host ? true : false;
         if (device) {
           itemArea = area + ' > ytd-item-section-renderer > div#contents > *:not(.target)';
@@ -328,7 +305,7 @@
         await waitQuerySelector(itemArea);
         items = document.querySelectorAll(itemArea);
       } else if (new RegExp(regWatch, 'gis').test(detail.path)) {
-        let itemArea = area;
+        let itemArea = area + ' > *:not(.target)';
         const device = 'www.youtube.com' === detail.host ? true : false;
         if (device) {
           itemArea = area + ' > ytd-item-section-renderer > div#contents > *:not(.target)';
@@ -344,15 +321,15 @@
           items = document.querySelectorAll(itemArea);
         }
       } else {
-        const itemArea = area;
+        const itemArea = area + ' > *:not(.target)';
         await waitQuerySelector(itemArea);
         items = document.querySelectorAll(itemArea);
       }
       console.log('yt movie list ... ', items.length);
       for await (const el of items) {
         // el.classList.remove('target', 'minScale', 'show', 'remove_item');
-        el.classList.add('target');
         await scaleShowMovie(area, el, detail);
+        el.classList.add('target');
       }
       if (0 === items.length) {
         clearInterval(ytLoop);
@@ -376,6 +353,46 @@
     }
     const config = { 'subtree': true, 'childList': true, 'attributes': false, 'characterData': false };
     ytMutation.observe(document.querySelector(area), config);
+
+    document.addEventListener('click', async (e) => {
+      if (e.target.classList.contains('target')) {
+        let items = null;
+        if (new RegExp(regSearch, 'gis').test(detail.path)) {
+          let itemArea = area + ' > .target';
+          const device = 'www.youtube.com' === detail.host ? true : false;
+          if (device) {
+            itemArea = area + ' > ytd-item-section-renderer > div#contents > .target';
+          } else {
+            itemArea = area + ' > ytm-item-section-renderer > lazy-list > .target';
+          }
+          await waitQuerySelector(itemArea); // 子要素存在チェック
+          items = document.querySelectorAll(itemArea);
+        } else if (new RegExp(regWatch, 'gis').test(detail.path)) {
+          let itemArea = area + ' > .target';
+          const device = 'www.youtube.com' === detail.host ? true : false;
+          if (device) {
+            itemArea = area + ' > ytd-item-section-renderer > div#contents > .target';
+            await waitQuerySelectorCount(10, itemArea);
+            items = document.querySelectorAll(itemArea);
+            if (0 === items.length) {
+              itemArea = area + ':not(:has(ytd-item-section-renderer > div#contents)) > .target';
+            }
+            await waitQuerySelectorCount(10, itemArea);
+            items = document.querySelectorAll(itemArea);
+          } else {
+            await waitQuerySelector(itemArea);
+            items = document.querySelectorAll(itemArea);
+          }
+        } else {
+          const itemArea = area + ' > .target';
+          await waitQuerySelector(itemArea); // 子要素存在チェック
+          items = document.querySelectorAll(itemArea + ' > .target');
+        }
+        // Array.from(items).forEach((el) => el.classList.add('minScale'));
+        for await (const el of items) { el.classList.add('minScale'); }
+        e.target.classList.remove('minScale');
+      }
+    });
   };
   const changeUrl = () => {
     const observer = new MutationObserver(() => {
