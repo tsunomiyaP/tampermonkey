@@ -166,7 +166,7 @@
     return false;
   };
 
-const switchToNewestReplies = async (e) => {
+  const switchToNewestReplies = async (e) => {
     if (e.detail.path.includes('/status/')) {
       // 既にURLに sort_replies が含まれている場合は二重処理を防ぐ
       if (searchParams(e.detail.href, 'sort_replies')) {
@@ -181,7 +181,7 @@ const switchToNewestReplies = async (e) => {
       // 2. 画面上のメニューを開いて「最新」に切り替える処理（DOM描画を少し待つ場合あり）
       try {
         // メニューボタンを探すセレクタ（環境に合わせて調整してください）
-        const menuButton = document.querySelector('div[aria-label*="会話" i] div[class="css-g5y9jx r-1awozwy r-18u37iz" i] button[aria-haspopup="menu" i]')
+        const menuButton = document.querySelector('div[aria-label*="会話" i] div[class="css-g5y9jx r-1awozwy r-18u37iz" i] button[aria-haspopup="menu" i]');
 
         if (menuButton) {
           // すでに「最新」になっていないかテキスト等で確認できればベストですが、
