@@ -50,7 +50,8 @@
   for (const yt of itemsArray) {
     if (isDevice) {
       // pc
-      appendStylus += yt.area + ':is(:not(:has(:is(ytd-item-section-renderer > div#contents, > ytd-item-section-renderer > div#contents))), :has(:is(ytd-item-section-renderer > div#contents, > ytd-item-section-renderer > div#contents))) > *:not(.target) { display: none !important; /* visibility: hidden !important; **/ } ';
+      appendStylus += yt.area + ':not(:has(div#contents)) > *:not(.target) { display: none !important; /* visibility: hidden !important; **/ } ';
+      appendStylus += yt.area + ':has(div#contents) div#contents > *:not(.target) { display: none !important; /* visibility: hidden !important; **/ } ';
     } else {
       // mobile
       appendStylus += yt.area + ':not(:has(:is(ytm-item-section-renderer > lazy-list))) > *:not(.target) { display: none !important; /* visibility: hidden !important; **/ } ';
