@@ -43,6 +43,7 @@
   appendStylus += 'section[aria-labelledby="accessible-list-0"i] > div[aria-label="タイムライン: 会話"i] > div > div[data-testid="cellInnerDiv"i]:not(.conversationX):not(.subTreeLinesX) { display: none !important; } ';
   appendStylus += 'div[data-testid="cellInnerDiv"i].' + xitemRem + ' { display: none !important; } ';
   appendStylus += 'div[data-testid="cellInnerDiv"i]:has(' + remReTweet + ') { display: none !important; } ';
+  // menu item status 最新
   appendStylus += 'div[role="menu"i][class="css-g5y9jx r-j2cz3j r-14lw9ot r-1q9bdsx r-1upvrn0 r-1udh08x r-u8s1d"i]:has(div[data-testid="Dropdown"i] > div[role="menuitem"i]) { display: none !important; } ';
   // ext area stylus
   appendStylus += 'div[aria-label="トレンド"i] > div > div:not(:has(form[aria-label="検索"i])) { display: none !important; } ';
@@ -165,19 +166,42 @@
     return false;
   };
 
-  const switchToNewestReplies = async (e) => {
+const switchToNewestReplies = async (e) => {
     if (e.detail.path.includes('/status/')) {
-      // const menu = document.querySelector('div[aria-label="タイムライン: 会話"i] div[class="css-g5y9jx r-1awozwy r-18u37iz r-1wtj0ep r-6gpygo"i] button[aria-haspopup="menu"i]');
-      // if (menu.textContent !== '最新') { menu.click(); }
-      // const dropdownLists = await document.querySelectorAll('div[role="menu"i][class="css-g5y9jx r-j2cz3j r-14lw9ot r-1q9bdsx r-1upvrn0 r-1udh08x r-u8s1d"i] div[data-testid="Dropdown"i] > div[role="menuitem"i]');
-      // dropdownLists.item(1).click(); // 最新 : sort_replies=recency
-      // const replaceURL = deleteParam(window.location.href, 'sort_replies').href;
-      // history.replaceState(null, '', replaceURL);
+      // 既にURLに sort_replies が含まれている場合は二重処理を防ぐ
       if (searchParams(e.detail.href, 'sort_replies')) {
-        console.log('> tweet is sort ... recency replacement.');
-      } else {
-        const search = buildURL(e.detail.href, { sort_replies: 'recency' });
-        location.replace(search);
+        console.log('> tweet is already sorted by recency.');
+        return;
+      }
+
+      // 1. URLをリロードなしで書き換える
+      const newURL = buildURL(e.detail.href, { sort_replies: 'recency' });
+      history.replaceState(null, '', newURL);
+
+      // 2. 画面上のメニューを開いて「最新」に切り替える処理（DOM描画を少し待つ場合あり）
+      try {
+        // メニューボタンを探すセレクタ（環境に合わせて調整してください）
+        const menuButton = document.querySelector('div[aria-label*="会話" i] div[class="css-g5y9jx r-1awozwy r-18u37iz" i] button[aria-haspopup="menu" i]')
+
+        if (menuButton) {
+          // すでに「最新」になっていないかテキスト等で確認できればベストですが、
+          // 確実に切り替えるためにクリック操作を実行
+          // ※Twitterの仕様変更でセレクタが変わる場合があります
+          menuButton.click();
+
+          // ドロップダウンが表示されるのを微小待機してから「最新」を選択
+          setTimeout(() => {
+            const dropdownItems = document.querySelectorAll('div[role="menu"] div[role="menuitem"] span');
+            if (1 < dropdownItems.length) {
+              for (const item of dropdownItems) {
+                if (item.textContent === '最新') { item.click(); }
+              }
+              // dropdownItems[1].click(); // 「最新」にあたる要素をクリック
+            }
+          }, 100);
+        }
+      } catch (err) {
+        console.error('> Failed to switch reply sort via DOM:', err);
       }
     }
   };
