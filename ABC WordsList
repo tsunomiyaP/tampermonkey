@@ -75,7 +75,7 @@
       '夢追(\\s)*翔|kakeru_yumeoi|@YumeoiKakeru',
       '三枝(\\s)*明那|333akina|@SaegusaAkina',
       'エクス(\\s)*[・]*アルビオ|ex_albio|@ExAlbio',
-      '加賀美(\\s)*ハヤト|H_KAGAMI2434|@KagamiHayato',
+      '加賀美(\\s)*ハヤト|H_KAGAMI2434|@KagamiHayato|(タラチオ|@tarachio)',
       'シェリン(\\s)*[・]*バーガンディ|ShellinBurgundy|@ShellinBurgundy',
       '不破(\\s)*湊|Fuwa_Minato|@FuwaMinato',
       'ましろ[爻]*|mashiro2434|@MashiroMeme',
