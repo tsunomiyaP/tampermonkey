@@ -294,8 +294,9 @@
   const scaleShowMovie = async (area, item, detail) => {
     if (!item.classList.contains('target')) {
       // console.log('test2 1件ずつ', item);
+      item.classList.add('target');
       const flg = await removeMovieInformation(item, detail);
-      if (!flg) { item.classList.add('target', 'show', 'minScale'); } else { item.classList.add('target', 'remove_item', 'minScale'); }
+      if (!flg) { item.classList.add('show', 'minScale'); } else { item.classList.add('remove_item', 'minScale'); }
     }
   };
   const isLoopM = async (area, items, detail) => {
@@ -313,7 +314,6 @@
     }
     await waitQuerySelector(itemArea);
     items = document.querySelectorAll(itemArea);
-    console.log(items, itemArea);
 
     if (0 < items.length) {
       for await (const el of items) {
@@ -333,7 +333,6 @@
     }, 10000);
 
     if (flg) {
-      console.log('> yt Movie List FIX');
       clearInterval(ytLoop);
     }
   };
@@ -342,7 +341,6 @@
 
     await ytMovieShowCase(area, detail);
     ytMutation = new MutationObserver(async () => {
-      console.log('ytArea Mutation changed ...');
       await ytMovieShowCase(area, detail);
     });
     if (new RegExp(regWatch, 'gis').test(detail.path)) {
@@ -394,14 +392,11 @@
           await new Promise(resolve => setTimeout(resolve, waitTime));
           // youtube Area Manager Manager:UserChannel
           if (new RegExp(channelEX, 'gis').test(location.pathname)) {
-            console.log('> youtube : my manager channel...');
             stylusElemCh.textContent = '';
           } else if (new RegExp('(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)(/videos|/streams|/playlists|/releases|/posts|/search|/community|/membership)', 'gis').test(e.detail.path)) {
-            console.log('> youtube : my not home channel...');
             // [ホーム/home]タブ以外
             stylusElemCh.textContent = '';
           } else {
-            console.log('> youtube : my home channel... remove Area');
             const sectionPC = document.querySelector(channelPC);
             const sectionPCItem = document.querySelector(channelPC + ' ' + channelPCItem);
             isNuN(sectionPC) ? false : isNuN(sectionPCItem) ? false : sectionPCItem.remove();
@@ -413,10 +408,8 @@
           await new Promise(resolve => setTimeout(resolve, waitTime));
           // youtube Area Manager Manager:UserChannel
           if (new RegExp(channelEX, 'gis').test(e.detail.path)) {
-            console.log('> youtube : my manager channel...');
             stylusElemCh.textContent = '';
           } else if (new RegExp('(^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+)(/videos|/streams|/playlists|/releases|/posts|/search|/community|/membership)', 'gis').test(e.detail.path)) {
-            console.log('> youtube : my not home channel...');
             // [ホーム/home]タブ以外
             stylusElemCh.textContent = '';
           } else {
@@ -432,7 +425,6 @@
       // 初期処理
       const ytArray = itemsArray.filter((yt) => e.detail.host === yt.device);
       for await (const yt of ytArray) {
-        // console.log(path, localPath);
         if (new RegExp(yt.path, 'gis').test(e.detail.path)) {
           await initial(yt.area, e.detail);
         }
