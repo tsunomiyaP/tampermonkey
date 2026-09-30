@@ -50,12 +50,12 @@
   for (const yt of itemsArray) {
     if (isDevice) {
       // pc
-      appendStylus += yt.area + ':not(:has(div#contents)) > *:not(.target) { display: none !important; /* visibility: hidden !important; **/ } ';
-      appendStylus += yt.area + ':has(div#contents) div#contents > *:not(.target) { display: none !important; /* visibility: hidden !important; **/ } ';
+      appendStylus += yt.area + ':not(:has(div#contents)) > *:not(.target):not(.show) { display: none !important; /* visibility: hidden !important; **/ } ';
+      appendStylus += yt.area + ':has(div#contents) div#contents > *:not(.target):not(.show) { display: none !important; /* visibility: hidden !important; **/ } ';
     } else {
       // mobile
-      appendStylus += yt.area + ':not(:has(ytm-item-section-renderer > lazy-list)) > *:not(.target) { display: none !important; /* visibility: hidden !important; **/ } ';
-      appendStylus += yt.area + ':has(ytm-item-section-renderer > lazy-list) ytm-item-section-renderer > lazy-list > *:not(.target) { display: none !important; /* visibility: hidden !important; **/ } ';
+      appendStylus += yt.area + ':not(:has(ytm-item-section-renderer > lazy-list)) > *:not(.target):not(.show) { display: none !important; /* visibility: hidden !important; **/ } ';
+      appendStylus += yt.area + ':has(ytm-item-section-renderer > lazy-list) ytm-item-section-renderer > lazy-list > *:not(.target):not(.show) { display: none !important; /* visibility: hidden !important; **/ } ';
     }
     appendStylus += yt.area + ' .target.minScale:not(:has(div[class*="subheader"i])) > * { ' + yt.stylus + ' } ';
     // [ショート]動画 削除
