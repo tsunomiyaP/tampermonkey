@@ -348,13 +348,6 @@
     ytMutation = new MutationObserver(async () => {
       await ytMovieShowCase(area, detail);
     });
-    if (new RegExp(regWatch, 'gis').test(detail.path)) {
-      const resizeObserver = new ResizeObserver(async () => {
-        console.log('ytArea size changed ...');
-        await ytMovieShowCase(area, detail);
-      });
-      resizeObserver.observe(document.querySelector(area));
-    }
     const config = { 'subtree': true, 'childList': true, 'attributes': false, 'characterData': false };
     ytMutation.observe(document.querySelector(area), config);
 
