@@ -484,8 +484,6 @@
           console.log('> yt stable volume 一定音量 setting...');
           await ytStableVolume(ytPlayer, isSTVol);
         }
-
-        await new Promise(resolve => setTimeout(resolve, 2000));
         // 読み込み位置を強制的に「はじめに(0)」戻す
         const stats = ytPlayer.getVideoStats() || {};
         if (stats.live === 'live' || stats.live === 'dvr' || stats.live === 'lp') {
