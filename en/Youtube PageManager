@@ -306,12 +306,16 @@
     let itemArea = area + ' > *:not(.target)';
     if (isDevice) {
       // pc
-      itemArea = [area + ':not(:has(ytd-item-section-renderer > div#contents)) > *:not(.target)',
-        area + ':has(ytd-item-section-renderer > div#contents) ytd-item-section-renderer > div#contents > *:not(.target)'].join(',');
+      itemArea = [
+        area + ':not(:has(ytd-item-section-renderer > div#contents)) > *:not(.target)',
+        area + ':has(ytd-item-section-renderer > div#contents) ytd-item-section-renderer > div#contents > *:not(.target)'
+      ].join(',');
     } else {
       // mobile
-      itemArea = [area + ':not(:has(ytm-item-section-renderer > lazy-list)) > *:not(.target)',
-        area + ':has(ytm-item-section-renderer > lazy-list) ytm-item-section-renderer > lazy-list > *:not(.target)'];
+      itemArea = [
+        area + ':not(:has(ytm-item-section-renderer > lazy-list)) > *:not(.target)',
+        area + ':has(ytm-item-section-renderer > lazy-list) ytm-item-section-renderer > lazy-list > *:not(.target)'
+      ].join(',');
     }
     await waitQuerySelector(itemArea);
     items = document.querySelectorAll(itemArea);
