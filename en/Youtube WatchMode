@@ -333,11 +333,6 @@
       // history.replaceState(null, '', window.location.pathname + window.location.search);
       document.querySelector(closeBtn).click();
     }
-    // 読み込み位置を強制的に「はじめに(0)」戻す
-    ytPlayer.seekTo(0, true);
-    // 動画の音声ミュート解除
-    // ytPlayer.unMute();
-    ytPlayer.setVolume(100);
   };
   const ytNavBtn = async (flag) => {
     if (flag) {
@@ -389,12 +384,17 @@
       }
     }
   };
+  const waitPlayerPhase = async (ytPlayer, state) => {
+    while (ytPlayer.getPlayerState() !== state) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+  };
   const ytQualityFix = async (ytPlayer, flag, level) => {
     // ytPlayer.pauseVideo();
     // ytPlayer.mute();
     // ytPlayer.unMute();
     // ytPlayer.playVideo();
-
+    // 自動再生
     if (flag) {
       let wit = qualitys[level];
       let low = qualitys[0];
@@ -428,9 +428,6 @@
       await new Promise(resolve => setTimeout(resolve, 2000));
       console.log('now quality set power on...', ytPlayer.getPlaybackQuality());
     }
-    // 自動再生
-    ytPlayer.playVideo();
-    ytPlayer.setVolume(0);
   };
 
   const changeUrl = () => {
@@ -447,14 +444,25 @@
     if (oldUrl !== e.detail.path + e.detail.search) {
       oldUrl = e.detail.path + e.detail.search; // oldUrlを更新
 
-      // 設定ポップアップ初期非表示
-      if (isChatMode) { stylusElemSettings.textContent = 'div#chat-container { display: none !important; } '; } else { stylusElemSettings.textContent = ''; }
-
       if (new RegExp(regWatch, 'gis').test(e.detail.path)) {
+        // 設定ポップアップ初期非表示
+        if (isChatMode) { stylusElemSettings.textContent = 'div#chat-container { display: none !important; } '; } else { stylusElemSettings.textContent = ''; }
         // 初期処理
         await waitQuerySelector(manager);
         const ytPlayer = await waitQuerySelector(player);
         await waitPlayerState(ytPlayer);
+        ytPlayer.setVolume(0);
+        ytPlayer.playVideo();
+        await waitPlayerPhase(ytPlayer, 1); // 再生されるまで待機
+        // 分岐コード: -1 未開始: まだ読み込まれていません
+        // 分岐コード: 0 再生終了: 動画が最後まで流れました
+        // 分岐コード: 1 再生中: 動画が動いています
+        // 分岐コード: 2 一時停止中: ユーザーが動画を止めました
+        // 分岐コード: 3 バッファリング中: 読み込みを待っています
+        // 分岐コード: 5 再生準備完了: 動画の準備ができています
+
+        // eslint-disable-next-line no-undef
+        console.log('動画の再生が開始されました');
 
         if ('www.youtube.com' === e.detail.host) {
           // pc
@@ -471,16 +479,27 @@
           console.log('> yt stable volume 一定音量 setting...');
           await ytStableVolume(ytPlayer, isSTVol);
         } else if ('m.youtube.com' === e.detail.host) {
-          // mobile
           console.log('> yt watch quality ... changing');
           await ytQualityFix(ytPlayer, isQuality, 4);
           console.log('> yt stable volume 一定音量 setting...');
           await ytStableVolume(ytPlayer, isSTVol);
         }
+
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        // 読み込み位置を強制的に「はじめに(0)」戻す
+        const stats = ytPlayer.getVideoStats() || {};
+        if (stats.live === 'live' || stats.live === 'dvr' || stats.live === 'lp') {
+          console.log('LIVE Stream のため巻き戻しは行わない');
+        } else {
+          ytPlayer.seekTo(0, true);
+        }
+        // 動画の音声ミュート解除
+        // ytPlayer.unMute();
+        ytPlayer.setVolume(100);
+
+        // style 無効化
+        if (isChatMode) { stylusElemSettings.textContent = 'div#chat-container { display: none !important; } '; } else { stylusElemSettings.textContent = ''; }
       }
-      // style 無効化
-      await new Promise(resolve => setTimeout(resolve, waitTime));
-      if (isChatMode) { stylusElemSettings.textContent = 'div#chat-container { display: none !important; } '; } else { stylusElemSettings.textContent = ''; }
     }
   });
   const eventHandler = () => {
