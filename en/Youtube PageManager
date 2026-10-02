@@ -39,7 +39,7 @@
   const regChannel = '^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+';
   const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
   // 可変数
-  let ytMutation, oldUrl = '';
+  let oldUrl = '', ytMutation = null, ytLoop = null, isYtRunning;
   // ==========================================================
   // 静的style適用エリア
   const isDevice = 'www.youtube.com' === location.host ? true : false;
@@ -300,7 +300,7 @@
       if (!flg) { item.classList.add('show', 'minScale'); } else { item.classList.add('remove_item', 'minScale'); }
     }
   };
-  const isLoopM = async (area, items, detail) => {
+  const itemList = async (area, detail) => {
     const isDevice = 'www.youtube.com' === detail.host ? true : false;
 
     let itemArea = area + ' > *:not(.target)';
@@ -317,29 +317,35 @@
         area + ':has(ytm-item-section-renderer > lazy-list) ytm-item-section-renderer > lazy-list > *:not(.target)'
       ].join(',');
     }
-    await waitQuerySelector(itemArea);
-    items = document.querySelectorAll(itemArea);
-
-    if (0 < items.length) {
-      for await (const el of items) {
-        await scaleShowMovie(area, el, detail);
-      }
-      return false;
-    } else {
-      return true;
+    // 対象の検索(捜索)を10秒まで継続
+    await waitQuerySelectorCount(10, itemArea);
+    const items = document.querySelectorAll(itemArea);
+    console.log('今回新たにヒットした件数:', items.length);
+    return items;
+  };
+  const isLoopM = async (area, items, detail) => {
+    for await (const el of items) {
+      await scaleShowMovie(area, el, detail);
     }
   };
   const ytMovieShowCase = async (area, detail) => {
-    let items = 0;
-    let flg = false;
-    flg = isLoopM(area, items, detail);
-    const ytLoop = setInterval(async() => {
-      flg = isLoopM(area, items, detail);
-    }, 10000);
+    // 処理が走っている、またはタイマーがある場合は、一度すべてリセットする
+    if (ytLoop) { clearInterval(ytLoop); ytLoop = null; }
+    // 重複実行を防ぐためのガード
+    if (isYtRunning) return false;
+    isYtRunning = true;
 
-    if (flg) {
-      clearInterval(ytLoop);
+    let items = await itemList(area, detail);
+    isYtRunning = false;
+    await isLoopM(area, items, detail);
+    if (items.length <= 0) {
+      console.log('yt count stop');
+      return false;
     }
+    ytLoop = setTimeout(async () => {
+      if (ytLoop) { clearInterval(ytLoop); ytLoop = null; }
+      await ytMovieShowCase(area, detail);
+    }, 10000);
   };
   const initial = async (area, detail) => {
     await waitQuerySelector(area);
@@ -375,6 +381,7 @@
       oldUrl = e.detail.path + e.detail.search; // oldUrlを更新
 
       if (!isNuN(ytMutation)) { ytMutation.disconnect(); }
+      if (ytLoop) { clearInterval(ytLoop); ytLoop = null; }
 
       // youtube Channel Area Manager
       if (new RegExp(regChannel, 'gis').test(e.detail.path)) {
