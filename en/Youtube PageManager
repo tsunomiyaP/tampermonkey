@@ -39,7 +39,7 @@
   const regChannel = '^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+';
   const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
   // 可変数
-  let oldUrl = '', ytMutation = null, ytLoop = null;
+  let oldUrl = '';
   // ==========================================================
   // 静的style適用エリア
   const isDevice = 'www.youtube.com' === location.host ? true : false;
@@ -329,19 +329,13 @@
     }
   };
   const ytMovieShowCase = async (area, detail) => {
-    // 処理が走っている、またはタイマーがある場合は、一度すべてリセットする
-    if (ytLoop) { clearInterval(ytLoop); ytLoop = null; }
-
     let items = await itemList(area, detail);
-    await isLoopM(area, items, detail);
-    if (items.length <= 0) {
-      console.log('yt count stop');
-      return;
-    }
-    ytLoop = setTimeout(async () => {
-      if (ytLoop) { clearInterval(ytLoop); ytLoop = null; }
+    if (0 < items.length) {
+      await isLoopM(area, items, detail);
       await ytMovieShowCase(area, detail);
-    }, 10000);
+    } else {
+      console.log('yt movies list cnt stop');
+    }
   };
   const changeUrl = () => {
     const observer = new MutationObserver(() => {
@@ -356,9 +350,6 @@
   window.addEventListener('urlChange', async (e) => {
     if (oldUrl !== e.detail.path + e.detail.search) {
       oldUrl = e.detail.path + e.detail.search; // oldUrlを更新
-
-      if (!isNuN(ytMutation)) { ytMutation.disconnect(); }
-      if (ytLoop) { clearInterval(ytLoop); ytLoop = null; }
 
       // youtube Channel Area Manager
       if (new RegExp(regChannel, 'gis').test(e.detail.path)) {
@@ -406,11 +397,23 @@
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       // 初期処理
+      const config = { 'subtree': true, 'childList': true, 'attributes': false, 'characterData': false };
       const ytArray = itemsArray.filter((yt) => e.detail.host === yt.device);
       for await (const yt of ytArray) {
         if (new RegExp(yt.path, 'gis').test(e.detail.path)) {
           await waitQuerySelector(yt.area);
           await ytMovieShowCase(yt.area, e.detail);
+
+          const observer = new MutationObserver(() => {
+            setTimeout(async () => { // 遅延
+              observer.disconnect();
+              await waitQuerySelector(yt.area);
+              await ytMovieShowCase(yt.area, e.detail);
+              console.log('yt next up movie list ... mutation index search');
+              observer.observe(document.querySelector(yt.area), config);
+            }, 5000);
+          });
+          observer.observe(document.querySelector(yt.area), config);
         }
       }
 
