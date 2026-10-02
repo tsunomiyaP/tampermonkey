@@ -403,7 +403,7 @@
         stylusElemCh.textContent = '';
       }
       await waitQuerySelector(manager);
-      await new Promise(resolve => setTimeout(resolve, 10000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       // 初期処理
       const ytArray = itemsArray.filter((yt) => e.detail.host === yt.device);
