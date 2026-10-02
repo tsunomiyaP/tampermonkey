@@ -50,12 +50,12 @@
   for (const yt of itemsArray) {
     if (isDevice) {
       // pc
-      appendStylus += yt.area + ':not(:has(ytd-item-section-renderer > div#contents)) > *:not(.target, .show, .minScale) { display: none !important; /* visibility: hidden !important; **/ } ';
-      appendStylus += yt.area + ':has(ytd-item-section-renderer > div#contents) ytd-item-section-renderer > div#contents > *:not(.target, .show, .minScale) { display: none !important; /* visibility: hidden !important; **/ } ';
+      appendStylus += yt.area + ':not(:has(ytd-item-section-renderer > div#contents)) > *:not(.show) { display: none !important; /* visibility: hidden !important; **/ } ';
+      appendStylus += yt.area + ':has(ytd-item-section-renderer > div#contents) ytd-item-section-renderer > div#contents > *:not(.show) { display: none !important; /* visibility: hidden !important; **/ } ';
     } else {
       // mobile
-      appendStylus += yt.area + ':not(:has(ytm-item-section-renderer > lazy-list)) > *:not(.target, .show, .minScale) { display: none !important; /* visibility: hidden !important; **/ } ';
-      appendStylus += yt.area + ':has(ytm-item-section-renderer > lazy-list) ytm-item-section-renderer > lazy-list > *:not(.target, .show, .minScale) { display: none !important; /* visibility: hidden !important; **/ } ';
+      appendStylus += yt.area + ':not(:has(ytm-item-section-renderer > lazy-list)) > *:not(.show) { display: none !important; /* visibility: hidden !important; **/ } ';
+      appendStylus += yt.area + ':has(ytm-item-section-renderer > lazy-list) ytm-item-section-renderer > lazy-list > *:not(.show) { display: none !important; /* visibility: hidden !important; **/ } ';
     }
     appendStylus += yt.area + ' .target.minScale:not(:has(div[class*="subheader"i])) > * { ' + yt.stylus + ' } ';
     // [ショート]動画 削除
@@ -398,24 +398,22 @@
 
       // 初期処理
       const config = { 'subtree': true, 'childList': true, 'attributes': false, 'characterData': false };
-      const ytArray = itemsArray.filter((yt) => e.detail.host === yt.device);
-      for await (const yt of ytArray) {
-        if (new RegExp(yt.path, 'gis').test(e.detail.path)) {
-          await waitQuerySelector(yt.area);
-          await ytMovieShowCase(yt.area, e.detail);
+      const ytArea = itemsArray.filter((yt) => e.detail.host === yt.device && new RegExp(yt.path, 'gis').test(e.detail.path));
+      if (0 === ytArea.length) { return false; }
 
-          const observer = new MutationObserver(() => {
-            setTimeout(async () => { // 遅延
-              observer.disconnect();
-              await waitQuerySelector(yt.area);
-              await ytMovieShowCase(yt.area, e.detail);
-              console.log('yt next up movie list ... mutation index search');
-              observer.observe(document.querySelector(yt.area), config);
-            }, 5000);
-          });
-          observer.observe(document.querySelector(yt.area), config);
-        }
-      }
+      await waitQuerySelector(ytArea[0].area);
+      await ytMovieShowCase(ytArea[0].area, e.detail);
+
+      const observer = new MutationObserver(() => {
+        setTimeout(async () => { // 遅延
+          observer.disconnect();
+          await waitQuerySelector(ytArea[0].area);
+          await ytMovieShowCase(ytArea[0].area, e.detail);
+          console.log('yt next up movie list ... mutation index search');
+          observer.observe(document.querySelector(ytArea[0].area), config);
+        }, 5000);
+      });
+      observer.observe(document.querySelector(ytArea[0].area), config);
 
       document.addEventListener('click', async (e) => {
         if (e.target.classList.contains('target')) {
