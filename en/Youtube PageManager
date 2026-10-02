@@ -39,7 +39,7 @@
   const regChannel = '^/@.+|^/channel/.+|^/c/.+|^/user/.+|^/u/.+';
   const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
   // 可変数
-  let oldUrl = '', ytMutation = null, ytLoop = null, isYtRunning;
+  let oldUrl = '', ytMutation = null, ytLoop = null;
   // ==========================================================
   // 静的style適用エリア
   const isDevice = 'www.youtube.com' === location.host ? true : false;
@@ -50,12 +50,12 @@
   for (const yt of itemsArray) {
     if (isDevice) {
       // pc
-      appendStylus += yt.area + ':not(:has(div#contents)) > *:not(.target, .show) { display: none !important; /* visibility: hidden !important; **/ } ';
-      appendStylus += yt.area + ':has(div#contents) div#contents > *:not(.target, .show) { display: none !important; /* visibility: hidden !important; **/ } ';
+      appendStylus += yt.area + ':not(:has(ytd-item-section-renderer > div#contents)) > *:not(.target, .show, .minScale) { display: none !important; /* visibility: hidden !important; **/ } ';
+      appendStylus += yt.area + ':has(ytd-item-section-renderer > div#contents) ytd-item-section-renderer > div#contents > *:not(.target, .show, .minScale) { display: none !important; /* visibility: hidden !important; **/ } ';
     } else {
       // mobile
-      appendStylus += yt.area + ':not(:has(ytm-item-section-renderer > lazy-list)) > *:not(.target, .show) { display: none !important; /* visibility: hidden !important; **/ } ';
-      appendStylus += yt.area + ':has(ytm-item-section-renderer > lazy-list) ytm-item-section-renderer > lazy-list > *:not(.target, .show) { display: none !important; /* visibility: hidden !important; **/ } ';
+      appendStylus += yt.area + ':not(:has(ytm-item-section-renderer > lazy-list)) > *:not(.target, .show, .minScale) { display: none !important; /* visibility: hidden !important; **/ } ';
+      appendStylus += yt.area + ':has(ytm-item-section-renderer > lazy-list) ytm-item-section-renderer > lazy-list > *:not(.target, .show, .minScale) { display: none !important; /* visibility: hidden !important; **/ } ';
     }
     appendStylus += yt.area + ' .target.minScale:not(:has(div[class*="subheader"i])) > * { ' + yt.stylus + ' } ';
     // [ショート]動画 削除
@@ -331,40 +331,17 @@
   const ytMovieShowCase = async (area, detail) => {
     // 処理が走っている、またはタイマーがある場合は、一度すべてリセットする
     if (ytLoop) { clearInterval(ytLoop); ytLoop = null; }
-    // 重複実行を防ぐためのガード
-    if (isYtRunning) return false;
-    isYtRunning = true;
 
     let items = await itemList(area, detail);
-    isYtRunning = false;
     await isLoopM(area, items, detail);
     if (items.length <= 0) {
       console.log('yt count stop');
-      return false;
+      return;
     }
     ytLoop = setTimeout(async () => {
       if (ytLoop) { clearInterval(ytLoop); ytLoop = null; }
       await ytMovieShowCase(area, detail);
     }, 10000);
-  };
-  const initial = async (area, detail) => {
-    await waitQuerySelector(area);
-
-    await ytMovieShowCase(area, detail);
-    ytMutation = new MutationObserver(async () => {
-      await ytMovieShowCase(area, detail);
-    });
-    const config = { 'subtree': true, 'childList': true, 'attributes': false, 'characterData': false };
-    ytMutation.observe(document.querySelector(area), config);
-
-    document.addEventListener('click', async (e) => {
-      if (e.target.classList.contains('target')) {
-        let itemArea = '.target';
-        // Array.from(items).forEach((el) => el.classList.add('minScale'));
-        for await (const el of document.querySelectorAll(itemArea)) { el.classList.add('minScale'); }
-        e.target.classList.remove('minScale');
-      }
-    });
   };
   const changeUrl = () => {
     const observer = new MutationObserver(() => {
@@ -379,6 +356,7 @@
   window.addEventListener('urlChange', async (e) => {
     if (oldUrl !== e.detail.path + e.detail.search) {
       oldUrl = e.detail.path + e.detail.search; // oldUrlを更新
+      await new Promise(resolve => setTimeout(resolve, 10000));
 
       if (!isNuN(ytMutation)) { ytMutation.disconnect(); }
       if (ytLoop) { clearInterval(ytLoop); ytLoop = null; }
@@ -431,9 +409,19 @@
       const ytArray = itemsArray.filter((yt) => e.detail.host === yt.device);
       for await (const yt of ytArray) {
         if (new RegExp(yt.path, 'gis').test(e.detail.path)) {
-          await initial(yt.area, e.detail);
+          await waitQuerySelector(yt.area);
+          await ytMovieShowCase(yt.area, e.detail);
         }
       }
+
+      document.addEventListener('click', async (e) => {
+        if (e.target.classList.contains('target')) {
+          let itemArea = '.target';
+          // Array.from(items).forEach((el) => el.classList.add('minScale'));
+          for await (const el of document.querySelectorAll(itemArea)) { el.classList.add('minScale'); }
+          e.target.classList.remove('minScale');
+        }
+      });
     }
   });
   const eventHandler = () => {
