@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      1.0
 // @description  try to take over the world!
-// @author       You
+// @author       Me
 // @match        https://*.youtube.com/*
 // @match        https://x.com/*
 // @match        https://hololive.hololivepro.com/*
