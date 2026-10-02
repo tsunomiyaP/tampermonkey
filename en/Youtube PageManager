@@ -356,7 +356,6 @@
   window.addEventListener('urlChange', async (e) => {
     if (oldUrl !== e.detail.path + e.detail.search) {
       oldUrl = e.detail.path + e.detail.search; // oldUrlを更新
-      await new Promise(resolve => setTimeout(resolve, 10000));
 
       if (!isNuN(ytMutation)) { ytMutation.disconnect(); }
       if (ytLoop) { clearInterval(ytLoop); ytLoop = null; }
@@ -404,6 +403,7 @@
         stylusElemCh.textContent = '';
       }
       await waitQuerySelector(manager);
+      await new Promise(resolve => setTimeout(resolve, 10000));
 
       // 初期処理
       const ytArray = itemsArray.filter((yt) => e.detail.host === yt.device);
