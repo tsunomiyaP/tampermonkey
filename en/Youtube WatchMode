@@ -444,9 +444,9 @@
     if (oldUrl !== e.detail.path + e.detail.search) {
       oldUrl = e.detail.path + e.detail.search; // oldUrlを更新
 
+      // 設定ポップアップ初期非表示
+      if (isChatMode) { stylusElemSettings.textContent = 'div#chat-container { display: none !important; } '; } else { stylusElemSettings.textContent = ''; }
       if (new RegExp(regWatch, 'gis').test(e.detail.path)) {
-        // 設定ポップアップ初期非表示
-        if (isChatMode) { stylusElemSettings.textContent = 'div#chat-container { display: none !important; } '; } else { stylusElemSettings.textContent = ''; }
         // 初期処理
         await waitQuerySelector(manager);
         const ytPlayer = await waitQuerySelector(player);
@@ -484,6 +484,7 @@
           console.log('> yt stable volume 一定音量 setting...');
           await ytStableVolume(ytPlayer, isSTVol);
         }
+
         // 読み込み位置を強制的に「はじめに(0)」戻す
         const stats = ytPlayer.getVideoStats() || {};
         if (stats.live === 'live' || stats.live === 'dvr' || stats.live === 'lp') {
@@ -494,10 +495,10 @@
         // 動画の音声ミュート解除
         // ytPlayer.unMute();
         ytPlayer.setVolume(100);
-
-        // style 無効化
-        if (isChatMode) { stylusElemSettings.textContent = 'div#chat-container { display: none !important; } '; } else { stylusElemSettings.textContent = ''; }
       }
+      // style 無効化
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      if (isChatMode) { stylusElemSettings.textContent = 'div#chat-container { display: none !important; } '; } else { stylusElemSettings.textContent = ''; }
     }
   });
   const eventHandler = () => {
