@@ -21,7 +21,7 @@
   const regWatch = '/watch';
   // attributes
   // ロード完了後再生
-  const cssMain = 'div[class="_4wqbwn0"i] > main[class="_4wqbwn1"i] > div';
+  const cssMain = 'body > div[class="_4wqbwn0"i] > main[class="_4wqbwn1"i] > div';
   // 再生：comment area not open, comment area open
   const cssPlayer = cssMain + ' > :is(div[class="_1vg5ukp0"i], div[class="_1vg5ukp0 _1vg5ukp1"i])';
   const cssMovies = cssMain + ' > div[class="_16d7kub0"i]';
@@ -35,6 +35,10 @@
   // 静的style適用エリア
   // stylus: beforebegin, afterbegin, beforeend, afterend
   let appendStylus = '';
+  // mobile app 販促ヘッダー
+  appendStylus += 'body > div[class="_4wqbwn0"i] > div[class="_1t0vmr00"i] { display: none !important; } ';
+  appendStylus += 'div[class="_1gc856a0"i]:has(a[href*="tagrelatedbanner"i]) { display: none !important; } ';
+  // プレミアム館員 販促
   appendStylus += 'a[href*="/premium"i] { display: none !important; } ';
   const stylusElem = document.createElement('style');
   stylusElem.id = 'stylusElem';
@@ -178,8 +182,8 @@
     console.log('comments click');
     const comemntBtn = await waitQuerySelectorCount(10, cssCommentArea + ' > div[class="_1ti8yhz2"i] > button[class="_5jwikj0"i]:not(:has(svg[class="_5jwikj1 _5jwikj2"i]))');
     if (!isNuN(comemntBtn)) { comemntBtn.click(); }
-    // コメント画面描画時[x]path Stylus
-    const commentTxt = await waitQuerySelectorCount(10, cssControls + ' > div[class="_9ndw3l0"i] > button[class="_9ndw3l1 _1tmkx9h0"i]:has(path[d^="M18 3H6C4.346"i])');
+    // コメント画面描画時[x]
+    const commentTxt = await waitQuerySelectorCount(10, cssControls + ' > div[class="_9ndw3l0"i] > button:nth-child(3)');
     if (!isNuN(commentTxt)) { commentTxt.click(); }
 
     // 再生画面 : 判断
@@ -189,7 +193,7 @@
     const comemntBtnController = await waitQuerySelectorCount(10, cssCommentArea + ' > div[class="_1ti8yhz2"i] > button[class="_5jwikj0"i]:not(:has(svg[class="_5jwikj1 _5jwikj2"i]))');
     if (!isNuN(comemntBtnController)) { comemntBtnController.click(); }
     // コメント画面描画時[x]path Stylus
-    const commentTxtController = await waitQuerySelectorCount(10, cssControls + ' > div[class="_9ndw3l0"i] > button[class="_9ndw3l1 _1tmkx9h0"i]:has(path[d^="M18 3H6C4.346"i])');
+    const commentTxtController = await waitQuerySelectorCount(10, cssControls + ' > div[class="_9ndw3l0"i] > button:nth-child(3)');
     if (!isNuN(commentTxtController)) { commentTxtController.click(); }
   };
   const changeUrl = () => {
