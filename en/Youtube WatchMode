@@ -478,18 +478,18 @@
           await ytStableVolume(ytPlayer, isSTVol);
         }
 
-        // 動画の音声ミュート解除
-        // ytPlayer.unMute();
-        ytPlayer.setVolume(100);
+        // 動画自動再生
+        ytPlayer.playVideo();
         // 読み込み位置を強制的に「はじめに(0)」戻す
         const stats = ytPlayer.getVideoStats() || {};
         if (stats.live === 'live' || stats.live === 'dvr' || stats.live === 'lp') {
           console.log('LIVE Stream のため巻き戻しは行わない');
         } else {
-          // ytPlayer.seekTo(0, true);
+           ytPlayer.seekTo(0, true);
         }
-        // 動画自動再生
-        ytPlayer.playVideo();
+        // 動画の音声ミュート解除
+        // ytPlayer.unMute();
+        ytPlayer.setVolume(100);
       }
       // style 無効化
       await new Promise(resolve => setTimeout(resolve, 2000));
