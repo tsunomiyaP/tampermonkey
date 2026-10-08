@@ -24,6 +24,7 @@
   const xitemRem = 'removeItem';
   const remReTweet = 'span[data-testid="socialContext"i]';
   const remAd = 'div[class="css-g5y9jx r-zl2h9q"i] div[class="css-g5y9jx r-1kkk96v"i] span[class="css-1jxf684 r-bcqeeo r-1ttztb7 r-qvutc0 r-1tl8opc"i]';
+  const regStatus = '/status/';
   const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
   // 可変数
   let twMutationManager;
@@ -44,7 +45,8 @@
   appendStylus += 'div[data-testid="cellInnerDiv"i].' + xitemRem + ' { display: none !important; } ';
   appendStylus += 'div[data-testid="cellInnerDiv"i]:has(' + remReTweet + ') { display: none !important; } ';
   // menu item status 最新
-  appendStylus += 'div[role="group"i] div[role="menu"i] div[data-testid="Dropdown"i]:not(:has([data-testid="tweetEngagements"i], [data-testid="settings"i])) { display: none !important; } ';
+  appendStylus += 'div[role="group"i] div[role="menu"i][class="css-g5y9jx r-j2cz3j r-14lw9ot r-1q9bdsx r-1upvrn0 r-1udh08x r-1rnoaur r-1r851ge r-1xcajam"i]:not(:has(div[data-testid="Dropdown"i] > div[class="css-g5y9jx r-1mnxbyr"i] > div)) { display: none !important; } ';
+  appendStylus += 'div[role="group"i] div[role="menu"i][class="css-g5y9jx r-j2cz3j r-14lw9ot r-1q9bdsx r-1upvrn0 r-1udh08x r-u8s1d"i]:not(:has(div[data-testid="Dropdown"i] > div[role="menuitem"i] ~ a)) { display: none !important; } ';
   // ext area stylus
   appendStylus += 'div[aria-label="トレンド"i] > div > div:not(:has(form[aria-label="検索"i])) { display: none !important; } ';
   appendStylus += 'nav[role="navigation"i] > a[href$="/i/grok"i], div[role="dialog"i] div:has(> a[href$="/i/grok"i]), nav[role="navigation"i] > a[href$="/communities"i], div[role="dialog"i] div:has(> a[href$="/communities"i]), nav[role="navigation"i] > a[href$="/i/premium_sign_up"i], div[role="dialog"i] div:has(> a[href$="/i/premium_sign_up"i]), nav[role="navigation"i] > a[href$="/i/verified-orgs-signup"i], div[role="dialog"i] div:has(> a[href$="/i/verified-orgs-signup"i]), nav[role="navigation"i] > a[href$="/jobs"i], div[role="dialog"i] div:has(> a[href$="/jobs"i]), nav[role="navigation"i] > a[href$="/i/jf/creators/studio"i], div[role="dialog"i] div:has(> a[href$="/i/jf/creators/studio"i]), nav[role="navigation"i] > a[href$="/i/chat"i], div[role="dialog"i] div:has(> a[href$="/i/chat"i]), nav[role="navigation"i] > a[href$="/i/monetization"i], div[role="dialog"i] div:has(> a[href$="/i/monetization"i]), nav[role="navigation"i] > a[href$="/i/connect_people"i], div[role="dialog"i] div:has(> a[href$="/i/connect_people"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href$="/i/premium_sign_up"i], div[role="dialog"i] div:has(> a[href$="/i/premium_sign_up"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href$="/i/verified-orgs-signup"i], div[role="dialog"i] div:has(> a[href$="/i/verified-orgs-signup"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href$="/i/jf/creators/studio"i], div[role="dialog"i] div:has(> a[href$="/i/jf/creators/studio"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href*="ads.x.com/"i], div[role="dialog"i] div:has(> a[href*="ads.x.com/"i]) { display: none !important; }';
@@ -58,7 +60,7 @@
   appendStylus += 'div[aria-label="ホームタイムライン"i] > div div[role="presentation"i] > a[href$="/news"i] { display: none !important; } ';
   appendStylus += 'div[aria-label="ホームタイムライン"i] > div div[role="presentation"i] > a[href$="/sports"i] { display: none !important; } ';
   appendStylus += 'div[aria-label="ホームタイムライン"i] > div div[role="presentation"i] > a[href$="/entertainment"i] { display: none !important; } ';
-  // navigation
+  // navigation:
   appendStylus += 'nav[role="navigation"i] > a[href$="/i/grok"i], div[role="dialog"i] div:has(> a[href$="/i/grok"i]), nav[role="navigation"i] > a[href$="/communities"i], div[role="dialog"i] div:has(> a[href$="/communities"i]), nav[role="navigation"i] > a[href$="/i/premium_sign_up"i], div[role="dialog"i] div:has(> a[href$="/i/premium_sign_up"i]), nav[role="navigation"i] > a[href$="/i/verified-orgs-signup"i], div[role="dialog"i] div:has(> a[href$="/i/verified-orgs-signup"i]), nav[role="navigation"i] > a[href$="/jobs"i], div[role="dialog"i] div:has(> a[href$="/jobs"i]), nav[role="navigation"i] > a[href$="/i/jf/creators/studio"i], div[role="dialog"i] div:has(> a[href$="/i/jf/creators/studio"i]), nav[role="navigation"i] > a[href$="/i/chat"i], div[role="dialog"i] div:has(> a[href$="/i/chat"i]), nav[role="navigation"i] > a[href$="/i/monetization"i], div[role="dialog"i] div:has(> a[href$="/i/monetization"i]), nav[role="navigation"i] > a[href$="/i/connect_people"i], div[role="dialog"i] div:has(> a[href$="/i/connect_people"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href$="/i/premium_sign_up"i], div[role="dialog"i] div:has(> a[href$="/i/premium_sign_up"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href$="/i/verified-orgs-signup"i], div[role="dialog"i] div:has(> a[href$="/i/verified-orgs-signup"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href$="/i/jf/creators/studio"i], div[role="dialog"i] div:has(> a[href$="/i/jf/creators/studio"i]), div[role="menu"i] div[data-testid="Dropdown"i] a[href*="ads.x.com/"i], div[role="dialog"i] div:has(> a[href*="ads.x.com/"i]) { display: none !important; }';
 
   const stylusElem = document.createElement('style');
@@ -167,7 +169,7 @@
   };
 
   const switchToNewestReplies = async (e) => {
-    if (e.detail.path.includes('/status/')) {
+    if (new RegExp(regStatus, 'gis').test(e.detail.path)) {
       // メニューボタンを探すセレクタ（環境に合わせて調整してください）
       const menuButton = await waitQuerySelector('div[aria-label*="会話" i] div[class="css-g5y9jx r-1awozwy r-18u37iz" i] button[aria-haspopup="menu" i]');
 
@@ -189,7 +191,7 @@
     }
   };
   const tweetMoreLines = async (e) => {
-    if (e.detail.path.includes('/status/')) {
+    if (new RegExp(regStatus, 'gis').test(e.detail.path)) {
 
       const showMoreLine = await waitQuerySelector('section[aria-labelledby="accessible-list-0"i] > div[aria-label="タイムライン: 会話"i] > div');
       await waitQuerySelector(twColumns);
@@ -213,7 +215,7 @@
   };
   const removeElements = async (e) => {
     let nodeTimeline = await waitQuerySelector('div[aria-label^="タイムライン: "i] > div');
-    if (e.detail.path.includes('/status/')) {
+    if (new RegExp(regStatus, 'gis').test(e.detail.path)) {
       // 会話の場合、読み込みは会話内のみでよい
       nodeTimeline = await waitQuerySelector('section[aria-labelledby="accessible-list-0"i] > div[aria-label="タイムライン: 会話"i] > div');
     } else {
