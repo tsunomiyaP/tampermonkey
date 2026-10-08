@@ -478,6 +478,9 @@
           await ytStableVolume(ytPlayer, isSTVol);
         }
 
+        // 動画の音声ミュート解除
+        // ytPlayer.unMute();
+        ytPlayer.setVolume(100);
         // 読み込み位置を強制的に「はじめに(0)」戻す
         const stats = ytPlayer.getVideoStats() || {};
         if (stats.live === 'live' || stats.live === 'dvr' || stats.live === 'lp') {
@@ -485,9 +488,6 @@
         } else {
           // ytPlayer.seekTo(0, true);
         }
-        // 動画の音声ミュート解除
-        // ytPlayer.unMute();
-        ytPlayer.setVolume(100);
         // 動画自動再生
         ytPlayer.playVideo();
       }
