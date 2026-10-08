@@ -310,11 +310,14 @@
       const closeBtn = ':is(ytd-app, ytm-app > bottom-sheet-container[role="dialog"i] > ytw-scrim)';
 
       console.log('> yt DRC Audio is already waiting...');
+      ytPlayer.playVideo();
       if ('www.youtube.com' === location.host) {
         await new Promise(resolve => setTimeout(resolve, 10));
       } else {
         await waitQuerySelector('div#player-control-overlay > div.player-controls-content player-top-controls');
       }
+      ytPlayer.pauseVideo();
+
       const setting = await waitQuerySelector(settingBtn);
       if (!isNuN(setting)) { setting.click(); }
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -479,12 +482,10 @@
         }
 
         // 動画読み込み完了後、自動再生
-        while (ytPlayer.getPlayerState() == 5) {
-          await new Promise(resolve => setTimeout(resolve, 500));
-        }
         ytPlayer.playVideo();
         // 読み込み位置を強制的に「はじめに(0)」戻す
         const stats = ytPlayer.getVideoStats() || {};
+        console.log(stats);
         if (stats.live === 'live' || stats.live === 'dvr' || stats.live === 'lp') {
           console.log('LIVE Stream のため巻き戻しは行わない');
         } else {
