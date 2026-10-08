@@ -384,11 +384,6 @@
       }
     }
   };
-  const waitPlayerPhase = async (ytPlayer, state) => {
-    while (ytPlayer.getPlayerState() !== state) {
-      await new Promise(resolve => setTimeout(resolve, 100));
-    }
-  };
   const ytQualityFix = async (ytPlayer, flag, level) => {
     // ytPlayer.pauseVideo();
     // ytPlayer.mute();
@@ -451,15 +446,13 @@
         await waitQuerySelector(manager);
         const ytPlayer = await waitQuerySelector(player);
         await waitPlayerState(ytPlayer);
-        ytPlayer.setVolume(0);
-        ytPlayer.playVideo();
-        await waitPlayerPhase(ytPlayer, 1); // 再生されるまで待機
         // 分岐コード: -1 未開始: まだ読み込まれていません
         // 分岐コード: 0 再生終了: 動画が最後まで流れました
         // 分岐コード: 1 再生中: 動画が動いています
         // 分岐コード: 2 一時停止中: ユーザーが動画を止めました
         // 分岐コード: 3 バッファリング中: 読み込みを待っています
         // 分岐コード: 5 再生準備完了: 動画の準備ができています
+        // ytPlayer.getPlayerState();
 
         // eslint-disable-next-line no-undef
         console.log('動画の再生が開始されました');
@@ -485,6 +478,7 @@
           await ytStableVolume(ytPlayer, isSTVol);
         }
 
+        ytPlayer.playVideo();
         // 読み込み位置を強制的に「はじめに(0)」戻す
         const stats = ytPlayer.getVideoStats() || {};
         if (stats.live === 'live' || stats.live === 'dvr' || stats.live === 'lp') {
