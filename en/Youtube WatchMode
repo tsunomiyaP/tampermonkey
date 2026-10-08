@@ -478,6 +478,7 @@
           await ytStableVolume(ytPlayer, isSTVol);
         }
 
+        await new Promise(resolve => setTimeout(resolve, 500));
         // 動画自動再生
         ytPlayer.playVideo();
         // 読み込み位置を強制的に「はじめに(0)」戻す
