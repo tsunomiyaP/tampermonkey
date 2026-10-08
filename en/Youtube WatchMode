@@ -478,8 +478,10 @@
           await ytStableVolume(ytPlayer, isSTVol);
         }
 
-        await new Promise(resolve => setTimeout(resolve, 500));
-        // 動画自動再生
+        // 動画読み込み完了後、自動再生
+        while (ytPlayer.getPlayerState() == 5) {
+          await new Promise(resolve => setTimeout(resolve, 500));
+        }
         ytPlayer.playVideo();
         // 読み込み位置を強制的に「はじめに(0)」戻す
         const stats = ytPlayer.getVideoStats() || {};
