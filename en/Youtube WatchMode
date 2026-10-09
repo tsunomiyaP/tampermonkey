@@ -417,16 +417,19 @@
     let settingController = null;
     let attempts = 0;
     const maxAttempts = 100;
-    while (attempts < maxAttempts || isNuN(settingController)) {
+    while (attempts < maxAttempts) {
       // 動画の音声ミュート状態が優先されて設定ボタン表示されないので、ミュート解除して先出で音(0)で漏れ防ぐ
       // ytPlayer.mute();
       ytPlayer.unMute();
       ytPlayer.setVolume(0);
 
-      ytPlayer.playVideo();
-      settingController = document.querySelector(settingBtn);
-      await new Promise(resolve => setTimeout(resolve, 100));
       ytPlayer.pauseVideo();
+      await new Promise(resolve => setTimeout(resolve, 10));
+      if (isNuN(settingController)) {
+        ytPlayer.playVideo();
+        settingController = document.querySelector(settingBtn);
+        ytPlayer.pauseVideo();
+      }
       attempts++;
     }
     await new Promise(resolve => setTimeout(resolve, 1000));
