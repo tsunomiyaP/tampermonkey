@@ -360,37 +360,6 @@
       if (toggleSubBtn.getAttribute('aria-pressed') === 'true') { toggleSubBtn.click(); return ytSubBtn(); } else { return false; }
     }
   };
-  const waitPlayerState = async (ytPlayer) => {
-    // video tag : video.getPlayerState()
-    // -1 YT.PlayerState.UNSTARTED未開始（動画が読み込まれていない状態）
-    // 0  YT.PlayerState.ENDED終了（最後まで再生し終わった）
-    // 1  YT.PlayerState.PLAYING再生中
-    // 2  YT.PlayerState.PAUSED一時停止中
-    // 3  YT.PlayerState.BUFFERINGバッファリング中（読み込み中）
-    // 5  YT.PlayerState.CUED頭出し済み（方法1・2で解説した、停止状態での読込完了）
-
-    const settingBtn = [
-      'button.ytp-settings-button[aria-label="設定"i]',
-      'player-top-controls button.player-settings-icon[aria-label="再生設定"i]'
-    ].join(',');
-
-    let settingController = null;
-    let attempts = 0;
-    const maxAttempts = 100;
-    while (attempts < maxAttempts || isNuN(settingController)) {
-      // 動画の音声ミュート状態が優先されて設定ボタン表示されないので、ミュート解除して先出で音(0)で漏れ防ぐ
-      // ytPlayer.mute();
-      ytPlayer.unMute();
-      ytPlayer.setVolume(0);
-
-      ytPlayer.playVideo();
-      await new Promise(resolve => setTimeout(resolve, 10));
-      settingController = document.querySelector(settingBtn);
-      ytPlayer.pauseVideo();
-      attempts++;
-    }
-    await new Promise(resolve => setTimeout(resolve, 1000));
-  };
   const ytQualityFix = async (ytPlayer, flag, level) => {
     // ytPlayer.pauseVideo();
     // ytPlayer.mute();
@@ -431,6 +400,37 @@
       console.log('now quality set power on...', ytPlayer.getPlaybackQuality());
     }
   };
+  const waitPlayerState = async (ytPlayer) => {
+    // video tag : video.getPlayerState()
+    // -1 YT.PlayerState.UNSTARTED未開始（動画が読み込まれていない状態）
+    // 0  YT.PlayerState.ENDED終了（最後まで再生し終わった）
+    // 1  YT.PlayerState.PLAYING再生中
+    // 2  YT.PlayerState.PAUSED一時停止中
+    // 3  YT.PlayerState.BUFFERINGバッファリング中（読み込み中）
+    // 5  YT.PlayerState.CUED頭出し済み（方法1・2で解説した、停止状態での読込完了）
+
+    const settingBtn = [
+      'button.ytp-settings-button[aria-label="設定"i]',
+      'player-top-controls button.player-settings-icon[aria-label="再生設定"i]'
+    ].join(',');
+
+    let settingController = null;
+    let attempts = 0;
+    const maxAttempts = 100;
+    while (attempts < maxAttempts || isNuN(settingController)) {
+      // 動画の音声ミュート状態が優先されて設定ボタン表示されないので、ミュート解除して先出で音(0)で漏れ防ぐ
+      // ytPlayer.mute();
+      ytPlayer.unMute();
+      ytPlayer.setVolume(0);
+
+      ytPlayer.playVideo();
+      settingController = document.querySelector(settingBtn);
+      await new Promise(resolve => setTimeout(resolve, 100));
+      ytPlayer.pauseVideo();
+      attempts++;
+    }
+    await new Promise(resolve => setTimeout(resolve, 1000));
+  };
 
   const changeUrl = () => {
     const observer = new MutationObserver(() => {
@@ -452,7 +452,6 @@
         // 初期処理
         await waitQuerySelector(manager);
         const ytPlayer = await waitQuerySelector(player);
-        await waitPlayerState(ytPlayer);
         // 分岐コード: -1 未開始: まだ読み込まれていません
         // 分岐コード: 0 再生終了: 動画が最後まで流れました
         // 分岐コード: 1 再生中: 動画が動いています
@@ -461,8 +460,8 @@
         // 分岐コード: 5 再生準備完了: 動画の準備ができています
         // ytPlayer.getPlayerState();
 
-        // eslint-disable-next-line no-undef
         console.log('動画の再生が開始されました');
+        await waitPlayerState(ytPlayer);
 
         if ('www.youtube.com' === e.detail.host) {
           // pc
