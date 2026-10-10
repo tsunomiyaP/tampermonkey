@@ -423,15 +423,16 @@
       ytPlayer.unMute();
       ytPlayer.setVolume(0);
 
+      ytPlayer.pauseVideo();
       await new Promise(resolve => setTimeout(resolve, 10));
       if (isNuN(settingController)) {
         ytPlayer.playVideo();
         settingController = document.querySelector(settingBtn);
+        await new Promise(resolve => setTimeout(resolve, 10));
         ytPlayer.pauseVideo();
       }
       attempts++;
     }
-    await new Promise(resolve => setTimeout(resolve, 1000));
   };
 
   const changeUrl = () => {
