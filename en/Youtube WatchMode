@@ -427,8 +427,8 @@
       await new Promise(resolve => setTimeout(resolve, 10));
       if (isNuN(settingController)) {
         ytPlayer.playVideo();
+        await new Promise(resolve => setTimeout(resolve, 100));
         settingController = document.querySelector(settingBtn);
-        await new Promise(resolve => setTimeout(resolve, 10));
         ytPlayer.pauseVideo();
       }
       attempts++;
