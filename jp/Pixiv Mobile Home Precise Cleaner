@@ -34,6 +34,8 @@
     'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="卯月コウ" i])',
     'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="伏見" i])',
     'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="剣持" i])',
+    'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="社築" i])',
+    'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="不破" i])',
     'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="イブラヒム" i])',
     'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="ローレン" i])',
     'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="伊波" i])',
