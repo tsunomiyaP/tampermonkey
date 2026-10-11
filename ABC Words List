@@ -226,7 +226,7 @@
       'twitch.tv/5_mario|五月病(\\s)*マリオ|@(5_mario|5mario)',
 
       // 芸人
-      'M-1|R-1'
+      'M-1|R-1',
       '狩野英孝|@eikogo3822',
       'ジャルジャル|JARUJARU',
       '中田敦彦|@NKTofficial',
@@ -235,7 +235,7 @@
       'ララチューン|@lalatuune',
       'オモコロ|@omocorochannel',
       'こたけ正義感',
-      'ジェラードン|@gerrardon'
+      'ジェラードン|@gerrardon',
       '花江夏樹|@hanae0626',
       '木村良平|@Ryouhey_Drunk',
 
