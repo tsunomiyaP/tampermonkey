@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      1.0
 // @description  try to take over the world!
-// @author       Me
+// @author       My
 // @match        https://*.youtube.com/*
 // @match        https://x.com/*
 // @match        https://hololive.hololivepro.com/*
@@ -226,13 +226,16 @@
       'twitch.tv/5_mario|五月病(\\s)*マリオ|@(5_mario|5mario)',
 
       // 芸人
+      'M-1|R-1'
       '狩野英孝|@eikogo3822',
+      'ジャルジャル|JARUJARU',
       '中田敦彦|@NKTofficial',
       '梶原雄太|カジサック|@kajisac',
       '粗品|@soshina',
       'ララチューン|@lalatuune',
       'オモコロ|@omocorochannel',
       'こたけ正義感',
+      'ジェラードン|@gerrardon'
       '花江夏樹|@hanae0626',
       '木村良平|@Ryouhey_Drunk',
 
