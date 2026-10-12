@@ -426,8 +426,9 @@
       ytPlayer.pauseVideo();
       await new Promise(resolve => setTimeout(resolve, 10));
       if (isNuN(settingController)) {
+        // 動画自動再生
         ytPlayer.playVideo();
-        await new Promise(resolve => setTimeout(resolve, 200));
+        await new Promise(resolve => setTimeout(resolve, 100));
 
         settingController = document.querySelector(settingBtn);
         ytPlayer.pauseVideo();
@@ -496,6 +497,8 @@
         } else {
           ytPlayer.seekTo(0, true);
         }
+        // 動画自動再生
+        await new Promise(resolve => setTimeout(resolve, 1000));
         ytPlayer.playVideo();
         // 動画の音声ミュート解除
         // ytPlayer.unMute();
