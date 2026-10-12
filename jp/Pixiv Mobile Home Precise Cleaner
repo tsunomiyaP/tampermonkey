@@ -20,6 +20,7 @@
     '.w-full[data-ga4-label="pixivision_content" i]',
     '.w-full:has([data-ga4-entity-id^="collection/" i])',
     '.w-full:has([data-ga4-entity-id^="novel" i])',
+    'div:has(> div[data-ga4-label="tag_content" i])',
     'div[class="sc-62a9fca4-0 bVmyEQ h-64" i] > div > div > div > .w-full:has(a[href^="/premium" i])',
     '.w-full:has(> .w-full > a[href^="/premium" i])',
     '.flex-col > section:has(a[href^="/premium/" i])',
