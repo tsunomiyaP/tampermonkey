@@ -408,6 +408,7 @@
     // 2  YT.PlayerState.PAUSED一時停止中
     // 3  YT.PlayerState.BUFFERINGバッファリング中（読み込み中）
     // 5  YT.PlayerState.CUED頭出し済み（方法1・2で解説した、停止状態での読込完了）
+    settingController = null;
     let attempts = 0;
     const maxAttempts = 100;
     while (attempts < maxAttempts) {
