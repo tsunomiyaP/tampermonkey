@@ -482,16 +482,16 @@
           await ytStableVolume(ytPlayer, isSTVol);
         }
 
+        // 読み込み完了したら再生開始
+        while (ytPlayer.getPlayerState() === -1 && ytPlayer.getPlayerState() === 3) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
         // 読み込み位置を強制的に「はじめに(0)」戻す
         const stats = ytPlayer.getVideoStats() || {};
         if (stats.live === 'live' || stats.live === 'dvr' || stats.live === 'lp') {
           console.log('LIVE Stream のため巻き戻しは行わない');
         } else {
           ytPlayer.seekTo(0, true);
-        }
-        // 読み込み完了したら再生開始
-        while (ytPlayer.getPlayerState() === -1 || ytPlayer.getPlayerState() === 3) {
-          await new Promise(resolve => setTimeout(resolve, 100));
         }
         // 動画自動再生
         ytPlayer.playVideo();
