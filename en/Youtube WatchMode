@@ -31,12 +31,26 @@
   // true: 再生画面 画質自動変更
   const isQuality = true;
 
+  const settingBtn = [
+    'button.ytp-settings-button[aria-label="設定" i]',
+    'player-top-controls button.player-settings-icon[aria-label="再生設定" i]'
+  ].join(',');
+  const drcBtn = [
+    'div.ytp-drc-menu-item[aria-label="一定音量" i][role="menuitemcheckbox" i]',
+    'player-settings-menu > stable-volume-toggle div.ytListItemViewModelTrailing > switch-button-view-model > button[aria-label="一定音量" i]'
+  ].join(',');
+  const closeBtn = [
+    'ytd-app',
+    'ytm-app > bottom-sheet-container[role="dialog" i] > ytw-scrim'
+  ].join(',');
+
   const manager = 'ytd-app, ytm-app[id="app" i]';
   const player = 'div#movie_player.html5-video-player';
   // youtube  画質 [0 : 144, 1 : 240, 2 : 360, 3 : 480, 4 : 720, 5 : 1080, 6 : auto]
   const qualitys = ['tiny', 'small', 'medium', 'large', 'hd720', 'hd1080', 'auto'];
   const regWatch = '^/watch|^/live';
   let oldUrl = '', ytMobPlayer = '';
+  let settingController = null;
   // ==========================================================
   // 静的style適用エリア
   // stylus: beforebegin, afterbegin, beforeend, afterend
@@ -305,22 +319,8 @@
       stylusElemSettings.textContent += 'div.ytp-popup.ytp-settings-menu { display: none !important; } '; // pc
       stylusElemSettings.textContent += 'ytm-app[id="app" i] > :is(bottom-sheet-container[aria-modal="true" i]) { display: none !important; } '; // mobile
 
-      const settingBtn = [
-        'button.ytp-settings-button[aria-label="設定" i]',
-        'player-top-controls button.player-settings-icon[aria-label="再生設定" i]'
-      ].join(',');
-      const drcBtn = [
-        'div.ytp-drc-menu-item[aria-label="一定音量" i][role="menuitemcheckbox" i]',
-        'player-settings-menu > stable-volume-toggle div.ytListItemViewModelTrailing > switch-button-view-model > button[aria-label="一定音量" i]'
-      ].join(',');
-      const closeBtn = [
-        'ytd-app',
-        'ytm-app > bottom-sheet-container[role="dialog" i] > ytw-scrim'
-      ].join(',');
-
       console.log('> yt DRC Audio is already waiting...');
-      const setting = await waitQuerySelector(settingBtn);
-      if (!isNuN(setting)) { setting.click(); }
+      settingController.click();
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       const drcMenuItem = document.querySelector(drcBtn);
@@ -335,7 +335,7 @@
         console.log('> yt DRC Audio is nothing...');
       }
       // history.replaceState(null, '', window.location.pathname + window.location.search);
-      document.querySelector(closeBtn).click();
+      if (!isNuN(document.querySelector(closeBtn))) { document.querySelector(closeBtn).click(); }
     }
   };
   const ytNavBtn = async (flag) => {
@@ -408,13 +408,6 @@
     // 2  YT.PlayerState.PAUSED一時停止中
     // 3  YT.PlayerState.BUFFERINGバッファリング中（読み込み中）
     // 5  YT.PlayerState.CUED頭出し済み（方法1・2で解説した、停止状態での読込完了）
-
-    const settingBtn = [
-      'button.ytp-settings-button[aria-label="設定" i]',
-      'player-top-controls button.player-settings-icon[aria-label="再生設定" i]'
-    ].join(',');
-
-    let settingController = null;
     let attempts = 0;
     const maxAttempts = 100;
     while (attempts < maxAttempts) {
@@ -431,6 +424,7 @@
         await new Promise(resolve => setTimeout(resolve, 100));
 
         settingController = document.querySelector(settingBtn);
+        console.log(settingController);
         ytPlayer.pauseVideo();
       }
       attempts++;
@@ -489,15 +483,16 @@
           await ytStableVolume(ytPlayer, isSTVol);
         }
 
+        console.log('1');
         // 読み込み位置を強制的に「はじめに(0)」戻す
         const stats = ytPlayer.getVideoStats() || {};
-        console.log(stats);
         if (stats.live === 'live' || stats.live === 'dvr' || stats.live === 'lp') {
           console.log('LIVE Stream のため巻き戻しは行わない');
         } else {
           ytPlayer.seekTo(0, true);
         }
         // 読み込み完了したら再生開始
+        console.log('2');
         while (ytPlayer.getPlayerState() !== 5) {
           await new Promise(resolve => setTimeout(resolve, 100));
           // 動画自動再生
@@ -506,10 +501,10 @@
           // ytPlayer.unMute();
           ytPlayer.setVolume(100);
         }
-        // style 無効化
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        if (isChatMode) { stylusElemSettings.textContent = 'div#chat-container { display: none !important; } '; } else { stylusElemSettings.textContent = ''; }
       }
+      // style 無効化
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      if (isChatMode) { stylusElemSettings.textContent = 'div#chat-container { display: none !important; } '; } else { stylusElemSettings.textContent = ''; }
     }
   });
   const eventHandler = () => {
