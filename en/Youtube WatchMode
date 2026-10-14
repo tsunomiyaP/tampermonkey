@@ -424,7 +424,6 @@
         await new Promise(resolve => setTimeout(resolve, 100));
 
         settingController = document.querySelector(settingBtn);
-        console.log(settingController);
         ytPlayer.pauseVideo();
       }
       attempts++;
@@ -483,7 +482,6 @@
           await ytStableVolume(ytPlayer, isSTVol);
         }
 
-        console.log('1');
         // 読み込み位置を強制的に「はじめに(0)」戻す
         const stats = ytPlayer.getVideoStats() || {};
         if (stats.live === 'live' || stats.live === 'dvr' || stats.live === 'lp') {
@@ -492,15 +490,14 @@
           ytPlayer.seekTo(0, true);
         }
         // 読み込み完了したら再生開始
-        console.log('2');
-        while (ytPlayer.getPlayerState() !== 5) {
+        while (ytPlayer.getPlayerState() === -1 || ytPlayer.getPlayerState() === 3) {
           await new Promise(resolve => setTimeout(resolve, 100));
-          // 動画自動再生
-          ytPlayer.playVideo();
-          // 動画の音声ミュート解除
-          // ytPlayer.unMute();
-          ytPlayer.setVolume(100);
         }
+        // 動画自動再生
+        ytPlayer.playVideo();
+        // 動画の音声ミュート解除
+        // ytPlayer.unMute();
+        ytPlayer.setVolume(100);
       }
       // style 無効化
       await new Promise(resolve => setTimeout(resolve, 2000));
