@@ -497,12 +497,15 @@
         } else {
           ytPlayer.seekTo(0, true);
         }
-        // 動画自動再生
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        ytPlayer.playVideo();
-        // 動画の音声ミュート解除
-        // ytPlayer.unMute();
-        ytPlayer.setVolume(100);
+        // 読み込み完了したら再生開始
+        while (ytPlayer.getPlayerState() !== 5) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+          // 動画自動再生
+          ytPlayer.playVideo();
+          // 動画の音声ミュート解除
+          // ytPlayer.unMute();
+          ytPlayer.setVolume(100);
+        }
       }
       // style 無効化
       await new Promise(resolve => setTimeout(resolve, 2000));
