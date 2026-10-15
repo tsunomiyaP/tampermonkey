@@ -275,7 +275,7 @@
     const words = isNuN(abc) ? '' : abc.hideword;
     const excludes = isNuN(abc) ? '' : abc.execludeWords;
 
-    const txt = youtubeItem.userChN + ' : ' + youtubeItem.userNam + ' : ' + youtubeItem.ytTitle;
+    const txt = youtubeItem.userNam + ' : ' + youtubeItem.userChN + ' : ' + youtubeItem.ytTitle;
     for (const word of words) {
       if (new RegExp(word, 'gis').test(txt)) {
         youtubeItem.word = word;
