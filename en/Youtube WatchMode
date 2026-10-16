@@ -491,8 +491,8 @@
           ytPlayer.seekTo(0, true);
         }
         // 読み込み完了したら再生開始
-        while (ytPlayer.getPlayerState() === -1 && ytPlayer.getPlayerState() === 3) {
-          await new Promise(resolve => setTimeout(resolve, 500));
+        while (ytPlayer.getPlayerState() === -1) {
+          await new Promise(resolve => setTimeout(resolve, 2000));
         }
         // 動画自動再生
         ytPlayer.playVideo();
@@ -501,7 +501,6 @@
         ytPlayer.setVolume(100);
       }
       // style 無効化
-      await new Promise(resolve => setTimeout(resolve, 2000));
       if (isChatMode) { stylusElemSettings.textContent = 'div#chat-container { display: none !important; } '; } else { stylusElemSettings.textContent = ''; }
     }
   });
