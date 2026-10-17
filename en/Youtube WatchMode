@@ -414,11 +414,16 @@
     while (attempts < maxAttempts) {
       // 動画の音声ミュート状態が優先されて設定ボタン表示されないので、ミュート解除して先出で音(0)で漏れ防ぐ
       // ytPlayer.mute();
-      ytPlayer.unMute();
+      // ytPlayer.unMute();
       ytPlayer.setVolume(0);
 
+      // 読み込まれるまで待機
+      while (ytPlayer.getPlayerState() === -1 || ytPlayer.getPlayerState() === 3) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
       ytPlayer.pauseVideo();
       await new Promise(resolve => setTimeout(resolve, 10));
+
       if (isNuN(settingController)) {
         // 動画自動再生
         ytPlayer.playVideo();
@@ -490,18 +495,21 @@
         } else {
           ytPlayer.seekTo(0, true);
         }
-        // 読み込み完了したら再生開始
-        while (ytPlayer.getPlayerState() === -1) {
-          await new Promise(resolve => setTimeout(resolve, 2000));
+        // 読み込み完了後、動画停止処理が行われた(2)後に自動再生待機
+        while (ytPlayer.getPlayerState() !== 2) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+          console.log('動画の準備中・・・ : ', ytPlayer.getPlayerState());
         }
+        console.log('動画の準備（頭出し）が完了しました！現在の状態 : ', ytPlayer.getPlayerState());
         // 動画自動再生
         ytPlayer.playVideo();
         // 動画の音声ミュート解除
         // ytPlayer.unMute();
         ytPlayer.setVolume(100);
+
+        // style 無効化
+        if (isChatMode) { stylusElemSettings.textContent = 'div#chat-container { display: none !important; } '; } else { stylusElemSettings.textContent = ''; }
       }
-      // style 無効化
-      if (isChatMode) { stylusElemSettings.textContent = 'div#chat-container { display: none !important; } '; } else { stylusElemSettings.textContent = ''; }
     }
   });
   const eventHandler = () => {
