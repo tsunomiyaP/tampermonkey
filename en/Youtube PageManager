@@ -275,8 +275,15 @@
     const words = isNuN(abc) ? '' : abc.hideword;
     const excludes = isNuN(abc) ? '' : abc.execludeWords;
 
-    const txt = youtubeItem.userNam + ' : ' + youtubeItem.userChN + ' : ' + youtubeItem.ytTitle;
+    const txt = youtubeItem.userNam + '：' + youtubeItem.userChN + '：' + youtubeItem.ytTitle;
     for (const word of words) {
+      // userName 除外
+      if (new RegExp(word, 'gis').test(youtubeItem.userNam)) {
+        youtubeItem.word = word;
+        console.log('> hide all words : ', youtubeItem);
+        flg = true;
+        break;
+      }
       if (new RegExp(word, 'gis').test(txt)) {
         youtubeItem.word = word;
         console.log('> hide all words : ', youtubeItem);
