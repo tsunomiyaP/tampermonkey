@@ -508,7 +508,7 @@
         ytPlayer.setVolume(100);
       }
       // style 無効化
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 500));
       if (isChatMode) { stylusElemSettings.textContent = 'div#chat-container { display: none !important; } '; } else { stylusElemSettings.textContent = ''; }
     }
   });
