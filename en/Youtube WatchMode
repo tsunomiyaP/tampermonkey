@@ -413,8 +413,8 @@
     const maxAttempts = 100;
     while (attempts < maxAttempts) {
       // 動画の音声ミュート状態が優先されて設定ボタン表示されないので、ミュート解除して先出で音(0)で漏れ防ぐ
-      // ytPlayer.mute();
-      // ytPlayer.unMute();
+      // 動画読み込んだ瞬間はミュ―ト状態の場合があるので解除後、音量「0」
+      ytPlayer.unMute();
       ytPlayer.setVolume(0);
 
       // 読み込まれるまで待機
