@@ -39,9 +39,11 @@
     'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="不破" i])',
     'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="イブラヒム" i])',
     'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="ローレン" i])',
+    'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="レオス" i])',
     'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="伊波" i])',
     'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="ましろ" i])',
-    'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="咎人" i], [data-cr-data*="トリガー" i])',
+    'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="咎人" i], [data-cr-data*="トリガー" i], [data-cr-data*="trigger" i])',
+    'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="七次元生徒会" i])',
     'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="MADTOWN" i])',
   ].join(', ');
   let cssAppended = '';
