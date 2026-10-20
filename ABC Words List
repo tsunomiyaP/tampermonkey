@@ -28,7 +28,7 @@
       '奏手(\\s)*イヅル|kanadeizuru|@KanadeIzuru',
       'アルランディス|arurandeisu|@Arurandeisu',
       '律可|rikkaroid|@rikka',
-      'アステル(\\s)*[・]*レダ|astelleda|@AstelLeda',
+      'アステル((\\s)*[・]*レダ)*|astelleda|@AstelLeda',
       '岸堂(\\s)*天真|kishidotemma|@KishidoTemma',
       '夕刻(\\s)*ロベル|yukokuroberu|@YukokuRoberu',
       '影山(\\s)*シエン|kageyamashien|@KageyamaShien',
