@@ -416,9 +416,11 @@ const waitPlayerState = async (ytPlayer) => {
     ytPlayer.setVolume(0);
 
     // 2. 動画の再生を開始
-    ytPlayer.playVideo();
+    if (ytPlayer.getPlayerState() !== 1) {
+        ytPlayer.playVideo();
+    }
 
-    // 3. 未開始(-1)やバッファリング中(3)の間は待機
+    // 3. 再生(1)以外の間は待機
     await new Promise(resolve => setTimeout(resolve, 500));
     while (ytPlayer.getPlayerState() !== 1) {
         await new Promise(resolve => setTimeout(resolve, 100));
