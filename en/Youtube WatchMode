@@ -410,6 +410,7 @@
     // 5  YT.PlayerState.CUED頭出し済み（方法1・2で解説した、停止状態での読込完了）
 
     // 読み込まれるまで待機
+    await new Promise(resolve => setTimeout(resolve, 500));
     while (ytPlayer.getPlayerState() === -1 || ytPlayer.getPlayerState() === 3) {
       await new Promise(resolve => setTimeout(resolve, 100));
     }
@@ -423,7 +424,7 @@
     const maxAttempts = 100;
     while (attempts < maxAttempts) {
       ytPlayer.pauseVideo();
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise(resolve => setTimeout(resolve, 100));
 
       if (isNuN(settingController)) {
         // 動画自動再生
