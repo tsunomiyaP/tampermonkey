@@ -320,7 +320,9 @@
       stylusElemSettings.textContent += 'ytm-app[id="app" i] > :is(bottom-sheet-container[aria-modal="true" i]) { display: none !important; } '; // mobile
 
       console.log('> yt DRC Audio is already waiting...');
-      settingController.click();
+      if (settingController) {
+          settingController.click();
+      }
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       const drcMenuItem = document.querySelector(drcBtn);
@@ -400,44 +402,53 @@
       console.log('now quality set power on...', ytPlayer.getPlaybackQuality());
     }
   };
-  const waitPlayerState = async (ytPlayer) => {
-    // video tag : video.getPlayerState()
+const waitPlayerState = async (ytPlayer) => {
+        // video tag : video.getPlayerState()
     // -1 YT.PlayerState.UNSTARTED未開始（動画が読み込まれていない状態）
     // 0  YT.PlayerState.ENDED終了（最後まで再生し終わった）
     // 1  YT.PlayerState.PLAYING再生中
     // 2  YT.PlayerState.PAUSED一時停止中
     // 3  YT.PlayerState.BUFFERINGバッファリング中（読み込み中）
     // 5  YT.PlayerState.CUED頭出し済み（方法1・2で解説した、停止状態での読込完了）
-    // 動画の音声ミュート状態が優先されて設定ボタン表示されないので、ミュート解除して先出で音(0)で漏れ防ぐ
-    // 動画読み込んだ瞬間はミュ―ト状態の場合があるので解除後、音量「0」
+
+    // 1. 最初はミュート＆音量0でブラウザの自動再生制限を回避
     ytPlayer.unMute();
     ytPlayer.setVolume(0);
-    // 動画自動再生
+
+    // 2. 動画の再生を開始
     ytPlayer.playVideo();
 
-    // 読み込まれるまで待機
+    // 3. 未開始(-1)やバッファリング中(3)の間は待機
     await new Promise(resolve => setTimeout(resolve, 500));
-    while (ytPlayer.getPlayerState() === -1 || ytPlayer.getPlayerState() === 3) {
-      await new Promise(resolve => setTimeout(resolve, 100));
-    }
-
-    settingController = null;
-    let attempts = 0;
-    const maxAttempts = 100;
-    while (attempts < maxAttempts) {
-      ytPlayer.pauseVideo();
-
-      if (isNuN(settingController)) {
-        // 動画自動再生
-        ytPlayer.playVideo();
-        settingController = document.querySelector(settingBtn);
+    while (ytPlayer.getPlayerState() !== 1) {
         await new Promise(resolve => setTimeout(resolve, 100));
-        ytPlayer.pauseVideo();
-      }
-      attempts++;
-      await new Promise(resolve => setTimeout(resolve, 100));
     }
-  };
+
+    // 4. 再生中(1)または一時停止(2)になったら、要素（設定ボタン）の出現を待つループに入る
+    // ※何度も再生・停止を繰り返さず、一度再生状態にしてボタンの描画を促す
+    let settingController = null;
+    let attempts = 0;
+    const maxAttempts = 50; // 最大5秒程度待つ
+
+    // まだ再生されていなければ一度再生を確実に指示
+    if (ytPlayer.getPlayerState() !== 1) {
+        ytPlayer.playVideo();
+    }
+
+    while (attempts < maxAttempts) {
+        // DOMから設定ボタンを取得してみる
+        settingController = document.querySelector(settingBtn);
+        if (settingController) {
+            console.log('設定ボタンが見つかりました！');
+            break; // 見つかったらループを抜ける
+        }
+        attempts++;
+        await new Promise(resolve => setTimeout(resolve, 100));
+    }
+
+    // pause video
+    ytPlayer.pauseVideo();
+};
 
   const changeUrl = () => {
     const observer = new MutationObserver(() => {
