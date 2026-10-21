@@ -426,16 +426,15 @@
     const maxAttempts = 100;
     while (attempts < maxAttempts) {
       ytPlayer.pauseVideo();
-      await new Promise(resolve => setTimeout(resolve, 100));
 
       if (isNuN(settingController)) {
         // 動画自動再生
         ytPlayer.playVideo();
-        await new Promise(resolve => setTimeout(resolve, 100));
-
         settingController = document.querySelector(settingBtn);
+        await new Promise(resolve => setTimeout(resolve, 100));
         ytPlayer.pauseVideo();
       }
+      await new Promise(resolve => setTimeout(resolve, 100));
       attempts++;
     }
   };
