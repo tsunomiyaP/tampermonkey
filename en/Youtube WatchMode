@@ -434,8 +434,8 @@
         await new Promise(resolve => setTimeout(resolve, 100));
         ytPlayer.pauseVideo();
       }
-      await new Promise(resolve => setTimeout(resolve, 100));
       attempts++;
+      await new Promise(resolve => setTimeout(resolve, 100));
     }
   };
 
