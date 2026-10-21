@@ -421,11 +421,6 @@
     }
     await new Promise(resolve => setTimeout(resolve, 500));
 
-    // 読み込まれるまで待機
-    while (ytPlayer.getPlayerState() === -1 || ytPlayer.getPlayerState() === 3) {
-      await new Promise(resolve => setTimeout(resolve, 100));
-    }
-
     settingController = null;
     let attempts = 0;
     const maxAttempts = 100;
