@@ -506,6 +506,10 @@
         ytPlayer.playVideo();
         while (ytPlayer.getPlayerState() !== 1) {
           await new Promise(resolve => setTimeout(resolve, 100));
+          // ※もしここで止まる場合は、一度 playVideo() をもう一度呼ぶと動き出すことがあります
+          if (ytPlayer.getPlayerState() === 2 || ytPlayer.getPlayerState() === -1) {
+            ytPlayer.playVideo();
+          }
         }
         console.log('動画の準備（頭出し）が完了しました！現在の状態 : ', ytPlayer.getPlayerState());
 
