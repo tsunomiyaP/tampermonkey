@@ -503,14 +503,15 @@ const waitPlayerState = async (ytPlayer) => {
           await ytStableVolume(ytPlayer, isSTVol);
         }
 
+        // seek to mute lock, video
+        ytPlayer.mute();
+
         // 読み込み位置を強制的に「はじめに(0)」戻す
         const stats = ytPlayer.getVideoStats() || {};
         if (stats.live === 'live' || stats.live === 'dvr' || stats.live === 'lp') {
           console.log('LIVE Stream のため巻き戻しは行わない');
         } else {
-          // seek to mute lock, video
-          ytPlayer.mute();
-          //ytPlayer.seekTo(0, true);
+          ytPlayer.seekTo(0, true);
           await new Promise(resolve => setTimeout(resolve, 500));
         }
 
