@@ -428,7 +428,7 @@ const waitPlayerState = async (ytPlayer) => {
     // ※何度も再生・停止を繰り返さず、一度再生状態にしてボタンの描画を促す
     let settingController = null;
     let attempts = 0;
-    const maxAttempts = 50; // 最大5秒程度待つ
+    const maxAttempts = 100; // 最大10秒程度待つ
 
     // まだ再生されていなければ一度再生を確実に指示
     if (ytPlayer.getPlayerState() !== 1) {
@@ -509,7 +509,7 @@ const waitPlayerState = async (ytPlayer) => {
         } else {
           // seek to mute lock, video
           ytPlayer.mute();
-          ytPlayer.seekTo(0, false);
+          //ytPlayer.seekTo(0, true);
           await new Promise(resolve => setTimeout(resolve, 500));
         }
 
@@ -518,10 +518,6 @@ const waitPlayerState = async (ytPlayer) => {
 
         while (ytPlayer.getPlayerState() !== 1) {
           await new Promise(resolve => setTimeout(resolve, 100));
-          // ※もしここで止まる場合は、一度 playVideo() をもう一度呼ぶと動き出すことがあります
-          if (ytPlayer.getPlayerState() === 2 || ytPlayer.getPlayerState() === -1 || ytPlayer.getPlayerState() === 3) {
-            ytPlayer.playVideo();
-          }
         }
         console.log('動画の準備（頭出し）が完了しました！現在の状態 : ', ytPlayer.getPlayerState());
 
