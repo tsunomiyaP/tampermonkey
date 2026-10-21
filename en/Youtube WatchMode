@@ -496,7 +496,7 @@
         if (stats.live === 'live' || stats.live === 'dvr' || stats.live === 'lp') {
           console.log('LIVE Stream のため巻き戻しは行わない');
         } else {
-          ytPlayer.seekTo(0, true);
+          ytPlayer.seekTo(0.5, true);
           ytPlayer.mute();
           await new Promise(resolve => setTimeout(resolve, 500));
         }
