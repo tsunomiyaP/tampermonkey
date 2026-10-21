@@ -496,19 +496,19 @@
         if (stats.live === 'live' || stats.live === 'dvr' || stats.live === 'lp') {
           console.log('LIVE Stream のため巻き戻しは行わない');
         } else {
-          ytPlayer.seekTo(0.5, true);
+          ytPlayer.seekTo(0, true);
+          ytPlayer.mute();
           await new Promise(resolve => setTimeout(resolve, 500));
         }
-        // 読み込み完了後、動画停止処理が行われた(2)後に自動再生待機
-        while (ytPlayer.getPlayerState() !== 2) {
+        ytPlayer.playVideo();
+        // 自動再生待機
+        // 3. 再生状態（State === 1: 再生中）になるのを待つ
+        while (ytPlayer.getPlayerState() !== 1) {
           await new Promise(resolve => setTimeout(resolve, 100));
-          console.log('動画の準備中・・・ : ', ytPlayer.getPlayerState());
         }
         console.log('動画の準備（頭出し）が完了しました！現在の状態 : ', ytPlayer.getPlayerState());
-        // 動画自動再生
-        ytPlayer.playVideo();
         // 動画の音声ミュート解除
-        // ytPlayer.unMute();
+        ytPlayer.unMute();
         ytPlayer.setVolume(100);
       }
       // style 無効化
