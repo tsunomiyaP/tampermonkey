@@ -506,6 +506,7 @@
         }
         console.log('動画の準備（頭出し）が完了しました！現在の状態 : ', ytPlayer.getPlayerState());
         // 動画自動再生
+        await new Promise(resolve => setTimeout(resolve, 500));
         ytPlayer.playVideo();
         // 動画の音声ミュート解除
         // ytPlayer.unMute();
