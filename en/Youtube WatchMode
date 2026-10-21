@@ -409,15 +409,16 @@
     // 3  YT.PlayerState.BUFFERINGバッファリング中（読み込み中）
     // 5  YT.PlayerState.CUED頭出し済み（方法1・2で解説した、停止状態での読込完了）
 
+    // 動画の音声ミュート状態が優先されて設定ボタン表示されないので、ミュート解除して先出で音(0)で漏れ防ぐ
+    // 動画読み込んだ瞬間はミュ―ト状態の場合があるので解除後、音量「0」
+    ytPlayer.unMute();
+    ytPlayer.setVolume(0);
+
     // 読み込まれるまで待機
     await new Promise(resolve => setTimeout(resolve, 500));
     while (ytPlayer.getPlayerState() === -1 || ytPlayer.getPlayerState() === 3) {
       await new Promise(resolve => setTimeout(resolve, 100));
     }
-    // 動画の音声ミュート状態が優先されて設定ボタン表示されないので、ミュート解除して先出で音(0)で漏れ防ぐ
-    // 動画読み込んだ瞬間はミュ―ト状態の場合があるので解除後、音量「0」
-    ytPlayer.unMute();
-    ytPlayer.setVolume(0);
 
     settingController = null;
     let attempts = 0;
