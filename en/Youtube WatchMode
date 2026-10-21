@@ -497,6 +497,7 @@
           console.log('LIVE Stream のため巻き戻しは行わない');
         } else {
           ytPlayer.seekTo(0.5, true);
+          await new Promise(resolve => setTimeout(resolve, 500));
         }
         // 読み込み完了後、動画停止処理が行われた(2)後に自動再生待機
         while (ytPlayer.getPlayerState() !== 2) {
@@ -505,7 +506,6 @@
         }
         console.log('動画の準備（頭出し）が完了しました！現在の状態 : ', ytPlayer.getPlayerState());
         // 動画自動再生
-        await new Promise(resolve => setTimeout(resolve, 500));
         ytPlayer.playVideo();
         // 動画の音声ミュート解除
         // ytPlayer.unMute();
