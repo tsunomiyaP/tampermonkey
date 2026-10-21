@@ -319,8 +319,8 @@
       stylusElemSettings.textContent += 'div.ytp-popup.ytp-settings-menu { display: none !important; } '; // pc
       stylusElemSettings.textContent += 'ytm-app[id="app" i] > :is(bottom-sheet-container[aria-modal="true" i]) { display: none !important; } '; // mobile
 
-      console.log('> yt DRC Audio is already waiting...');
-      if (settingController) {
+      console.log('> yt DRC Audio is already waiting...', settingController);
+      if (!isNuN(settingController)) {
           settingController.click();
       }
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -428,7 +428,6 @@ const waitPlayerState = async (ytPlayer) => {
 
     // 4. 再生中(1)または一時停止(2)になったら、要素（設定ボタン）の出現を待つループに入る
     // ※何度も再生・停止を繰り返さず、一度再生状態にしてボタンの描画を促す
-    let settingController = null;
     let attempts = 0;
     const maxAttempts = 100; // 最大10秒程度待つ
 
@@ -440,8 +439,8 @@ const waitPlayerState = async (ytPlayer) => {
     while (attempts < maxAttempts) {
         // DOMから設定ボタンを取得してみる
         settingController = document.querySelector(settingBtn);
-        if (settingController) {
-            console.log('設定ボタンが見つかりました！');
+        if (!isNuN(settingController)) {
+            console.log('設定ボタンが見つかりました！', settingController);
             break; // 見つかったらループを抜ける
         }
         attempts++;
