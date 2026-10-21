@@ -413,12 +413,16 @@
     while (ytPlayer.getPlayerState() === -1 || ytPlayer.getPlayerState() === 3) {
       await new Promise(resolve => setTimeout(resolve, 100));
     }
-
-    await new Promise(resolve => setTimeout(resolve, 500));
     // 動画の音声ミュート状態が優先されて設定ボタン表示されないので、ミュート解除して先出で音(0)で漏れ防ぐ
     // 動画読み込んだ瞬間はミュ―ト状態の場合があるので解除後、音量「0」
     ytPlayer.unMute();
     ytPlayer.setVolume(0);
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    // 読み込まれるまで待機
+    while (ytPlayer.getPlayerState() === -1 || ytPlayer.getPlayerState() === 3) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
 
     settingController = null;
     let attempts = 0;
