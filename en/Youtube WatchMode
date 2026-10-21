@@ -504,10 +504,11 @@
 
         // video play
         ytPlayer.playVideo();
+
         while (ytPlayer.getPlayerState() !== 1) {
           await new Promise(resolve => setTimeout(resolve, 100));
           // ※もしここで止まる場合は、一度 playVideo() をもう一度呼ぶと動き出すことがあります
-          if (ytPlayer.getPlayerState() === 2 || ytPlayer.getPlayerState() === -1) {
+          if (ytPlayer.getPlayerState() === 2 || ytPlayer.getPlayerState() === -1 || ytPlayer.getPlayerState() === 3) {
             ytPlayer.playVideo();
           }
         }
