@@ -314,32 +314,6 @@
       if (!isNuN(chat)) { chat.remove(); }
     }
   };
-  const ytStableVolume = async (ytPlayer, flag) => {
-    if (flag) {
-      stylusElemSettings.textContent += 'div.ytp-popup.ytp-settings-menu { display: none !important; } '; // pc
-      stylusElemSettings.textContent += 'ytm-app[id="app" i] > :is(bottom-sheet-container[aria-modal="true" i]) { display: none !important; } '; // mobile
-
-      console.log('> yt DRC Audio is already waiting...', settingController);
-      if (!isNuN(settingController)) {
-          settingController.click();
-      }
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      const drcMenuItem = document.querySelector(drcBtn);
-      if (!isNuN(drcMenuItem)) {
-        if (drcMenuItem.getAttribute('aria-checked') === 'true') {
-          drcMenuItem.click();
-          console.log('> yt DRC Audio : Disabled...');
-        } else {
-          console.log('> yt DRC Audio is already Disabled');
-        }
-      } else {
-        console.log('> yt DRC Audio is nothing...');
-      }
-      // history.replaceState(null, '', window.location.pathname + window.location.search);
-      if (!isNuN(document.querySelector(closeBtn))) { document.querySelector(closeBtn).click(); }
-    }
-  };
   const ytNavBtn = async (flag) => {
     if (flag) {
       const cssControls = 'div[class="ytp-right-controls" i]';
@@ -360,6 +334,32 @@
       const toggleSubBtn = await waitQuerySelector(cssControls + ' ' + cssToggleSubBtn);
       console.log('> yt subtitle clicker...');
       if (toggleSubBtn.getAttribute('aria-pressed') === 'true') { toggleSubBtn.click(); return ytSubBtn(); } else { return false; }
+    }
+  };
+  const ytStableVolume = async (ytPlayer, flag) => {
+    if (flag) {
+      stylusElemSettings.textContent += 'div.ytp-popup.ytp-settings-menu { display: none !important; } '; // pc
+      stylusElemSettings.textContent += 'ytm-app[id="app" i] > :is(bottom-sheet-container[aria-modal="true" i]) { display: none !important; } '; // mobile
+
+      console.log('> yt DRC Audio is already waiting...', settingController);
+      if (!isNuN(settingController)) {
+        settingController.click();
+      }
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      const drcMenuItem = document.querySelector(drcBtn);
+      if (!isNuN(drcMenuItem)) {
+        if (drcMenuItem.getAttribute('aria-checked') === 'true') {
+          drcMenuItem.click();
+          console.log('> yt DRC Audio : Disabled...');
+        } else {
+          console.log('> yt DRC Audio is already Disabled');
+        }
+      } else {
+        console.log('> yt DRC Audio is nothing...');
+      }
+      // history.replaceState(null, '', window.location.pathname + window.location.search);
+      if (!isNuN(document.querySelector(closeBtn))) { document.querySelector(closeBtn).click(); }
     }
   };
   const ytQualityFix = async (ytPlayer, flag, level) => {
@@ -402,8 +402,8 @@
       console.log('now quality set power on...', ytPlayer.getPlaybackQuality());
     }
   };
-const waitPlayerState = async (ytPlayer) => {
-        // video tag : video.getPlayerState()
+  const waitPlayerState = async (ytPlayer) => {
+    // video tag : video.getPlayerState()
     // -1 YT.PlayerState.UNSTARTED未開始（動画が読み込まれていない状態）
     // 0  YT.PlayerState.ENDED終了（最後まで再生し終わった）
     // 1  YT.PlayerState.PLAYING再生中
@@ -417,13 +417,13 @@ const waitPlayerState = async (ytPlayer) => {
 
     // 2. 動画の再生を開始
     if (ytPlayer.getPlayerState() !== 1) {
-        ytPlayer.playVideo();
+      ytPlayer.playVideo();
     }
 
     // 3. 再生(1)以外の間は待機
     await new Promise(resolve => setTimeout(resolve, 500));
     while (ytPlayer.getPlayerState() !== 1) {
-        await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 100));
     }
 
     // 4. 再生中(1)または一時停止(2)になったら、要素（設定ボタン）の出現を待つループに入る
@@ -433,23 +433,23 @@ const waitPlayerState = async (ytPlayer) => {
 
     // まだ再生されていなければ一度再生を確実に指示
     if (ytPlayer.getPlayerState() !== 1) {
-        ytPlayer.playVideo();
+      ytPlayer.playVideo();
     }
 
     while (attempts < maxAttempts) {
-        // DOMから設定ボタンを取得してみる
-        settingController = document.querySelector(settingBtn);
-        if (!isNuN(settingController)) {
-            console.log('設定ボタンが見つかりました！', settingController);
-            break; // 見つかったらループを抜ける
-        }
-        attempts++;
-        await new Promise(resolve => setTimeout(resolve, 100));
+      // DOMから設定ボタンを取得してみる
+      settingController = document.querySelector(settingBtn);
+      if (!isNuN(settingController)) {
+        console.log('設定ボタンが見つかりました！', settingController);
+        break; // 見つかったらループを抜ける
+      }
+      attempts++;
+      await new Promise(resolve => setTimeout(resolve, 100));
     }
 
     // pause video
     ytPlayer.pauseVideo();
-};
+  };
 
   const changeUrl = () => {
     const observer = new MutationObserver(() => {
