@@ -420,9 +420,9 @@
       ytPlayer.playVideo();
     }
 
-    // 3. 再生(1)以外の間は待機
+    // 3. 再生(-1, 3)以外の間は待機
     await new Promise(resolve => setTimeout(resolve, 500));
-    while (ytPlayer.getPlayerState() !== 1) {
+    while (ytPlayer.getPlayerState() === -1 || ytPlayer.getPlayerState() === 3) {
       await new Promise(resolve => setTimeout(resolve, 100));
     }
 
@@ -512,16 +512,16 @@
           console.log('LIVE Stream のため巻き戻しは行わない');
         } else {
           ytPlayer.seekTo(0, true);
-          await new Promise(resolve => setTimeout(resolve, 500));
         }
 
-        // video play
-        ytPlayer.playVideo();
-
-        while (ytPlayer.getPlayerState() !== 1) {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        while (ytPlayer.getPlayerState() === -1 || ytPlayer.getPlayerState() === 3) {
           await new Promise(resolve => setTimeout(resolve, 100));
         }
         console.log('動画の準備（頭出し）が完了しました！現在の状態 : ', ytPlayer.getPlayerState());
+
+        // video play
+        ytPlayer.playVideo();
 
         // video mute unlock
         ytPlayer.unMute();
