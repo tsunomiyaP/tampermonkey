@@ -431,11 +431,6 @@
     let attempts = 0;
     const maxAttempts = 100; // 最大10秒程度待つ
 
-    // まだ再生されていなければ一度再生を確実に指示
-    if (ytPlayer.getPlayerState() !== 1) {
-      ytPlayer.playVideo();
-    }
-
     while (attempts < maxAttempts) {
       // DOMから設定ボタンを取得してみる
       settingController = document.querySelector(settingBtn);
@@ -449,6 +444,14 @@
 
     // pause video
     ytPlayer.pauseVideo();
+
+    // 読み込み位置を強制的に「はじめに(0)」戻す
+    const stats = ytPlayer.getVideoStats() || {};
+    if (stats.live === 'live' || stats.live === 'dvr' || stats.live === 'lp') {
+      console.log('LIVE Stream のため巻き戻しは行わない');
+    } else {
+      ytPlayer.seekTo(0, true);
+    }
   };
 
   const changeUrl = () => {
@@ -505,14 +508,6 @@
 
         // seek to mute lock, video
         ytPlayer.mute();
-
-        // 読み込み位置を強制的に「はじめに(0)」戻す
-        const stats = ytPlayer.getVideoStats() || {};
-        if (stats.live === 'live' || stats.live === 'dvr' || stats.live === 'lp') {
-          console.log('LIVE Stream のため巻き戻しは行わない');
-        } else {
-          ytPlayer.seekTo(0, true);
-        }
 
         await new Promise(resolve => setTimeout(resolve, 500));
         while (ytPlayer.getPlayerState() === -1 || ytPlayer.getPlayerState() === 3) {
