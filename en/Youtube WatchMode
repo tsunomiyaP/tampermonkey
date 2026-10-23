@@ -450,7 +450,7 @@
     if (stats.live === 'live' || stats.live === 'dvr' || stats.live === 'lp') {
       console.log('LIVE Stream のため巻き戻しは行わない');
     } else {
-      ytPlayer.seekTo(0, true);
+      // ytPlayer.seekTo(0, true);
     }
   };
 
