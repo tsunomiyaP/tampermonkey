@@ -78,7 +78,7 @@
       '加賀美(\\s)*ハヤト|加賀美ハヤト|@HayatoKagami',
       'シェリン(\\s)*[・]*バーガンディ|シェリン・バーガンディ|@ShellinBurgundy',
       '不破(\\s)*湊|不破湊|@FuwaMinato',
-      'ましろ[爻]*|ましろ爻|@Mashiro',
+      '^ましろ[爻]*$|ましろ爻|@Mashiro',
       'イブラヒム|イブラヒム|@Ibrahim',
       '甲斐田(\\s)*晴|甲斐田晴|@KaidaHaru',
       '弦月(\\s)*藤士郎|弦月藤士郎|@GenzukiTojiro',
