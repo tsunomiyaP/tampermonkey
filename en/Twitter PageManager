@@ -48,7 +48,38 @@
   appendStylus += 'div[role="group" i] div[role="menu" i]:has(div[data-testid="Dropdown" i] > div:is([class="css-g5y9jx r-14lw9ot r-j5o65s r-rull8r r-qklmqi r-w7s2jr r-u9wvl5" i], [class="css-g5y9jx r-14lw9ot r-j5o65s r-rull8r r-qklmqi r-1ml3abn r-284m6k" i])) { display: none !important; } ';
   // ext area stylus
   appendStylus += 'div[aria-label="トレンド" i] > div > div:not(:has(form[aria-label="検索" i])) { display: none !important; } ';
-  appendStylus += 'nav[role="navigation" i] > a[href$="/i/grok" i], div[role="dialog" i] div:has(> a[href$="/i/grok" i]), nav[role="navigation" i] > a[href$="/communities" i], div[role="dialog" i] div:has(> a[href$="/communities" i]), nav[role="navigation" i] > a[href$="/i/premium_sign_up" i], div[role="dialog" i] div:has(> a[href$="/i/premium_sign_up" i]), nav[role="navigation" i] > a[href$="/i/verified-orgs-signup" i], div[role="dialog" i] div:has(> a[href$="/i/verified-orgs-signup" i]), nav[role="navigation" i] > a[href$="/jobs" i], div[role="dialog" i] div:has(> a[href$="/jobs" i]), nav[role="navigation" i] > a[href$="/i/jf/creators/studio" i], div[role="dialog" i] div:has(> a[href$="/i/jf/creators/studio" i]), nav[role="navigation" i] > a[href$="/i/chat" i], div[role="dialog" i] div:has(> a[href$="/i/chat" i]), nav[role="navigation" i] > a[href$="/i/monetization" i], div[role="dialog" i] div:has(> a[href$="/i/monetization" i]), nav[role="navigation" i] > a[href$="/i/connect_people" i], div[role="dialog" i] div:has(> a[href$="/i/connect_people" i]), div[role="menu" i] div[data-testid="Dropdown" i] a[href$="/i/premium_sign_up" i], div[role="dialog" i] div:has(> a[href$="/i/premium_sign_up" i]), div[role="menu" i] div[data-testid="Dropdown" i] a[href$="/i/verified-orgs-signup" i], div[role="dialog" i] div:has(> a[href$="/i/verified-orgs-signup" i]), div[role="menu" i] div[data-testid="Dropdown" i] a[href$="/i/jf/creators/studio" i], div[role="dialog" i] div:has(> a[href$="/i/jf/creators/studio" i]), div[role="menu" i] div[data-testid="Dropdown" i] a[href*="ads.x.com/" i], div[role="dialog" i] div:has(> a[href*="ads.x.com/" i]) { display: none !important; }';
+  const morelinks = [
+    'nav[role="navigation" i] > a[href$="/i/grok" i]',
+    'div[role="dialog" i] div:has(> a[href$="/i/grok" i])',
+    'nav[role="navigation" i] > a[href$="/communities" i]',
+    'div[role="dialog" i] div:has(> a[href$="/communities" i])',
+    'nav[role="navigation" i] > a[href$="/i/premium_sign_up" i]',
+    'div[role="dialog" i] div:has(> a[href$="/i/premium_sign_up" i])',
+    'nav[role="navigation" i] > a[href$="/i/verified-orgs-signup" i]',
+    'div[role="dialog" i] div:has(> a[href$="/i/verified-orgs-signup" i])',
+    'nav[role="navigation" i] > a[href$="/jobs" i]',
+    'div[role="dialog" i] div:has(> a[href$="/jobs" i])',
+    'nav[role="navigation" i] > a[href$="/i/jf/creators/studio" i]',
+    'div[role="dialog" i] div:has(> a[href$="/i/jf/creators/studio" i])',
+    'nav[role="navigation" i] > a[href$="/i/chat" i]',
+    'div[role="dialog" i] div:has(> a[href$="/i/chat" i])',
+    'nav[role="navigation" i] > a[href$="/i/monetization" i]',
+    'div[role="dialog" i] div:has(> a[href$="/i/monetization" i])',
+    'nav[role="navigation" i] > a[href$="/i/connect_people" i]',
+    'div[role="dialog" i] div:has(> a[href$="/i/connect_people" i])',
+    'nav[role="navigation" i] > a[href*="/i/calls" i]',
+    'div[role="dialog" i] div:has(> a[href*="/i/calls" i])',
+
+    'div[role="menu" i] div[data-testid="Dropdown" i] a[href$="/i/premium_sign_up" i]',
+    'div[role="dialog" i] div:has(> a[href$="/i/premium_sign_up" i])',
+    'div[role="menu" i] div[data-testid="Dropdown" i] a[href$="/i/verified-orgs-signup" i]',
+    'div[role="dialog" i] div:has(> a[href$="/i/verified-orgs-signup" i])',
+    'div[role="menu" i] div[data-testid="Dropdown" i] a[href$="/i/jf/creators/studio" i]',
+    'div[role="dialog" i] div:has(> a[href$="/i/jf/creators/studio" i])',
+    'div[role="menu" i] div[data-testid="Dropdown" i] a[href*="ads.x.com/" i]',
+    'div[role="dialog" i] div:has(> a[href*="ads.x.com/" i])'
+  ].join(',');
+  appendStylus += morelinks + ' { display: none !important; } ';
   appendStylus += 'header[role="banner" i] div:has(> div > button[aria-label="アカウントメニュー" i]) { display: none !important; } ';
   // おすすめ
   appendStylus += 'div:is([aria-label^="タイムライン: " i]:not(:is([aria-label*="通知" i], [aria-label*="フォロー" i], [aria-label*="フォロワー" i], [aria-label*="ミュート" i], [aria-label*="ブロック" i], [aria-label*="リスト" i])), [aria-label$="さんのポスト" i]) > div > div[data-testid="cellInnerDiv" i]:not(:has(:is(article[data-testid="tweet" i], div[data-testid="trend" i], li[role="listitem"]))) { display : none !important; } ';
@@ -181,16 +212,22 @@
         // ドロップダウンが表示されるのを微小待機してから「最新」を選択
         setTimeout(() => {
           const dropdownItems = document.querySelectorAll('div[role="menu"] div[role="menuitem"] span');
+          // dropdownItems[1].click(); // 「最新」にあたる要素をクリック
           for (const item of dropdownItems) {
             if (item.textContent === '最新') { item.click(); break; }
           }
-          // dropdownItems[1].click(); // 「最新」にあたる要素をクリック
         }, 100);
       }
     }
   };
   const tweetMoreLines = async (e) => {
     if (new RegExp(regStatus, 'gis').test(e.detail.path)) {
+
+      const isNewLines = searchParams(location.href, 'sort_replies') === 'recency' ? true : false;
+      if (!isNewLines) {
+        // 返信ランを最新順に変更
+        await switchToNewestReplies(e);
+      }
 
       const showMoreLine = await waitQuerySelector('section[aria-labelledby="accessible-list-0" i] > div[aria-label="タイムライン: 会話" i] > div');
       await waitQuerySelector(twColumns);
@@ -273,9 +310,6 @@
       oldUrl = e.detail.path; // oldUrlを更新
       label = tabLabel;
       console.log('tab : ', label, '、URL : ', oldUrl);
-      // 返信ランを最新順に変更
-      await switchToNewestReplies(e);
-
       if (!isNuN(twMutationManager)) { twMutationManager.disconnect(); }
 
       const nodeMain = await waitQuerySelector(twMain);
