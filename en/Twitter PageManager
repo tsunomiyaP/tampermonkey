@@ -27,7 +27,7 @@
   const regStatus = '/status/';
   const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
   // 可変数
-  let twMutationManager;
+  let twMutationManager, newest = false;
   let oldUrl = '';
   let label = ''; // 現在のタブ
   // ==========================================================
@@ -41,7 +41,7 @@
   appendStylus += 'div[data-testid="cellInnerDiv" i] .r-1867qdf { border-radius: 0px !important; }';
   appendStylus += 'form[aria-label="検索" i] > div > div.r-sdzlij { border-bottom-left-radius: 0px !important; border-bottom-right-radius: 0px !important; border-top-left-radius: 0px !important; border-top-right-radius: 0px !important; }';
   // tweet hide
-  appendStylus += 'section[aria-labelledby="accessible-list-0" i] > div[aria-label="タイムライン: 会話" i] > div > div[data-testid="cellInnerDiv" i]:not(.conversationX):not(.subTreeLinesX) { display: none !important; } ';
+  appendStylus += 'section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i] > div > div[data-testid="cellInnerDiv" i]:not(.conversationX):not(.subTreeLinesX) { display: none !important; } ';
   appendStylus += 'div[data-testid="cellInnerDiv" i].' + xitemRem + ' { display: none !important; } ';
   appendStylus += 'div[data-testid="cellInnerDiv" i]:has(' + remReTweet + ') { display: none !important; } ';
   // menu item status 最新
@@ -199,7 +199,7 @@
   };
 
   const switchToNewestReplies = async (e) => {
-    if (new RegExp(regStatus, 'gis').test(e.detail.path)) {
+    if (new RegExp(regStatus, 'gis').test(e.detail.path) && !newest) {
       // メニューボタンを探すセレクタ（環境に合わせて調整してください）
       const menuButton = await waitQuerySelector('div[aria-label*="会話" i] div[class="css-g5y9jx r-1awozwy r-18u37iz" i] button[aria-haspopup="menu" i]');
 
@@ -214,7 +214,7 @@
           const dropdownItems = document.querySelectorAll('div[role="menu"] div[role="menuitem"] span');
           // dropdownItems[1].click(); // 「最新」にあたる要素をクリック
           for (const item of dropdownItems) {
-            if (item.textContent === '最新') { item.click(); break; }
+            if (item.textContent === '最新') { item.click(); newest = true; break; }
           }
         }, 100);
       }
@@ -223,13 +223,10 @@
   const tweetMoreLines = async (e) => {
     if (new RegExp(regStatus, 'gis').test(e.detail.path)) {
 
-      const isNewLines = searchParams(location.href, 'sort_replies') === 'recency' ? true : false;
-      if (!isNewLines) {
-        // 返信ランを最新順に変更
-        await switchToNewestReplies(e);
-      }
+      // 返信ランを最新順に変更
+      await switchToNewestReplies(e);
 
-      const showMoreLine = await waitQuerySelector('section[aria-labelledby="accessible-list-0" i] > div[aria-label="タイムライン: 会話" i] > div');
+      const showMoreLine = await waitQuerySelector('section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i] > div');
       await waitQuerySelector(twColumns);
 
       // 子要素取得
@@ -284,6 +281,10 @@
     }
   };
   const twPath = async (e, nodeMain) => {
+
+    // 現在のタブの状態変化が「最新」ではないことを格納
+    newest = false;
+
     // Mutation Observer
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
     twMutationManager = new MutationObserver(async () => {
