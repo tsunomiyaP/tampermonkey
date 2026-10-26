@@ -199,7 +199,8 @@
   };
 
   const switchToNewestReplies = async (e) => {
-    if (new RegExp(regStatus, 'gis').test(e.detail.path) && !newest) {
+    if (!newest) { return false; }
+    if (new RegExp(regStatus, 'gis').test(e.detail.path)) {
       // メニューボタンを探すセレクタ（環境に合わせて調整してください）
       const menuButton = await waitQuerySelector('div[aria-label*="会話" i] div[class="css-g5y9jx r-1awozwy r-18u37iz" i] button[aria-haspopup="menu" i]');
 
@@ -223,10 +224,9 @@
   const tweetMoreLines = async (e) => {
     if (new RegExp(regStatus, 'gis').test(e.detail.path)) {
 
-      const showMoreLine = await waitQuerySelector('section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i] > div');
-
       // 返信ランを最新順に変更
       await switchToNewestReplies(e);
+      const showMoreLine = await waitQuerySelector('section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i] > div');
 
       // 子要素取得
       await waitQuerySelector(twColumns);
