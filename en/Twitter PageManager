@@ -223,13 +223,13 @@
   const tweetMoreLines = async (e) => {
     if (new RegExp(regStatus, 'gis').test(e.detail.path)) {
 
+      const showMoreLine = await waitQuerySelector('section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i] > div');
+
       // 返信ランを最新順に変更
       await switchToNewestReplies(e);
 
-      const showMoreLine = await waitQuerySelector('section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i] > div');
-      await waitQuerySelector(twColumns);
-
       // 子要素取得
+      await waitQuerySelector(twColumns);
       const timelineItems = Array.from(showMoreLine.querySelectorAll(twColumns));
       const conversation = timelineItems[0];
       conversation.classList.add('conversationX');
