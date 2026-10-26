@@ -199,7 +199,7 @@
   };
 
   const switchToNewestReplies = async (e) => {
-    if (!newest) { return false; }
+    if (newest) { return false; }
     if (new RegExp(regStatus, 'gis').test(e.detail.path)) {
       // メニューボタンを探すセレクタ（環境に合わせて調整してください）
       const menuButton = await waitQuerySelector('div[aria-label*="会話" i] div[class="css-g5y9jx r-1awozwy r-18u37iz" i] button[aria-haspopup="menu" i]');
@@ -225,6 +225,7 @@
     if (new RegExp(regStatus, 'gis').test(e.detail.path)) {
 
       // 返信ランを最新順に変更
+      await waitQuerySelector('section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i]');
       await switchToNewestReplies(e);
       const showMoreLine = await waitQuerySelector('section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i] > div');
 
