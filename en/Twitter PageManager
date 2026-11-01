@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Twitter PageManager
 // @namespace    http://tampermonkey.net/
-// @version      5.2
+// @version      6.0
 // @description  try to take over the world!
 // @author       You
 // @match        https://x.com/*
@@ -198,26 +198,33 @@
     return false;
   };
 
-  const switchToNewestReplies = async (e) => {
-    if (newest) { return false; }
+  const waitSwToggleState = async (e) => {
     if (new RegExp(regStatus, 'gis').test(e.detail.path)) {
+      const menu = 'section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i] div[class="css-g5y9jx r-1awozwy r-18u37iz" i] button[aria-haspopup="menu" i]';
+
+      let attempts = 0;
+      const maxAttempts = 100; // 最大10秒程度待つ
+
+      // 初期取得
       // メニューボタンを探すセレクタ（環境に合わせて調整してください）
-      const menuButton = document.querySelector('section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i] div[class="css-g5y9jx r-1awozwy r-18u37iz" i] button[aria-haspopup="menu" i]');
+      let menuButton = document.querySelector(menu);
 
-      if (menuButton) {
-        // すでに「最新」になっていないかテキスト等で確認できればベストですが、
-        // 確実に切り替えるためにクリック操作を実行
-        // ※Twitterの仕様変更でセレクタが変わる場合があります
-        menuButton.click();
-
-        // ドロップダウンが表示されるのを微小待機してから「最新」を選択
-        setTimeout(() => {
+      while (attempts < maxAttempts) {
+        if (newest) { break; }
+        // DOMから取得してみる
+        menuButton = document.querySelector(menu);
+        if (!isNuN(menuButton)) {
+          console.log('画面描画されました。', menu);
+          menuButton.click();
+          // ドロップダウンが表示されるのを微小待機してから「最新」を選択
           const dropdownItems = document.querySelectorAll('div[role="menu"] div[role="menuitem"] span');
           // dropdownItems[1].click(); // 「最新」にあたる要素をクリック
           for (const item of dropdownItems) {
-            if (item.textContent === '最新') { item.click(); newest = true; break; }
+            if (item.textContent === '最新') { newest = true; item.click(); }
           }
-        }, 100);
+        }
+        attempts++;
+        await new Promise(resolve => setTimeout(resolve, 100));
       }
     }
   };
@@ -225,7 +232,7 @@
     if (new RegExp(regStatus, 'gis').test(e.detail.path)) {
 
       // 返信ランを最新順に変更
-      await switchToNewestReplies(e);
+      await waitSwToggleState(e);
       const showMoreLine = await waitQuerySelector('section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i] > div');
 
       // 子要素取得
