@@ -198,34 +198,35 @@
     return false;
   };
 
-  const waitSwToggleState = async (e) => {
-    if (new RegExp(regStatus, 'gis').test(e.detail.path)) {
-      const menu = 'section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i] div[class="css-g5y9jx r-1awozwy r-18u37iz" i] button[aria-haspopup="menu" i]';
+  const waitSwToggleState = async () => {
+    const menu = 'section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i] div[class="css-g5y9jx r-1awozwy r-18u37iz" i] button[aria-haspopup="menu" i]';
+    const toggle = 'div[role="menu" i] div[role="menuitem" i] span';
 
-      let attempts = 0;
-      const maxAttempts = 100; // 最大10秒程度待つ
+    let attempts = 0;
+    const maxAttempts = 100; // 最大10秒程度待つ
 
-      // 初期取得
-      // メニューボタンを探すセレクタ（環境に合わせて調整してください）
-      let menuButton = document.querySelector(menu);
+    // 初期取得
+    // メニューボタンを探すセレクタ（環境に合わせて調整してください）
+    let menuButton = document.querySelector(menu);
 
-      while (attempts < maxAttempts) {
-        if (newest) { break; }
-        // DOMから取得してみる
-        menuButton = document.querySelector(menu);
-        if (!isNuN(menuButton)) {
-          console.log('画面描画されました。', menu);
-          menuButton.click();
-          // ドロップダウンが表示されるのを微小待機してから「最新」を選択
-          const dropdownItems = document.querySelectorAll('div[role="menu"] div[role="menuitem"] span');
-          // dropdownItems[1].click(); // 「最新」にあたる要素をクリック
-          for (const item of dropdownItems) {
-            if (item.textContent === '最新') { newest = true; item.click(); }
-          }
-        }
-        attempts++;
+    while (attempts < maxAttempts) {
+      if (newest) { break; }
+      // DOMから取得してみる
+      menuButton = document.querySelector(menu);
+      if (!isNuN(menuButton)) {
+        console.log('画面描画されました。', menu);
+        menuButton.click();
+        // ドロップダウンが表示されるのを微小待機してから「最新」を選択
         await new Promise(resolve => setTimeout(resolve, 100));
+        const dropdownItems = document.querySelectorAll(toggle);
+        for (const item of dropdownItems) {
+          if (item.textContent === '最新') { newest = true; item.click(); }
+        }
+        // dropdownItems[1].click(); // 「最新」にあたる要素をクリック
+        await new Promise(resolve => setTimeout(resolve, 1000));
       }
+      attempts++;
+      await new Promise(resolve => setTimeout(resolve, 100));
     }
   };
   const tweetMoreLines = async (e) => {
