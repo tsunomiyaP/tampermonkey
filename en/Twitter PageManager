@@ -241,14 +241,6 @@
       // 子要素取得
       await waitQuerySelector(twColumns);
       const timelineItems = Array.from(showMoreLine.querySelectorAll(twColumns));
-
-      // 返信ツイート状況リセット
-      for (const item of timelineItems) {
-        if (item.classList.contains(xitemDom)) {
-          item.classList.remove(xitemDom, xitemRem, 'conversationX', 'subTreeLinesX');
-        }
-      }
-
       const conversation = timelineItems[0];
       conversation.classList.add('conversationX');
 
@@ -299,6 +291,14 @@
     }
   };
   const twPath = async (e, nodeMain) => {
+
+    // 返信ツイート状況リセット
+    const tweets = document.querySelectorAll(twColumns);
+    for (const item of tweets) {
+      if (item.classList.contains(xitemDom)) {
+        item.classList.remove(xitemDom, xitemRem, 'conversationX', 'subTreeLinesX');
+      }
+    }
 
     // 現在のタブの状態変化が「最新」ではないことを格納
     newest = false;
