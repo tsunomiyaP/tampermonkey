@@ -20,6 +20,7 @@
   const waitTime = 1000;
   const twMain = 'main[role="main" i]';
   const twColumns = 'div[data-testid="cellInnerDiv" i]';
+  const twPost = 'section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i]';
   const xitemDom = 'stayofItem';
   const xitemRem = 'removeItem';
   const remReTweet = 'span[data-testid="socialContext" i]';
@@ -199,8 +200,9 @@
   };
 
   const waitSwToggleState = async () => {
-    const menu = 'section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i] div[class="css-g5y9jx r-1awozwy r-18u37iz" i] > div[class="css-g5y9jx" i] > button[aria-haspopup="menu" i]';
-    const popup = 'section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i] div[class="css-g5y9jx r-1awozwy r-18u37iz" i] > div[class="css-g5y9jx" i] > div[class="css-g5y9jx r-1p0dtai r-1d2f490 r-u8s1d r-zchlnj r-ipm5af" i]';
+    const menu = twPost + ' div[class="css-g5y9jx r-1awozwy r-18u37iz" i] > div[class="css-g5y9jx" i]';
+    const btn = menu + ' > button[aria-haspopup="menu" i]';
+    const pop = menu + ' > div[class="css-g5y9jx r-1p0dtai r-1d2f490 r-u8s1d r-zchlnj r-ipm5af" i]';
     const toggle = 'div[role="menu" i] div[role="menuitem" i] span';
 
     let attempts = 0;
@@ -208,16 +210,16 @@
 
     // 初期取得
     // メニューボタンを探すセレクタ（環境に合わせて調整してください）
-    let menuButton = document.querySelector(menu);
+    let menuButton = document.querySelector(btn);
 
     while (attempts < maxAttempts) {
       if (newest) { break; }
       // DOMから取得してみる
-      menuButton = document.querySelector(menu);
+      menuButton = document.querySelector(btn);
       if (!isNuN(menuButton)) {
         console.log('画面描画されました。', menu);
-        const pop = document.querySelector(popup);
-        if (isNuN(pop)) {
+        const output = document.querySelector(pop);
+        if (isNuN(output)) {
           menuButton.click();
         }
         // ドロップダウンのリストから「最新」を選択
@@ -236,7 +238,7 @@
 
       // 返信ランを最新順に変更
       await waitSwToggleState();
-      const showMoreLine = await waitQuerySelector('section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i] > div');
+      const showMoreLine = await waitQuerySelector(twPost + ' > div');
 
       // 子要素取得
       await waitQuerySelector(twColumns);
@@ -260,7 +262,7 @@
     let nodeTimeline = await waitQuerySelector('div[aria-label^="タイムライン: " i] > div');
     if (new RegExp(regStatus, 'gis').test(e.detail.path)) {
       // 会話の場合、読み込みは会話内のみでよい
-      nodeTimeline = await waitQuerySelector('section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i] > div');
+      nodeTimeline = await waitQuerySelector(twPost + ' > div');
     } else {
       nodeTimeline = await waitQuerySelector('div[aria-label^="タイムライン: " i] > div');
     }
