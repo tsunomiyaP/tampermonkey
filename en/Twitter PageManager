@@ -199,7 +199,8 @@
   };
 
   const waitSwToggleState = async () => {
-    const menu = 'section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i] div[class="css-g5y9jx r-1awozwy r-18u37iz" i] button[aria-haspopup="menu" i]';
+    const menu = 'section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i] div[class="css-g5y9jx r-1awozwy r-18u37iz" i] > div[class="css-g5y9jx" i] > button[aria-haspopup="menu" i]';
+    const popup = 'section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i] div[class="css-g5y9jx r-1awozwy r-18u37iz" i] > div[class="css-g5y9jx" i] > div[class="css-g5y9jx r-1p0dtai r-1d2f490 r-u8s1d r-zchlnj r-ipm5af" i]';
     const toggle = 'div[role="menu" i] div[role="menuitem" i] span';
 
     let attempts = 0;
@@ -215,15 +216,16 @@
       menuButton = document.querySelector(menu);
       if (!isNuN(menuButton)) {
         console.log('画面描画されました。', menu);
-        menuButton.click();
-        // ドロップダウンが表示されるのを微小待機してから「最新」を選択
-        await new Promise(resolve => setTimeout(resolve, 100));
+        const pop = document.querySelector(popup);
+        if (isNuN(pop)) {
+          menuButton.click();
+        }
+        // ドロップダウンのリストから「最新」を選択
         const dropdownItems = document.querySelectorAll(toggle);
         for (const item of dropdownItems) {
           if (item.textContent === '最新') { newest = true; item.click(); }
         }
         // dropdownItems[1].click(); // 「最新」にあたる要素をクリック
-        await new Promise(resolve => setTimeout(resolve, 1000));
       }
       attempts++;
       await new Promise(resolve => setTimeout(resolve, 100));
@@ -233,12 +235,20 @@
     if (new RegExp(regStatus, 'gis').test(e.detail.path)) {
 
       // 返信ランを最新順に変更
-      await waitSwToggleState(e);
+      await waitSwToggleState();
       const showMoreLine = await waitQuerySelector('section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i] > div');
 
       // 子要素取得
       await waitQuerySelector(twColumns);
       const timelineItems = Array.from(showMoreLine.querySelectorAll(twColumns));
+
+      // 返信ツイート状況リセット
+      for (const item of timelineItems) {
+        if (item.classList.contains(xitemDom)) {
+          item.classList.remove(xitemDom, xitemRem, 'conversationX', 'subTreeLinesX');
+        }
+      }
+
       const conversation = timelineItems[0];
       conversation.classList.add('conversationX');
 
@@ -258,7 +268,7 @@
     let nodeTimeline = await waitQuerySelector('div[aria-label^="タイムライン: " i] > div');
     if (new RegExp(regStatus, 'gis').test(e.detail.path)) {
       // 会話の場合、読み込みは会話内のみでよい
-      nodeTimeline = await waitQuerySelector('section[aria-labelledby="accessible-list-0" i] > div[aria-label="タイムライン: 会話" i] > div');
+      nodeTimeline = await waitQuerySelector('section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i] > div');
     } else {
       nodeTimeline = await waitQuerySelector('div[aria-label^="タイムライン: " i] > div');
     }
@@ -292,12 +302,16 @@
 
     // 現在のタブの状態変化が「最新」ではないことを格納
     newest = false;
+    await tweetMoreLines(e);
+    await removeElements(e);
 
     // Mutation Observer
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
     twMutationManager = new MutationObserver(async () => {
+      twMutationManager.disconnect();
       await tweetMoreLines(e);
       await removeElements(e);
+      twMutationManager.observe(nodeMain, config);
     });
     twMutationManager.observe(nodeMain, config);
   };
