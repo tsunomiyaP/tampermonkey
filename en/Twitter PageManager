@@ -233,6 +233,28 @@
       await new Promise(resolve => setTimeout(resolve, 100));
     }
   };
+  const waitTimelines = async (childlines, num) => {
+    let attempts = 0;
+    const maxAttempts = 100; // 最大10秒程度待つ
+
+    // 初期取得
+    let subtree = Array.from(document.querySelectorAll(childlines));
+
+    while (attempts < maxAttempts) {
+      if (num <= subtree.length) {
+        console.log('tweet 会話 > ', num, subtree);
+        const len = parseInt(num, 10); // 10進数変換
+        for (let i = 0; i < len; i++) {
+          subtree[i].classList.add('subTreeLinesX');
+        }
+        break;
+      }
+      // DOMから取得してみる
+      subtree = document.querySelectorAll(childlines);
+      attempts++;
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+  };
   const tweetMoreLines = async (e) => {
     if (new RegExp(regStatus, 'gis').test(e.detail.path)) {
 
@@ -240,22 +262,16 @@
       await waitSwToggleState();
       const showMoreLine = await waitQuerySelector(twPost + ' > div');
 
-      // 子要素取得
+      // 親要素取得
       await waitQuerySelector(twColumns);
-      const timelineItems = Array.from(showMoreLine.querySelectorAll(twColumns));
-      const conversation = timelineItems[0];
+      const timelineParent = showMoreLine.querySelector(twColumns);
+      const conversation = timelineParent;
       conversation.classList.add('conversationX');
-
       const counterTxt = 'button[data-testid="reply" i] span[data-testid="app-text-transition-container" i]';
       const count = isNuN(conversation.querySelector(counterTxt)) ? 0 : conversation.querySelector(counterTxt).textContent;
 
       // 返信のみ抽出
-      const subtree = timelineItems.slice(1);
-      console.log('tweet 会話 > ', count, timelineItems);
-      const len = parseInt(count, 10); // 10進数変換
-      for (let i = 0; i < len; i++) {
-        subtree[i].classList.add('subTreeLinesX');
-      }
+      await waitTimelines(twColumns + ':not(.conversationX)', count);
     }
   };
   const removeElements = async (e) => {
