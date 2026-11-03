@@ -233,7 +233,30 @@
       await new Promise(resolve => setTimeout(resolve, 100));
     }
   };
-  const waitTimelines = async (childlines, num) => {
+  const waitTimelines = async (cssTimeline) => {
+    let attempts = 0;
+    const maxAttempts = 100; // 最大10秒程度待つ
+
+    const cssStylus = twColumns + ':not(.' + xitemDom + ')';
+    // 初期取得
+    const timelines = document.querySelectorAll(cssTimeline);
+    let subtree = [];
+    for (const timeline of timelines) {
+      subtree = subtree.concat(Array.from(timeline.querySelectorAll(cssStylus)));
+    }
+
+    while (attempts < maxAttempts) {
+      if (0 < subtree.length) { break; }
+      // DOMから取得してみる
+      const timelines = document.querySelectorAll(cssTimeline);
+      for (const timeline of timelines) {
+        subtree = subtree.concat(Array.from(timeline.querySelectorAll(cssStylus)));
+      }
+      attempts++;
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+  };
+  const waitRepTimelines = async (childlines, num) => {
     let attempts = 0;
     const maxAttempts = 100; // 最大10秒程度待つ
 
@@ -271,28 +294,29 @@
       const count = isNuN(conversation.querySelector(counterTxt)) ? 0 : conversation.querySelector(counterTxt).textContent;
 
       // 返信のみ抽出
-      await waitTimelines(twColumns + ':not(.conversationX)', count);
+      await waitRepTimelines(twColumns + ':not(.conversationX)', count);
     }
   };
   const removeElements = async (e) => {
-    let timeline = await waitQuerySelector('div[aria-label^="タイムライン: " i] > div');
+    await waitQuerySelector('div:has(> ' + twColumns + ')');
     let timelineItems = null;
     if (new RegExp(regStatus, 'gis').test(e.detail.path)) {
       // 会話の場合、読み込みは会話内のみでよい
-      timeline = await waitQuerySelector(twPost + ' > div');
-      await waitQuerySelector(twColumns);
-      await new Promise(resolve => setTimeout(resolve, waitTime));
-      timelineItems = timeline.querySelectorAll(twColumns + '.subTreeLinesX');
+      const cssPostLine = twPost + ' > div:has(> ' + twColumns + ')';
+      const timeline = await waitQuerySelector(cssPostLine);
+      const cssStylus = twColumns + '.subTreeLinesX';
+      timelineItems = timeline.querySelectorAll(cssStylus);
     } else {
-      timeline = await waitQuerySelector('div[aria-label^="タイムライン: " i] > div');
-      await waitQuerySelector(twColumns);
-      await new Promise(resolve => setTimeout(resolve, waitTime));
-      timelineItems = timeline.querySelectorAll(twColumns + ':not(.' + xitemDom + ')');
+      const cssTimeline = 'div[aria-label^="タイムライン" i] > div:has(> ' + twColumns + ')';
+      await waitTimelines(cssTimeline);
+      const cssStylus = twColumns + ':not(.' + xitemDom + ')';
+      timelineItems = document.querySelectorAll(cssStylus);
     }
     console.log('tweet item length > ', timelineItems.length);
 
     for (const tweet of timelineItems) {
       tweet.classList.add(xitemDom);
+
       // もっと見るクリック
       isNuN(tweet.querySelector('button[data-testid="tweet-text-show-more-link" i]')) ? '' : tweet.querySelector('button[data-testid="tweet-text-show-more-link" i]').click();
 
@@ -326,6 +350,7 @@
     newest = false;
     await tweetMoreLines(e);
     await removeElements(e);
+    await new Promise(resolve => setTimeout(resolve, waitTime));
 
     // Mutation Observer
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
