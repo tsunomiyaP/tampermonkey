@@ -41,10 +41,6 @@
   /** css style border line */
   appendStylus += 'div[data-testid="cellInnerDiv" i] .r-1867qdf { border-radius: 0px !important; }';
   appendStylus += 'form[aria-label="検索" i] > div > div.r-sdzlij { border-bottom-left-radius: 0px !important; border-bottom-right-radius: 0px !important; border-top-left-radius: 0px !important; border-top-right-radius: 0px !important; }';
-  // tweet hide
-  appendStylus += 'section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i] > div > div[data-testid="cellInnerDiv" i]:not(.conversationX):not(.subTreeLinesX) { display: none !important; } ';
-  appendStylus += 'div[data-testid="cellInnerDiv" i].' + xitemRem + ' { display: none !important; } ';
-  appendStylus += 'div[data-testid="cellInnerDiv" i]:has(' + remReTweet + ') { display: none !important; } ';
   // menu item status 最新
   appendStylus += 'div[role="group" i] div[role="menu" i]:has(div[data-testid="Dropdown" i] > div:is([class="css-g5y9jx r-14lw9ot r-j5o65s r-rull8r r-qklmqi r-w7s2jr r-u9wvl5" i], [class="css-g5y9jx r-14lw9ot r-j5o65s r-rull8r r-qklmqi r-1ml3abn r-284m6k" i])) { display: none !important; } ';
   // ext area stylus
@@ -93,6 +89,11 @@
   appendStylus += 'div[aria-label="ホームタイムライン" i] > div div[role="presentation" i] > a[href$="/entertainment" i] { display: none !important; } ';
   // navigation:
   appendStylus += 'nav[role="navigation" i] > a[href$="/i/grok" i], div[role="dialog" i] div:has(> a[href$="/i/grok" i]), nav[role="navigation" i] > a[href$="/communities" i], div[role="dialog" i] div:has(> a[href$="/communities" i]), nav[role="navigation" i] > a[href$="/i/premium_sign_up" i], div[role="dialog" i] div:has(> a[href$="/i/premium_sign_up" i]), nav[role="navigation" i] > a[href$="/i/verified-orgs-signup" i], div[role="dialog" i] div:has(> a[href$="/i/verified-orgs-signup" i]), nav[role="navigation" i] > a[href$="/jobs" i], div[role="dialog" i] div:has(> a[href$="/jobs" i]), nav[role="navigation" i] > a[href$="/i/jf/creators/studio" i], div[role="dialog" i] div:has(> a[href$="/i/jf/creators/studio" i]), nav[role="navigation" i] > a[href$="/i/chat" i], div[role="dialog" i] div:has(> a[href$="/i/chat" i]), nav[role="navigation" i] > a[href$="/i/monetization" i], div[role="dialog" i] div:has(> a[href$="/i/monetization" i]), nav[role="navigation" i] > a[href$="/i/connect_people" i], div[role="dialog" i] div:has(> a[href$="/i/connect_people" i]), div[role="menu" i] div[data-testid="Dropdown" i] a[href$="/i/premium_sign_up" i], div[role="dialog" i] div:has(> a[href$="/i/premium_sign_up" i]), div[role="menu" i] div[data-testid="Dropdown" i] a[href$="/i/verified-orgs-signup" i], div[role="dialog" i] div:has(> a[href$="/i/verified-orgs-signup" i]), div[role="menu" i] div[data-testid="Dropdown" i] a[href$="/i/jf/creators/studio" i], div[role="dialog" i] div:has(> a[href$="/i/jf/creators/studio" i]), div[role="menu" i] div[data-testid="Dropdown" i] a[href*="ads.x.com/" i], div[role="dialog" i] div:has(> a[href*="ads.x.com/" i]) { display: none !important; }';
+  // tweet hide
+  appendStylus += 'div[data-testid="cellInnerDiv" i]:not(.' + xitemDom + ') { visibility: hidden !important; } ';
+  appendStylus += 'div[data-testid="cellInnerDiv" i].' + xitemRem + ' { display: none !important; } ';
+  appendStylus += 'div[data-testid="cellInnerDiv" i]:has(' + remReTweet + ') { display: none !important; } ';
+  appendStylus += 'section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i] > div > div[data-testid="cellInnerDiv" i]:not(.conversationX):not(.subTreeLinesX) { display: none !important; } ';
 
   const stylusElem = document.createElement('style');
   stylusElem.id = 'stylusElemPage';
@@ -239,7 +240,7 @@
 
     const cssStylus = twColumns + ':not(.' + xitemDom + ')';
     // 初期取得
-    const timelines = document.querySelectorAll(cssTimeline);
+    const timelines = Array.from(document.querySelectorAll(cssTimeline));
     let subtree = [];
     for (const timeline of timelines) {
       subtree = subtree.concat(Array.from(timeline.querySelectorAll(cssStylus)));
@@ -248,7 +249,7 @@
     while (attempts < maxAttempts) {
       if (0 < subtree.length) { break; }
       // DOMから取得してみる
-      const timelines = document.querySelectorAll(cssTimeline);
+      const timelines = Array.from(document.querySelectorAll(cssTimeline));
       for (const timeline of timelines) {
         subtree = subtree.concat(Array.from(timeline.querySelectorAll(cssStylus)));
       }
@@ -289,7 +290,8 @@
       await waitQuerySelector(twColumns);
       const timelineParent = showMoreLine.querySelector(twColumns);
       const conversation = timelineParent;
-      conversation.classList.add('conversationX');
+      conversation.classList.add('conversationX', xitemDom);
+
       const counterTxt = 'button[data-testid="reply" i] span[data-testid="app-text-transition-container" i]';
       const count = isNuN(conversation.querySelector(counterTxt)) ? 0 : conversation.querySelector(counterTxt).textContent;
 
