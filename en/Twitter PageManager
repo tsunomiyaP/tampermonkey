@@ -238,16 +238,16 @@
     const maxAttempts = 100; // 最大10秒程度待つ
 
     // 初期取得
+    const len = parseInt(num, 10); // 10進数変換
     let subtree = Array.from(document.querySelectorAll(childlines));
 
     while (attempts < maxAttempts) {
       if (num <= subtree.length) {
         console.log('tweet 会話 > ', num, subtree);
-        const len = parseInt(num, 10); // 10進数変換
         for (let i = 0; i < len; i++) {
           subtree[i].classList.add('subTreeLinesX');
         }
-        break;
+        break; 
       }
       // DOMから取得してみる
       subtree = document.querySelectorAll(childlines);
@@ -275,18 +275,22 @@
     }
   };
   const removeElements = async (e) => {
-    let nodeTimeline = await waitQuerySelector('div[aria-label^="タイムライン: " i] > div');
+    let timeline = await waitQuerySelector('div[aria-label^="タイムライン: " i] > div');
+    let timelineItems = null;
     if (new RegExp(regStatus, 'gis').test(e.detail.path)) {
       // 会話の場合、読み込みは会話内のみでよい
-      nodeTimeline = await waitQuerySelector(twPost + ' > div');
+      timeline = await waitQuerySelector(twPost + ' > div');
+      await waitQuerySelector(twColumns);
+      await new Promise(resolve => setTimeout(resolve, waitTime));
+      timelineItems = timeline.querySelectorAll(twColumns + '.subTreeLinesX');
     } else {
-      nodeTimeline = await waitQuerySelector('div[aria-label^="タイムライン: " i] > div');
+      timeline = await waitQuerySelector('div[aria-label^="タイムライン: " i] > div');
+      await waitQuerySelector(twColumns);
+      await new Promise(resolve => setTimeout(resolve, waitTime));
+      timelineItems = timeline.querySelectorAll(twColumns + ':not(.' + xitemDom + ')');
     }
-    await waitQuerySelector(twColumns);
-    await new Promise(resolve => setTimeout(resolve, waitTime));
-    const timelineItems = nodeTimeline.querySelectorAll(twColumns + ':not(.' + xitemDom + ')');
+    console.log('tweet item length > ', timelineItems.length);
 
-    console.log('tweet remove item length > ', timelineItems.length);
     for (const tweet of timelineItems) {
       tweet.classList.add(xitemDom);
       // もっと見るクリック
