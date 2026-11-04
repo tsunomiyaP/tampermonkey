@@ -304,10 +304,8 @@
     let timelineItems = null;
     if (new RegExp(regStatus, 'gis').test(e.detail.path)) {
       // 会話の場合、読み込みは会話内のみでよい
-      const cssPostLine = twPost + ' > div:has(> ' + twColumns + ')';
-      const timeline = await waitQuerySelector(cssPostLine);
-      const cssStylus = twColumns + '.subTreeLinesX';
-      timelineItems = timeline.querySelectorAll(cssStylus);
+      const cssStylus = twPost + ' > div:has(> ' + twColumns + ') ' + twColumns + '.subTreeLinesX';
+      timelineItems = document.querySelectorAll(cssStylus);
     } else {
       const cssTimeline = 'div[aria-label^="タイムライン" i] > div:has(> ' + twColumns + ')';
       await waitTimelines(cssTimeline);
