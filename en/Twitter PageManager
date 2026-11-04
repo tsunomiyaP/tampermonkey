@@ -93,7 +93,8 @@
   // tweet hide
   appendStylus += 'div[data-testid="cellInnerDiv" i].' + xitemRem + ' { display: none !important; } ';
   appendStylus += 'div[data-testid="cellInnerDiv" i]:has(' + remReTweet + ') { display: none !important; } ';
-  appendStylus += twPost + ' > div > div[data-testid="cellInnerDiv" i]:not(.' + xitemDom + '):not(.conversationX):not(.subTreeLinesX) { display: none !important; } ';
+  appendStylus += twPost + ' > div > div[data-testid="cellInnerDiv" i]:not(.' + xitemDom + '), div[data-testid="cellInnerDiv" i]:not(.' + xitemDom + ') { visibility: hidden !important; } ';
+  appendStylus += twPost + ' > div > div[data-testid="cellInnerDiv" i]:not(.conversationX):not(.subTreeLinesX) { display: none !important; } ';
 
   const stylusElem = document.createElement('style');
   stylusElem.id = 'stylusElemPage';
