@@ -42,7 +42,8 @@
   appendStylus += 'div[data-testid="cellInnerDiv" i] .r-1867qdf { border-radius: 0px !important; }';
   appendStylus += 'form[aria-label="検索" i] > div > div.r-sdzlij { border-bottom-left-radius: 0px !important; border-bottom-right-radius: 0px !important; border-top-left-radius: 0px !important; border-top-right-radius: 0px !important; }';
   // menu item status 最新
-  appendStylus += 'div[role="group" i] div[role="menu" i]:has(div[data-testid="Dropdown" i] > div:is([class="css-g5y9jx r-14lw9ot r-j5o65s r-rull8r r-qklmqi r-w7s2jr r-u9wvl5" i], [class="css-g5y9jx r-14lw9ot r-j5o65s r-rull8r r-qklmqi r-1ml3abn r-284m6k" i])) { display: none !important; } ';
+  appendStylus += 'div[role="group" i] div[role="menu" i]:has(div[data-testid="Dropdown" i] > div > div[class="css-146c3p1 r-bcqeeo r-1ttztb7 r-qvutc0 r-1tl8opc r-a023e6 r-rjixqe r-16dba41" i]) { display: none !important; } ';
+  appendStylus += 'div[role="menu" i] div[role="group" i]:has(div[data-testid="sheetDialog" i]) { display: none !important; } ';
   // ext area stylus
   appendStylus += 'div[aria-label="トレンド" i] > div > div:not(:has(form[aria-label="検索" i])) { display: none !important; } ';
   const morelinks = [
@@ -92,7 +93,7 @@
   // tweet hide
   appendStylus += 'div[data-testid="cellInnerDiv" i].' + xitemRem + ' { display: none !important; } ';
   appendStylus += 'div[data-testid="cellInnerDiv" i]:has(' + remReTweet + ') { display: none !important; } ';
-  appendStylus += 'section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i] > div > div[data-testid="cellInnerDiv" i]:not(.' + xitemDom + '):not(.conversationX):not(.subTreeLinesX) { display: none !important; } ';
+  appendStylus += twPost + ' > div > div[data-testid="cellInnerDiv" i]:not(.' + xitemDom + '):not(.conversationX):not(.subTreeLinesX) { display: none !important; } ';
 
   const stylusElem = document.createElement('style');
   stylusElem.id = 'stylusElemPage';
@@ -315,7 +316,7 @@
     }
     console.log('tweet item length > ', timelineItems.length);
 
-    for (const tweet of timelineItems) {
+    for await (const tweet of timelineItems) {
       tweet.classList.add(xitemDom);
 
       // もっと見るクリック
