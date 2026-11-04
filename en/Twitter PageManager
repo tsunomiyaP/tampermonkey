@@ -320,7 +320,6 @@
 
       // もっと見るクリック
       isNuN(tweet.querySelector('button[data-testid="tweet-text-show-more-link" i]')) ? '' : tweet.querySelector('button[data-testid="tweet-text-show-more-link" i]').click();
-
       // 広告
       isNuN(tweet.querySelector(remAd)) ? '' : tweet.querySelector(remAd).textContent !== '広告' ? '' : tweet.classList.add(xitemRem);
 
@@ -335,6 +334,7 @@
           break;
         }
       }
+      await new Promise(resolve => setTimeout(resolve, waitTime));
     }
   };
   const twPath = async (e, nodeMain) => {
