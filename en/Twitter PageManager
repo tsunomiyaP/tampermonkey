@@ -334,7 +334,7 @@
           break;
         }
       }
-      await new Promise(resolve => setTimeout(resolve, waitTime));
+      await new Promise(resolve => setTimeout(resolve, 200));
     }
   };
   const twPath = async (e, nodeMain) => {
