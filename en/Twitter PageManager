@@ -269,10 +269,10 @@
     while (attempts < maxAttempts) {
       if (num <= subtree.length) {
         console.log('tweet 会話 > ', num, subtree);
-        for (let i = 0; i < len; i++) {
+        for (let i = 0; i <= len; i++) {
           subtree[i].classList.add('subTreeLinesX');
         }
-        break; 
+        break;
       }
       // DOMから取得してみる
       subtree = document.querySelectorAll(childlines);
