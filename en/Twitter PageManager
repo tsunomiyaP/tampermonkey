@@ -18,6 +18,7 @@
   // ==========================================================
   // 変数宣言
   const waitTime = 1000;
+  /* eslint-disable no-unused-vars */
   const twMain = 'main[role="main" i]';
   const twColumns = 'div[data-testid="cellInnerDiv" i]';
   const twPost = 'section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i]';
@@ -91,10 +92,10 @@
   // navigation:
   appendStylus += 'nav[role="navigation" i] > a[href$="/i/grok" i], div[role="dialog" i] div:has(> a[href$="/i/grok" i]), nav[role="navigation" i] > a[href$="/communities" i], div[role="dialog" i] div:has(> a[href$="/communities" i]), nav[role="navigation" i] > a[href$="/i/premium_sign_up" i], div[role="dialog" i] div:has(> a[href$="/i/premium_sign_up" i]), nav[role="navigation" i] > a[href$="/i/verified-orgs-signup" i], div[role="dialog" i] div:has(> a[href$="/i/verified-orgs-signup" i]), nav[role="navigation" i] > a[href$="/jobs" i], div[role="dialog" i] div:has(> a[href$="/jobs" i]), nav[role="navigation" i] > a[href$="/i/jf/creators/studio" i], div[role="dialog" i] div:has(> a[href$="/i/jf/creators/studio" i]), nav[role="navigation" i] > a[href$="/i/chat" i], div[role="dialog" i] div:has(> a[href$="/i/chat" i]), nav[role="navigation" i] > a[href$="/i/monetization" i], div[role="dialog" i] div:has(> a[href$="/i/monetization" i]), nav[role="navigation" i] > a[href$="/i/connect_people" i], div[role="dialog" i] div:has(> a[href$="/i/connect_people" i]), div[role="menu" i] div[data-testid="Dropdown" i] a[href$="/i/premium_sign_up" i], div[role="dialog" i] div:has(> a[href$="/i/premium_sign_up" i]), div[role="menu" i] div[data-testid="Dropdown" i] a[href$="/i/verified-orgs-signup" i], div[role="dialog" i] div:has(> a[href$="/i/verified-orgs-signup" i]), div[role="menu" i] div[data-testid="Dropdown" i] a[href$="/i/jf/creators/studio" i], div[role="dialog" i] div:has(> a[href$="/i/jf/creators/studio" i]), div[role="menu" i] div[data-testid="Dropdown" i] a[href*="ads.x.com/" i], div[role="dialog" i] div:has(> a[href*="ads.x.com/" i]) { display: none !important; }';
   // tweet hide
-  appendStylus += 'div[data-testid="cellInnerDiv" i].' + xitemRem + ' { display: none !important; } ';
-  appendStylus += 'div[data-testid="cellInnerDiv" i]:has(' + remReTweet + ') { display: none !important; } ';
-  appendStylus += twPost + ' > div > div[data-testid="cellInnerDiv" i]:not(.' + xitemDom + '), div[data-testid="cellInnerDiv" i]:not(.' + xitemDom + ') { visibility: hidden !important; } ';
-  appendStylus += twPost + ' > div > div[data-testid="cellInnerDiv" i]:not(.conversationX):not(.subTreeLinesX) { display: none !important; } ';
+  appendStylus += 'div[data-testid="cellInnerDiv" i].removeItem { display: none !important; } ';
+  appendStylus += 'div[data-testid="cellInnerDiv" i]:has(span[data-testid="socialContext" i]) { display: none !important; } ';
+  appendStylus += 'div[data-testid="cellInnerDiv" i]:not(:has(.conversationX)):not(.stayofItem) { visibility: hidden !important; } ';
+  appendStylus += 'section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i] > div > div[data-testid="cellInnerDiv" i]:not(.conversationX):not(.subTreeLinesX) { display: none !important; } ';
 
   const stylusElem = document.createElement('style');
   stylusElem.id = 'stylusElemPage';
@@ -272,7 +273,7 @@
         for (let i = 0; i <= len; i++) {
           subtree[i].classList.add('subTreeLinesX');
         }
-        break;
+        break; 
       }
       // DOMから取得してみる
       subtree = document.querySelectorAll(childlines);
