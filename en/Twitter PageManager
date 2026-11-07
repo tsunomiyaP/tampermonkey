@@ -94,8 +94,7 @@
   // tweet hide
   appendStylus += 'div[data-testid="cellInnerDiv" i].removeItem { display: none !important; } ';
   appendStylus += 'div[data-testid="cellInnerDiv" i]:has(span[data-testid="socialContext" i]) { display: none !important; } ';
-  appendStylus += 'div[data-testid="cellInnerDiv" i]:not(:has(.conversationX)):not(.stayofItem) { visibility: hidden !important; } ';
-  appendStylus += 'section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i] > div > div[data-testid="cellInnerDiv" i]:not(.conversationX):not(.subTreeLinesX) { display: none !important; } ';
+  appendStylus += 'section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i] div[data-testid="cellInnerDiv" i]:not(.conversationX):not(.subTreeLinesX) { display: none !important; } ';
 
   const stylusElem = document.createElement('style');
   stylusElem.id = 'stylusElemPage';
@@ -236,25 +235,25 @@
       await new Promise(resolve => setTimeout(resolve, 100));
     }
   };
-  const waitTimelines = async (cssTimeline) => {
+  const waitTimelines = async (cssStylus) => {
     let attempts = 0;
     const maxAttempts = 100; // 最大10秒程度待つ
 
-    const cssStylus = twColumns + ':not(.' + xitemDom + ')';
     // 初期取得
-    const timelines = Array.from(document.querySelectorAll(cssTimeline));
-    let subtree = [];
-    for (const timeline of timelines) {
-      subtree = subtree.concat(Array.from(timeline.querySelectorAll(cssStylus)));
-    }
+    //const timelines = document.querySelectorAll('div[aria-label^="タイムライン"] > div');
+    let subtree = document.querySelectorAll(cssStylus);
 
     while (attempts < maxAttempts) {
-      if (0 < subtree.length) { break; }
-      // DOMから取得してみる
-      const timelines = Array.from(document.querySelectorAll(cssTimeline));
-      for (const timeline of timelines) {
-        subtree = subtree.concat(Array.from(timeline.querySelectorAll(cssStylus)));
+      if (0 < subtree.length) {
+        for await (const x of subtree) {
+          x.classList.add('timelineX');
+          await new Promise(resolve => setTimeout(resolve, 500));
+        }
+        return subtree; 
       }
+
+      // DOMから取得してみる
+      subtree = document.querySelectorAll(cssStylus);
       attempts++;
       await new Promise(resolve => setTimeout(resolve, 100));
     }
@@ -265,13 +264,17 @@
 
     // 初期取得
     const len = parseInt(num, 10); // 10進数変換
-    let subtree = Array.from(document.querySelectorAll(childlines));
+    let subtree = document.querySelectorAll(childlines);
 
     while (attempts < maxAttempts) {
-      if (num <= subtree.length) {
-        console.log('tweet 会話 > ', num, subtree);
-        for (let i = 0; i <= len; i++) {
-          subtree[i].classList.add('subTreeLinesX');
+      if (len <= subtree.length) {
+        console.log('tweet 会話 > ', len, subtree);
+        for (let n = 0; n <= subtree.length; n++) {
+          if (n <= len) {
+            subtree[n].classList.add('subTreeLinesX');
+          } else {
+            subtree[n].classList.add(xitemRem);
+          }
         }
         break; 
       }
@@ -309,10 +312,8 @@
       const cssStylus = twPost + ' > div:has(> ' + twColumns + ') ' + twColumns + '.subTreeLinesX';
       timelineItems = document.querySelectorAll(cssStylus);
     } else {
-      const cssTimeline = 'div[aria-label^="タイムライン" i] > div:has(> ' + twColumns + ')';
-      await waitTimelines(cssTimeline);
       const cssStylus = twColumns + ':not(.' + xitemDom + ')';
-      timelineItems = document.querySelectorAll(cssStylus);
+      timelineItems = await waitTimelines(cssStylus);
     }
     console.log('tweet item length > ', timelineItems.length);
 
@@ -324,18 +325,19 @@
       // 広告
       isNuN(tweet.querySelector(remAd)) ? '' : tweet.querySelector(remAd).textContent !== '広告' ? '' : tweet.classList.add(xitemRem);
 
-      const words = isNuN(abc) ? [] : abc.hideword;
-      // 非表示対象文字列
-      for (const word of words) {
-        const regWord = new RegExp(word, 'gis');
-        if (regWord.test(tweet.textContent)) {
-          console.log([word, tweet.textContent]);
-          // tweet.style.setProperty('display', 'none', 'important');
-          tweet.classList.add(xitemRem);
-          break;
+      if (!tweet.classList.contains(xitemRem)) {
+        const words = isNuN(abc) ? [] : abc.hideword;
+        // 非表示対象文字列
+        for (const word of words) {
+          const regWord = new RegExp(word, 'gis');
+          if (regWord.test(tweet.textContent)) {
+            console.log([word, tweet.textContent]);
+            // tweet.style.setProperty('display', 'none', 'important');
+            tweet.classList.add(xitemRem);
+            break;
+          }
         }
       }
-      await new Promise(resolve => setTimeout(resolve, 200));
     }
   };
   const twPath = async (e, nodeMain) => {
@@ -344,7 +346,7 @@
     const tweets = document.querySelectorAll(twColumns);
     for (const item of tweets) {
       if (item.classList.contains(xitemDom)) {
-        item.classList.remove(xitemDom, xitemRem, 'conversationX', 'subTreeLinesX');
+        item.classList.remove('conversationX', 'subTreeLinesX');
       }
     }
 
@@ -357,10 +359,8 @@
     // Mutation Observer
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
     twMutationManager = new MutationObserver(async () => {
-      twMutationManager.disconnect();
       await tweetMoreLines(e);
       await removeElements(e);
-      twMutationManager.observe(nodeMain, config);
     });
     twMutationManager.observe(nodeMain, config);
   };
