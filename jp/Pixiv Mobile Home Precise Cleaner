@@ -38,6 +38,8 @@
     'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="剣持" i])',
     'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="社築" i])',
     'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="ましろ" i])',
+    'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="舞元" i])',
+    'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="力一" i])',
     'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="黛" i])',
     'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="不破" i])',
     'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="イブラヒム" i])',
@@ -49,7 +51,7 @@
     'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="咎人" i], [data-cr-data*="トリガー" i], [data-cr-data*="trigger" i])',
     'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="七次元生徒会" i])',
     'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="にじそうさく" i])',
-    'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="MADTOWN" i])',
+    'div[data-ga4-label="home_recommend" i] > .w-full > div[data-ga4-label="work_content" i]:is([data-cr-data*="MADTOWN" i], [data-cr-data*="NEWTOWN" i])',
   ].join(', ');
   let cssAppended = '';
   cssAppended += css + ' { display: none !important; } ';
