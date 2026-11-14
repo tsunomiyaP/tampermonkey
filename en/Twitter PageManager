@@ -270,7 +270,7 @@
             x.classList.add(addClassName);
             await new Promise(resolve => setTimeout(resolve, 500));
           }
-          return subtree; 
+          return subtree;
         }
       }
       // DOMから取得してみる
@@ -301,16 +301,17 @@
     let timelineItems = null;
     if (new RegExp(regStatus, 'gis').test(e.detail.path)) {
       // 会話の場合、読み込みは会話内のみでよい
-      const cssStylus = twPost + ' > div:has(> ' + twColumns + ') ' + twColumns + ':not(.conversationX)';
+      const cssStylus = twPost + ' > div:has(> ' + twColumns + ':not(.' + xitemDom + ')) ' + twColumns + ':not(.conversationX)';
       timelineItems = await waitTimelines('repline', cssStylus, 'subTreeLinesX');
     } else {
-      const cssStylus = twColumns;
-      timelineItems = await waitTimelines('newpost', cssStylus, xitemDom);
+      const cssStylus = twColumns + ':not(.' + xitemDom + ')';
+      timelineItems = await waitTimelines('newpost', cssStylus, 'twTreeLineX');
     }
     console.log('tweet item length > ', timelineItems.length);
 
     for await (const tweet of timelineItems) {
-      // もっと見るクリック
+      tweet.classList.add(xitemDom);
+       // もっと見るクリック
       isNuN(tweet.querySelector('button[data-testid="tweet-text-show-more-link" i]')) ? '' : tweet.querySelector('button[data-testid="tweet-text-show-more-link" i]').click();
       // 広告
       isNuN(tweet.querySelector(remAd)) ? '' : tweet.querySelector(remAd).textContent !== '広告' ? '' : tweet.classList.add(xitemRem);
@@ -335,7 +336,7 @@
     // 返信ツイート状況リセット
     const tweets = document.querySelectorAll(twColumns);
     for (const item of tweets) {
-      item.classList.remove(xitemDom, 'conversationX', 'subTreeLinesX');
+      item.classList.remove(xitemDom, 'twTreeLineX', 'conversationX', 'subTreeLinesX');
     }
     await new Promise(resolve => setTimeout(resolve, waitTime));
 
@@ -343,7 +344,6 @@
     newest = false;
     await tweetMoreLines(e);
     await removeElements(e);
-    await new Promise(resolve => setTimeout(resolve, waitTime));
 
     // Mutation Observer
     const config = { 'attributes': false, 'childList': true, 'subtree': true };
