@@ -269,8 +269,8 @@
     while (attempts < maxAttempts) {
       if (len <= subtree.length) {
         console.log('tweet 会話 > ', len, subtree);
-        for (let n = 0; n <= subtree.length; n++) {
-          if (n <= len) {
+        for (let n = 0; n < subtree.length; n++) {
+          if (n < len) {
             subtree[n].classList.add('subTreeLinesX');
           } else {
             subtree[n].classList.add(xitemRem);
