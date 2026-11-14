@@ -29,7 +29,7 @@
   const regStatus = '/status/';
   const abc = JSON.parse(window.sessionStorage.getItem('ABC')) || null;
   // 可変数
-  let twMutationManager, newest = false;
+  let twMutationManager, newest = false, countRepX = 0;
   let oldUrl = '';
   let label = ''; // 現在のタブ
   // ==========================================================
@@ -235,51 +235,46 @@
       await new Promise(resolve => setTimeout(resolve, 100));
     }
   };
-  const waitTimelines = async (cssStylus) => {
+  const waitTimelines = async (status, cssStylus, addClassName) => {
     let attempts = 0;
     const maxAttempts = 100; // 最大10秒程度待つ
+    let len = parseInt(countRepX, 10); // 10進数変換
+    let cnt = 0;
 
     // 初期取得
     //const timelines = document.querySelectorAll('div[aria-label^="タイムライン"] > div');
     let subtree = document.querySelectorAll(cssStylus);
 
     while (attempts < maxAttempts) {
-      if (0 < subtree.length) {
-        for await (const x of subtree) {
-          x.classList.add('timelineX');
-          await new Promise(resolve => setTimeout(resolve, 500));
+      if (status === 'repline') {
+        if (len <= subtree.length) {
+          console.log('tweet 会話 > ', len, subtree);
+          for await (const x of subtree) {
+            if (len <= cnt) {
+              break;
+            }
+            x.classList.add(addClassName);
+            await new Promise(resolve => setTimeout(resolve, 500));
+            cnt++;
+          }
+          const subtreeRep = Array.from(subtree)
+            .filter(el => !el.classList.contains(addClassName)) // addClassName を持っていないものを抽出
+            .forEach(el => {
+              el.classList.add(xitemRem); // 返信要素ではないので削除クラス を付与
+            });
+          return subtreeRep;
         }
-        return subtree; 
+      } else {
+        if (0 < subtree.length) {
+          for await (const x of subtree) {
+            x.classList.add(addClassName);
+            await new Promise(resolve => setTimeout(resolve, 500));
+          }
+          return subtree; 
+        }
       }
-
       // DOMから取得してみる
       subtree = document.querySelectorAll(cssStylus);
-      attempts++;
-      await new Promise(resolve => setTimeout(resolve, 100));
-    }
-  };
-  const waitRepTimelines = async (childlines, num) => {
-    let attempts = 0;
-    const maxAttempts = 100; // 最大10秒程度待つ
-
-    // 初期取得
-    const len = parseInt(num, 10); // 10進数変換
-    let subtree = document.querySelectorAll(childlines);
-
-    while (attempts < maxAttempts) {
-      if (len <= subtree.length) {
-        console.log('tweet 会話 > ', len, subtree);
-        for (let n = 0; n < subtree.length; n++) {
-          if (n < len) {
-            subtree[n].classList.add('subTreeLinesX');
-          } else {
-            subtree[n].classList.add(xitemRem);
-          }
-        }
-        break; 
-      }
-      // DOMから取得してみる
-      subtree = document.querySelectorAll(childlines);
       attempts++;
       await new Promise(resolve => setTimeout(resolve, 100));
     }
@@ -295,13 +290,10 @@
       await waitQuerySelector(twColumns);
       const timelineParent = showMoreLine.querySelector(twColumns);
       const conversation = timelineParent;
-      conversation.classList.add('conversationX', xitemDom);
+      conversation.classList.add('conversationX');
 
       const counterTxt = 'button[data-testid="reply" i] span[data-testid="app-text-transition-container" i]';
-      const count = isNuN(conversation.querySelector(counterTxt)) ? 0 : conversation.querySelector(counterTxt).textContent;
-
-      // 返信のみ抽出
-      await waitRepTimelines(twColumns + ':not(.conversationX)', count);
+      countRepX = isNuN(conversation.querySelector(counterTxt)) ? 0 : conversation.querySelector(counterTxt).textContent;
     }
   };
   const removeElements = async (e) => {
@@ -309,17 +301,15 @@
     let timelineItems = null;
     if (new RegExp(regStatus, 'gis').test(e.detail.path)) {
       // 会話の場合、読み込みは会話内のみでよい
-      const cssStylus = twPost + ' > div:has(> ' + twColumns + ') ' + twColumns + '.subTreeLinesX';
-      timelineItems = document.querySelectorAll(cssStylus);
+      const cssStylus = twPost + ' > div:has(> ' + twColumns + ') ' + twColumns + ':not(.conversationX)';
+      timelineItems = await waitTimelines('repline', cssStylus, 'subTreeLinesX');
     } else {
-      const cssStylus = twColumns + ':not(.' + xitemDom + ')';
-      timelineItems = await waitTimelines(cssStylus);
+      const cssStylus = twColumns;
+      timelineItems = await waitTimelines('newpost', cssStylus, xitemDom);
     }
     console.log('tweet item length > ', timelineItems.length);
 
     for await (const tweet of timelineItems) {
-      tweet.classList.add(xitemDom);
-
       // もっと見るクリック
       isNuN(tweet.querySelector('button[data-testid="tweet-text-show-more-link" i]')) ? '' : tweet.querySelector('button[data-testid="tweet-text-show-more-link" i]').click();
       // 広告
@@ -345,10 +335,9 @@
     // 返信ツイート状況リセット
     const tweets = document.querySelectorAll(twColumns);
     for (const item of tweets) {
-      if (item.classList.contains(xitemDom)) {
-        item.classList.remove('conversationX', 'subTreeLinesX');
-      }
+      item.classList.remove(xitemDom, 'conversationX', 'subTreeLinesX');
     }
+    await new Promise(resolve => setTimeout(resolve, waitTime));
 
     // 現在のタブの状態変化が「最新」ではないことを格納
     newest = false;
