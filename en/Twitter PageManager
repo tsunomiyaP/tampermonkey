@@ -250,7 +250,7 @@
         if (len <= subtree.length) {
           console.log('tweet 会話 > ', len, subtree);
           for await (const x of subtree) {
-            if (len <= cnt) {
+            if (len < cnt) {
               break;
             }
             x.classList.add(addClassName);
