@@ -335,13 +335,6 @@
   };
   const twPath = async (e, nodeMain) => {
 
-    // 返信ツイート状況リセット
-    const tweets = document.querySelectorAll(twColumns);
-    for (const item of tweets) {
-      item.classList.remove(xitemDom, 'twTreeLineX', 'subTreeLinesX');
-    }
-    await new Promise(resolve => setTimeout(resolve, waitTime));
-
     // 現在のタブの状態変化が「最新」ではないことを格納
     newest = false;
     await tweetMoreLines(e);
