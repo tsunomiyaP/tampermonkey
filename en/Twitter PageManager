@@ -243,9 +243,6 @@
     // 初期取得
     //const timelines = document.querySelectorAll('div[aria-label^="タイムライン"] > div');
     let subtree = document.querySelectorAll(cssStylus);
-    for (const item of subtree) {
-      item.classList.remove(addClassName, xitemRem);
-    }
 
     while (attempts < maxAttempts) {
       if (status === 'repline') {
