@@ -94,7 +94,7 @@
   // tweet hide
   appendStylus += 'div[data-testid="cellInnerDiv" i].removeItem { display: none !important; } ';
   appendStylus += 'div[data-testid="cellInnerDiv" i]:has(span[data-testid="socialContext" i]) { display: none !important; } ';
-  appendStylus += 'section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i] div[data-testid="cellInnerDiv" i]:not(.conversationX):not(.subTreeLinesX) { visibility: hidden !important; } ';
+  appendStylus += 'section[aria-labelledby^="accessible-list-" i] > div[aria-label*="会話" i] div[data-testid="cellInnerDiv" i]:not(.subTreeLinesX):not(.removeItem) { visibility: hidden !important; } ';
   const stylusElem = document.createElement('style');
   stylusElem.id = 'stylusElemPage';
   stylusElem.textContent = appendStylus;
