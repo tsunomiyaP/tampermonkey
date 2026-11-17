@@ -336,7 +336,7 @@
     // 返信ツイート状況リセット
     const tweets = document.querySelectorAll(twColumns);
     for (const item of tweets) {
-      item.classList.remove(xitemDom, 'twTreeLineX', 'conversationX', 'subTreeLinesX');
+      item.classList.remove(xitemDom, 'twTreeLineX', 'subTreeLinesX');
     }
     await new Promise(resolve => setTimeout(resolve, waitTime));
 
