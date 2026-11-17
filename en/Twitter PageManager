@@ -237,7 +237,8 @@
   const waitTimelines = async (status, cssStylus, addClassName) => {
     let attempts = 0;
     const maxAttempts = 100; // 最大10秒程度待つ
-    let len = parseInt(countRepX, 10); // 10進数変換
+    let max = parseInt(countRepX, 10); // 10進数変換
+    let cnt = 0;
 
     // 初期取得
     //const timelines = document.querySelectorAll('div[aria-label^="タイムライン"] > div');
@@ -246,15 +247,12 @@
     while (attempts < maxAttempts) {
       if (status === 'repline') {
         if (0 < subtree.length) {
-          if (len <= subtree.length) {
-            for (const item of subtree) {
-              item.classList.remove('subTreeLinesX');
+          for (const item of subtree) {
+            if (cnt < max) {
+              item.classList.add(addClassName);
+              await new Promise(resolve => setTimeout(resolve, 500));
+              cnt++;
             }
-          }
-          console.log('tweet 会話 > ', len, subtree);
-          for await (const item of subtree) {
-            x.classList.add(addClassName);
-            await new Promise(resolve => setTimeout(resolve, 500));
           }
           for (const item of subtree) {
             if (!item.classList.contains(addClassName)) {
@@ -262,7 +260,8 @@
               item.classList.add(xitemRem); // 返信要素ではないので削除クラス を付与
             }
           }
-          return subtreeRep;
+          console.log('tweet 会話 > ', countRepX, subtree);
+          return subtree;
         }
       } else {
         if (0 < subtree.length) {
