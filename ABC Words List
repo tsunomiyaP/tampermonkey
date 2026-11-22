@@ -153,7 +153,7 @@
       '#(にじ(さんじ)*|NIJI(SANJI)*)',
       'ハピトリ|メイフ|SMC|チューリップ組|エデン組|3skm|oriens|dytica|cellmates|セルメイツ',
       'chronoir|くろのわ|くろなん',
-      'rof(\\s)*[-]*mao|ろふまお',
+      'rof[-|\\s]*mao|ろふまお',
       'ヴォルタクション|voltaction',
       'VΔLZ|ヴァルツ|ばるつ|VALZ',
       '七次元生徒会|seitokai_07',
@@ -202,29 +202,38 @@
       'うるか|CR_uruca|@crazyraccoon',
       'クイズノック|(@)*quizknock',
       'なつめさんち|俺ン家|@natsume_sanchi',
+      'トラブルバスター|@torabasu',
       'ぽんぽこ|ぽこピー|ピーナッツくん|@pokopea',
+      '五月病(\\s)*マリオ|@(5_mario|5mario)',
 
-      // others streamer
-      'twitch.tv/yuyuta0702|ゆゆうた|@(yuyuta0702|yuyutadesu)',
-      'twitch.tv/kato_junichi0817|加藤(\\s)*純一|うんこちゃん|@junchannel',
-      'twitch.tv/zetyou2|(w(\\s)*/(\\s)*)*ズズ|zetyou2|@zuzu_channel',
-      'twitch.tv/kenki521|けんき|@(kenki521|kenki521)',
-      'twitch.tv/tachikawabr|立川|@tachikawabr',
-      'twitch.tv/koujikog|小路kog|@(koujikog|kog4586)',
-      'twitch.tv/cr_arisakaaa|ありさか|@Arisakaaa',
-      'twitch.tv/ikoma_dogura|どぐら|@(ikoma_dogura|maneater_dgr)',
-      'twitch.tv/k4sen|k4sen|@zzxk4sen',
-      'twitch.tv/haitani0904|ハイタニ|hai090|HaitaniTV',
-      'twitch.tv/fps_shaka|釈迦|(@)*(fps_shaka|avashaka|shaka)',
-      'twitch.tv/vodkavdk|(ぼどか|ボドカ)|@(vodkachaso|vodkavdk)',
-      'twitch.tv/zackraystream|ザクレイ|@(zackraystream|zackray3056)',
-      'twitch.tv/ixa_inaba|@(ixa_inaba|inaba360)',
-      'twitch.tv/acqua_0316|acqua|@(acqua_0316|acqua316)',
-      'twitch.tv/shirayuki_reid|白雪(\\s)*レイド|@shirayuki_reid',
-      'twitch.tv/5_mario|五月病(\\s)*マリオ|@(5_mario|5mario)',
+      // プロゲーマーw streamer
+      // CR
+      '^だるまいずごっど|@darumaisgod',
+      '^ありさか|ありさか/Arisakaaa|@Arisakaaa',
+      '^うるか|Uruca ch /うるか|@CR_uruca',
+      '^Selly|Selly Apex|@Selly_o55',
+      '^Ras|Ras Apex|@Ras99s',
+      '^Mondo|@Mondo2233',
+      '^天月|天月-あまつき-|@amatsuki-official',
+      // ZETA
+      '^SHAKA|釈迦|@SHAKAch',
+      '^k4sen|k4sen / かせん|@zzxk4sen',
+      '^Laz|Lazvell|@Lazvell',
+      '^ハセシン|ハセシン / HASESHIN|@XxHASESHINxX',
+      // REJECT
+      '^ときど|ときどチャンネル / Tokido|@Tokido',
+      '^たいじ|たいじ/たいちゃんねる|@Yaritaiji',
+      '^ハイタニ|ハイタニ TV|@HaitaniTV',
+      '^立川|立川ちゃんねる|@TachikawaBR',
+      '^どぐら|どぐら 生駒デビル|@ikoma_dogura',
+      '^ズズ|ズズちゃんねる|@zuzu_channel',
+      '^乾伸一郎|乾ちゃんねる|@乾ちゃんねる',
+      '^カプラ・リブラス|@rc_capla.libras',
+      // 他
+      '^カワノ|カワノKawano|@kawano4057',
 
       // 芸人
-      'M-1|R-1',
+      '[M|R]-1',
       '狩野英孝|@eikogo3822',
       'バキ童|ぐんぴぃ|@bakibakidt',
       'ジャルジャル|JARUJARU',
@@ -242,17 +251,18 @@
       '木村良平|@Ryouhey_Drunk',
 
       // other groups ...
+      'Crazy(\\s)*Raccoon|(@)*crazyraccoon406',
+      'ZETA(\\s)*DIVISION|(@)*zetadivision',
       'REJECT|(@)*RC_REJECT',
+      'Good(\\s)*8(\\s)*Squad|(@)*good8squad',
+      'eスポーツ|(プロ)*(FPS|格(闘)*)*ゲーマー|インフルエンサー|ストリーマー',
       'monsterz(\\s)*mate|モンスターズメイト|mzm_kosaka',
       'ぶいすぽ|vspo',
-      'ネオポリス',
-      'ハルヴァロ',
-      'プロゲーマー|インフルエンサー',
 
       // tips
-      '中国|朝鮮|韓国|考察|(?<!.*英語)解説|反応|REACTION|女性向|神回|神ゲー|と噂の|news',
-      '(?=.*(にじ(さんじ)*|cr|valo|apex|pubg|(STREET(\\s)*FIGHTER|ストリートファイター|スト\\d)|(ow|over(\\s)*watch)|(?<!ho)(lol)(?!ive)|League(\\s)*of(\\s)*Legends|スプラ|ストリーマー|獅白|kzh))(?=.*((cup|カップ|かっぷ)|(custom|カスタム|かすたむ)|(プラベ|ぷらべ|マッチ)|杯|(交流|個人|団体)戦|祭|大会|選手権|チーム|運動会|切り抜き|企画|まとめ).*)',
-      'v(tuber)*最(協)*|v(tuber)*祭(協)*|#Vの|(mad|new)(\\s)*town|(天下統一)RUST|ストグラ|ストリヌ|スト鯖|VCR|V1GP|TRPG|ホロ7大豆|コーチング|漢気|漢義|スクリム|交流戦|講座|顔合わせ',
+      '中国|朝鮮|韓国|考察|(?<!.*英語)解説|反応|REACTION|女性向|神回|神ゲー|と噂の|忖度(なし|無し)|news',
+      '(?=.*(にじ(さんじ)*|cr|valo|apex|pubg|(STREET(\\s)*FIGHTER|ストリートファイター|スト\\d)|(ow|over(\\s)*watch)|(?<!ho)(lol)(?!ive)|League(\\s)*of(\\s)*Legends|スプラ|獅白|kzh))(?=.*((cup|カップ|かっぷ)|(custom|カスタム|かすたむ)|(プラベ|ぷらべ|マッチ)|杯|(交流|個人|団体)戦|祭|大会|選手権|チーム|運動会|切り抜き|企画|まとめ).*)',
+      'v(tuber)*最(協)*|v(tuber)*祭(協)*|#Vの|(mad|new)(\\s)*town|ネオポリス|(天下統一)RUST|ストグラ|ストリヌ|スト鯖|VCR|V1GP|TRPG|ハルヴァロ|ホロ7大豆|コーチング|漢気|漢義|スクリム|交流戦|講座|顔合わせ',
     ],
     execludeWords: []
   };
