@@ -93,7 +93,7 @@
     'ytd-guide-section-renderer > div#items.ytd-guide-section-renderer > ytd-guide-entry-renderer > a#endpoint[title="ショート" i]',
     'ytd-mini-guide-renderer > div#items.ytd-mini-guide-renderer > ytd-mini-guide-entry-renderer > a#endpoint[title="ショート" i]',
     // サイドバー
-    'ytd-guide-renderer > div#sections > ytd-guide-section-renderer > div#items > ytd-guide-entry-renderer > a[title="ショート"]',
+    'ytd-guide-renderer > div#sections > ytd-guide-section-renderer > div#items > ytd-guide-entry-renderer > a[title="ショート" i]',
     'ytd-guide-renderer > div#sections > ytd-guide-section-renderer:nth-child(n+3)',
     'ytd-guide-renderer > div#footer',
     'div[class="tab-content" i]:is([tab-title="ホーム" i], [tab-title="動画" i], [tab-title="ライブ" i], [tab-identifier="FEsubscriptions" i]) :is(:is(ytm-rich-section-renderer, ytm-item-section-renderer, ytm-rich-item-renderer):has(:is(a[href*="/shorts/" i], a[href*="&start_radio=" i], a[href*="&list=" i], ytm-channel-featured-video-renderer, ad-slot-renderer, ytm-radio-renderer, ytm-badge-supported-renderer)), ytm-statement-banner-renderer, ytm-rich-section-renderer)',
