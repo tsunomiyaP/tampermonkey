@@ -106,9 +106,9 @@
 
   const itemremover = [
     // [ショート]動画 削除
-    ':has(a[href*="/shorts" i]))',
+    ':has(a[href*="/shorts" i])',
     // [Mix & playlist] [他(headline)]動画 削除
-    ':has(a[href*="&list=" i], #rich-shelf-header-container, .rich-shelf-header, chips-shelf-with-video-shelf-renderer, ytd-brand-video-singleton-renderer, ytd-brand-video-shelf-renderer))',
+    ':has(a[href*="&list=" i], #rich-shelf-header-container, .rich-shelf-header, chips-shelf-with-video-shelf-renderer, ytd-brand-video-singleton-renderer, ytd-brand-video-shelf-renderer)',
   ].join(',');
   const moredoms = [
     // pc
