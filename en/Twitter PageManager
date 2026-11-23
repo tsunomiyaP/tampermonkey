@@ -35,14 +35,14 @@
   // ==========================================================
   // stylus: beforebegin, afterbegin, beforeend, afterend
   let appendStylus = '';
-  /** css style border line */
+  /* gradient stylus :意味あるかは不明 */
+  appendStylus += '* { backdrop-filter: none !important; } ';
   appendStylus += 'div[data-testid="cellInnerDiv" i] .r-1867qdf { border-radius: 0px !important; }';
   appendStylus += 'form[aria-label="検索" i] > div > div.r-sdzlij { border-bottom-left-radius: 0px !important; border-bottom-right-radius: 0px !important; border-top-left-radius: 0px !important; border-top-right-radius: 0px !important; }';
 
-  /* gradient stylus :意味あるかは不明 */
+  appendStylus += 'img[src*="twimg.com/emoji" i] { display: none !important; } ';
   appendStylus += 'div[data-testid="cellInnerDiv" i] div:has(> div[data-testid="Tweet-User-Avatar" i]) { display: none !important; } ';
   appendStylus += 'a[href*="/grok.com/" i], div[data-testid="GrokDrawer" i], button[aria-label*="Grok" i], button[aria-label="プロフィールの要約" i], button[aria-label="チャット" i] { display: none !important; } ';
-  appendStylus += 'img[src*="twimg.com/emoji" i] { display: none !important; } ';
   // menu item status 最新
   appendStylus += 'div[role="group" i] div[role="menu" i]:has(div[data-testid="Dropdown" i] > div > div[class="css-146c3p1 r-bcqeeo r-1ttztb7 r-qvutc0 r-1tl8opc r-a023e6 r-rjixqe r-16dba41" i]) { display: none !important; } ';
   appendStylus += 'div[role="menu" i] div[role="group" i]:has(div[data-testid="sheetDialog" i]) { display: none !important; } ';
