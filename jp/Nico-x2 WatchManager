@@ -41,9 +41,9 @@
 
   const cssMoreTxt = cssMain + ' > div[class="_16d7kub0" i] button[class="d8iohg8" i]';
   const cssInfo = cssPlayerArea + ' div[class="wjwcbt0" i][aria-label="動画情報" i] > div[class="m03n2n0" i] > div[class="_1hfvdw30" i]';
-  const cssInfoTxt = 'h2[class="_1xtfb7p4 _1xtfb7p3" i]';
-  const cssInfoSeriesTxt = 'h3[class="_1xtfb7p5 _1xtfb7p3" i]';
-  const cssInfoSeriesPath = 'a[href*="/watch/sm" i]';
+  const cssInfoTxt = 'div[class="_1xtfb7p2 _1xtfb7p0" i] > h2[class="_1xtfb7p4 _1xtfb7p3" i]';
+  const cssInfoSeriesTxt = 'div:not([class]) > div[class="_1xtfb7p1 _1xtfb7p0" i] > h3[class="_1xtfb7p5 _1xtfb7p3" i]';
+  const cssInfoSeriesPath = 'ol a[href*="/watch/sm" i]';
 
   let oldUrl = '';
   // ==========================================================
@@ -157,21 +157,30 @@
   const dialogHide = () => {
     // 動画読み込みに失敗
   };
-  const nextSeriesNode = () => {
-    const sources = document.querySelectorAll(cssInfo);
+  const nextSeriesNode = async (cnt) => {
+    if (10 <= cnt) { return false; }
 
-    for (const elem of sources) {
-      const title = elem.querySelector(cssInfoTxt) ? elem.querySelector(cssInfoTxt).textContent : '';
-      if (title === 'シリーズ') {
+    const sources = document.querySelectorAll(cssInfo);
+    console.log('1 ...', sources);
+
+    for await (const elem of sources) {
+      const titleNode = elem.querySelector(cssInfoTxt) ? elem.querySelector(cssInfoTxt).textContent : '';
+      console.log('2 ...', titleNode);
+      if (titleNode == 'シリーズ') {
         const seriesNode = elem.querySelector(cssInfoSeriesTxt) ? elem.querySelector(cssInfoSeriesTxt).textContent : '';
-        if (seriesNode === '次の動画') {
+        console.log('3 ...', seriesNode);
+        if (seriesNode == '次の動画') {
           const movieNext = elem.querySelector(cssInfoSeriesPath);
           console.log('next ...', movieNext);
+          await new Promise(resolve => setTimeout(resolve, waitTime));
           movieNext.click();
+          return false;
         }
       }
     }
-    nextSeriesNode();
+    cnt++;
+    await new Promise(resolve => setTimeout(resolve, 5000));
+    await nextSeriesNode(cnt);
   };
   const playNextWatch = async () => {
     const videoElem = await waitQuerySelector(cssVideo);
@@ -186,7 +195,7 @@
       const txt = await waitQuerySelector(cssMoreTxt);
       txt.click();
 
-      nextSeriesNode();
+      await nextSeriesNode(0);
     });
   };
   const playingWatch = async () => {
