@@ -157,6 +157,22 @@
   const dialogHide = () => {
     // 動画読み込みに失敗
   };
+  const nextSeriesNode = () => {
+    const sources = document.querySelectorAll(cssInfo);
+
+    for (const elem of sources) {
+      const title = elem.querySelector(cssInfoTxt) ? elem.querySelector(cssInfoTxt).textContent : '';
+      if (title === 'シリーズ') {
+        const seriesNode = elem.querySelector(cssInfoSeriesTxt) ? elem.querySelector(cssInfoSeriesTxt).textContent : '';
+        if (seriesNode === '次の動画') {
+          const movieNext = elem.querySelector(cssInfoSeriesPath);
+          console.log('next ...', movieNext);
+          movieNext.click();
+        }
+      }
+    }
+    nextSeriesNode();
+  };
   const playNextWatch = async () => {
     const videoElem = await waitQuerySelector(cssVideo);
 
@@ -170,23 +186,7 @@
       const txt = await waitQuerySelector(cssMoreTxt);
       txt.click();
 
-      await waitQuerySelector(cssInfo);
-      const sources = document.querySelectorAll(cssInfo);
-      console.log('0 ...', sources);
-
-      for (const elem of sources) {
-        const title = elem.querySelector(cssInfoTxt) ? elem.querySelector(cssInfoTxt).textContent : '';
-        console.log('1 ...', title);
-        if (title === 'シリーズ') {
-          const seriesNode = elem.querySelector(cssInfoSeriesTxt) ? elem.querySelector(cssInfoSeriesTxt).textContent : '';
-          console.log('2 ...', seriesNode);
-          if (seriesNode === '次の動画') {
-            const movieNext = elem.querySelector(cssInfoSeriesPath);
-            console.log('next ...', movieNext);
-            movieNext.click();
-          }
-        }
-      }
+      nextSeriesNode();
     });
   };
   const playingWatch = async () => {
