@@ -169,10 +169,18 @@
       // もっとみる
       const txt = await waitQuerySelector(cssMoreTxt);
       txt.click();
+
+      await waitQuerySelector(cssInfo);
       const sources = document.querySelectorAll(cssInfo);
+      console.log('0 ...', sources);
+
       for (const elem of sources) {
-        if (elem.querySelector(cssInfoTxt).textContent === 'シリーズ') {
-          if (elem.querySelector(cssInfoSeriesTxt).textContent === '次の動画') {
+        const title = elem.querySelector(cssInfoTxt) ? elem.querySelector(cssInfoTxt).textContent : '';
+        console.log('1 ...', title);
+        if (title === 'シリーズ') {
+          const seriesNode = elem.querySelector(cssInfoSeriesTxt) ? elem.querySelector(cssInfoSeriesTxt).textContent : '';
+          console.log('2 ...', seriesNode);
+          if (seriesNode === '次の動画') {
             const movieNext = elem.querySelector(cssInfoSeriesPath);
             console.log('next ...', movieNext);
             movieNext.click();
@@ -196,7 +204,10 @@
     btn = await waitQuerySelectorCount(10, cssVideoBtn);
     if (isNuN(btn)) { btn = await waitQuerySelectorCount(10, cssPlayBtn); }
     // 再生ボタン存在した場合、押下
-    if (!isNuN(btn)) { btn.click(); }
+    if (!isNuN(btn)) {
+      await new Promise(resolve => setTimeout(resolve, 5000));
+      btn.click(); 
+    }
 
     // コメント画面描画時[x]
     const commentSVG = await waitQuerySelectorCount(10, cssCommentBtn);
