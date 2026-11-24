@@ -40,9 +40,9 @@
   const cssCommentBtn = cssAControls + ' > button[class="_9ndw3l1 _1tmkx9h0" i]:has(svg > path[d^="M18 3H6C4.346" i])';
 
   const cssMoreTxt = cssMain + ' > div[class="_16d7kub0" i] button[class="d8iohg8" i]';
-  const cssInfo = cssPlayerArea + ' div[class="_1hfvdw30" i]';
-  const cssMovieInfo = 'h3[class="_1xtfb7p5 _1xtfb7p3" i]';
-  const cssMoviePath = 'a[href*="/watch/sm" i]';
+  const cssInfo = cssPlayerArea + ' div[class="wjwcbt0" i][aria-label="動画情報" i] div[class="_1hfvdw30" i]';
+  const cssInfoSeriesTxt = 'h3[class="_1xtfb7p5 _1xtfb7p3" i]';
+  const cssInfoSeriesPath = 'a[href*="/watch/sm" i]';
 
   let oldUrl = '';
   // ==========================================================
@@ -171,8 +171,8 @@
       const sources = document.querySelector(cssInfo).children;
       for (const elem of sources) {
         console.log('next ...', elem);
-        if (elem.querySelector(cssMovieInfo).textContent === '次の動画') {
-          const movieNext = elem.querySelector(cssMoviePath);
+        if (elem.querySelector(cssInfoSeriesTxt).textContent === '次の動画') {
+          const movieNext = elem.querySelector(cssInfoSeriesPath);
           movieNext.click();
         }
       }
