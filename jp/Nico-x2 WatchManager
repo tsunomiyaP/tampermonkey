@@ -41,6 +41,7 @@
 
   const cssMoreTxt = cssMain + ' > div[class="_16d7kub0" i] button[class="d8iohg8" i]';
   const cssInfo = cssPlayerArea + ' div[class="wjwcbt0" i][aria-label="動画情報" i] > div[class="m03n2n0" i] > div[class="_1hfvdw30" i]';
+  const cssInfoTxt = 'h2[class="_1xtfb7p4 _1xtfb7p3" i]';
   const cssInfoSeriesTxt = 'h3[class="_1xtfb7p5 _1xtfb7p3" i]';
   const cssInfoSeriesPath = 'a[href*="/watch/sm" i]';
 
@@ -168,12 +169,14 @@
       // もっとみる
       const txt = await waitQuerySelector(cssMoreTxt);
       txt.click();
-      const sources = document.querySelector(cssInfo).children;
+      const sources = document.querySelectorAll(cssInfo);
       for (const elem of sources) {
-        console.log('next ...', elem);
-        if (elem.querySelector(cssInfoSeriesTxt).textContent === '次の動画') {
-          const movieNext = elem.querySelector(cssInfoSeriesPath);
-          movieNext.click();
+        if (elem.querySelector(cssInfoTxt).textContent === 'シリーズ') {
+          if (elem.querySelector(cssInfoSeriesTxt).textContent === '次の動画') {
+            const movieNext = elem.querySelector(cssInfoSeriesPath);
+            console.log('next ...', movieNext);
+            movieNext.click();
+          }
         }
       }
     });
