@@ -179,6 +179,7 @@
       }
     }
     cnt++;
+    await new Promise(resolve => setTimeout(resolve, waitTime));
     await nextSeriesNode(cnt, flg);
   };
   const playNextWatch = async () => {
